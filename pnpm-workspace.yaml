@@ -1,0 +1,40 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Canonical monorepo linking. First-party packages must resolve locally.
+linkWorkspacePackages: true
+preferWorkspacePackages: true
+saveWorkspaceProtocol: true
+sharedWorkspaceLockfile: true
+
+# Workspace integrity / deterministic recursive operations.
+recursiveInstall: true
+disallowWorkspaceCycles: true
+failIfNoMatch: true
+engineStrict: true
+
+# Dependency graph / peer consistency.
+strictPeerDependencies: true
+dedupePeerDependents: true
+resolvePeersFromWorkspaceRoot: true
+dedupeDirectDeps: true
+hoistWorkspacePackages: true
+
+# Store / repeat-install integrity and performance.
+verifyStoreIntegrity: true
+strictStorePkgContentCheck: true
+preferFrozenLockfile: true
+optimisticRepeatInstall: true
+
+# Injected workspace packages are intentionally not enabled. The workspace
+# exports live TypeScript sources and uses symlinked workspace packages.
+dedupeInjectedDeps: true
+
+# Dependency lifecycle scripts are allowlisted only.
+strictDepBuilds: true
+verifyDepsBeforeRun: error
+allowBuilds:
+  bigint-buffer: true
+  bufferutil: true
+  utf-8-validate: true

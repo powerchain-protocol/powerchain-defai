@@ -1,0 +1,10 @@
+.next/
+node_modules/
+*.tsbuildinfo
+.env
+.env.local
+.env.production
+.env.development
+.env.*.local
+!.env.example
+!.env.*.example

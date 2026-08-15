@@ -1,0 +1,280 @@
+generator client {
+  provider            = "prisma-client"
+  output              = "../packages/database/src/generated/prisma"
+  runtime             = "nodejs"
+  moduleFormat        = "esm"
+  importFileExtension = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum BridgeDirection {
+  SOLANA_TO_SUI
+  SUI_TO_SOLANA
+}
+
+enum BridgeTransferStatus {
+  CREATED
+  SOURCE_SUBMITTING
+  SOURCE_SUBMITTED
+  SOURCE_FINALIZED
+  MESSAGE_OBSERVED
+  DESTINATION_SUBMITTED
+  DESTINATION_FINALIZED
+  RECONCILIATION_REQUIRED
+  COMPLETED
+  FAILED
+}
+
+enum BridgeGovernanceProposalKind {
+  ROUTE_RUNTIME_UPDATE
+  TRUSTED_WALLET_UPDATE
+  CLAIM_ALLOCATION_UPDATE
+  SERVICE_FEE_POLICY_UPDATE
+}
+
+enum BridgeGovernanceProposalStatus {
+  PENDING
+  APPLIED
+  REJECTED
+  EXPIRED
+}
+
+enum BridgeServiceFeeChain {
+  SOLANA
+  SUI
+}
+
+enum BridgeServiceFeeSettlementStatus {
+  ASSESSED
+  SUBMITTED
+  VERIFIED
+  FAILED
+  WAIVED
+  RETRY_WAIT
+  MANUAL_REVIEW
+}
+
+enum ClaimStatus {
+  RESERVED
+  SUBMITTING
+  SUBMITTED
+  FINALIZED
+  FAILED
+  EXPIRED
+  UNKNOWN
+}
+
+model BridgeQuote {
+  id                  String          @id @db.Text
+  routeId             String          @map("route_id") @db.Text
+  direction           BridgeDirection
+  amountBaseUnits     Decimal         @map("amount_base_units") @db.Decimal(40, 0)
+  feeBaseUnits        Decimal         @map("fee_base_units") @db.Decimal(40, 0)
+  sourceAddress       String          @map("source_address") @db.Text
+  destinationAddress  String          @map("destination_address") @db.Text
+  serviceFeeRecipient String?         @map("service_fee_recipient") @db.Text
+  runtimeSnapshotId   String          @map("runtime_snapshot_id") @db.Text
+  intentCommitment    String          @unique @map("intent_commitment") @db.Text
+  expiresAt           DateTime        @map("expires_at") @db.Timestamptz(6)
+  createdAt           DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  transfer            BridgeTransfer?
+
+  @@index([routeId, direction, createdAt])
+  @@index([expiresAt])
+  @@map("bridge_quotes")
+}
+
+model BridgeTransfer {
+  id                   String               @id @db.Text
+  quoteId              String               @unique @map("quote_id") @db.Text
+  routeId              String               @map("route_id") @db.Text
+  direction            BridgeDirection
+  principalBaseUnits   Decimal              @map("principal_base_units") @db.Decimal(40, 0)
+  sourceAddress        String               @map("source_address") @db.Text
+  destinationAddress   String               @map("destination_address") @db.Text
+  runtimeSnapshotId    String               @map("runtime_snapshot_id") @db.Text
+  intentCommitment     String               @map("intent_commitment") @db.Text
+  idempotencyKey       String               @unique @map("idempotency_key") @db.Text
+  status               BridgeTransferStatus @default(CREATED)
+  sourceTx             String?              @map("source_tx") @db.Text
+  destinationTx        String?              @map("destination_tx") @db.Text
+  sourceFinalityRef    String?              @map("source_finality_ref") @db.Text
+  destinationFinalityRef String?             @map("destination_finality_ref") @db.Text
+  failureCode          String?              @map("failure_code") @db.Text
+  createdAt            DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime             @updatedAt @map("updated_at") @db.Timestamptz(6)
+  quote                BridgeQuote          @relation(fields: [quoteId], references: [id], onDelete: Restrict)
+
+  @@index([status, updatedAt])
+  @@index([sourceAddress, createdAt])
+  @@index([destinationAddress, createdAt])
+  @@index([sourceTx])
+  @@index([destinationTx])
+  @@map("bridge_transfers")
+}
+
+model BridgeGovernanceProposal {
+  id             String                         @id @db.Text
+  kind           BridgeGovernanceProposalKind
+  status         BridgeGovernanceProposalStatus @default(PENDING)
+  payload        Json
+  payloadHash    String                         @map("payload_hash") @db.Text
+  idempotencyKey String?                        @unique @map("idempotency_key") @db.Text
+  proposedBy     String                         @map("proposed_by") @db.Text
+  approvedBy     String?                        @map("approved_by") @db.Text
+  requestId      String                         @map("request_id") @db.Text
+  expiresAt      DateTime                       @map("expires_at") @db.Timestamptz(6)
+  appliedAt      DateTime?                      @map("applied_at") @db.Timestamptz(6)
+  createdAt      DateTime                       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime                       @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([kind, status, createdAt])
+  @@map("bridge_governance_proposals")
+}
+
+model BridgeAuditEvent {
+  id        String   @id @db.Text
+  event     String   @db.Text
+  actor     String   @db.Text
+  target    String   @db.Text
+  payload   Json
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([event, createdAt])
+  @@index([target, createdAt])
+  @@map("bridge_audit_events")
+}
+
+model BridgeServiceFeePolicy {
+  id                  String                @id @db.Text
+  routeId             String                @map("route_id") @db.Text
+  sourceChain         BridgeServiceFeeChain @map("source_chain")
+  assetId             String                @map("asset_id") @db.Text
+  feeBps              Int                   @map("fee_bps")
+  recipient           String                @db.Text
+  enabled             Boolean               @default(true)
+  version             Int
+  minFeeBaseUnits     Decimal?              @map("min_fee_base_units") @db.Decimal(40, 0)
+  maxFeeBaseUnits     Decimal?              @map("max_fee_base_units") @db.Decimal(40, 0)
+  effectiveFrom       DateTime              @default(now()) @map("effective_from") @db.Timestamptz(6)
+  disabledAt          DateTime?             @map("disabled_at") @db.Timestamptz(6)
+  createdBy           String                @map("created_by") @db.Text
+  proposalId          String?               @map("proposal_id") @db.Text
+  policyCommitment    String?               @unique @map("policy_commitment") @db.Text
+  createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@unique([routeId, sourceChain, version])
+  @@index([routeId, sourceChain, enabled, version])
+  @@map("bridge_service_fee_policies")
+}
+
+model BridgeServiceFeeSettlement {
+  id                       String                           @id @db.Text
+  transferId               String                           @unique @map("transfer_id") @db.Text
+  quoteId                  String                           @map("quote_id") @db.Text
+  routeId                  String                           @map("route_id") @db.Text
+  sourceChain              BridgeServiceFeeChain            @map("source_chain")
+  assetId                  String                           @map("asset_id") @db.Text
+  principalBaseUnits       Decimal                          @map("principal_base_units") @db.Decimal(40, 0)
+  feeBps                   Int                              @map("fee_bps")
+  feeBaseUnits             Decimal                          @map("fee_base_units") @db.Decimal(40, 0)
+  collectedBaseUnits       Decimal?                         @map("collected_base_units") @db.Decimal(40, 0)
+  recipient                String                           @db.Text
+  policyId                 String                           @map("policy_id") @db.Text
+  policyVersion            Int                              @map("policy_version")
+  commitment               String                           @unique @db.Text
+  sourceTx                 String?                          @map("source_tx") @db.Text
+  status                   BridgeServiceFeeSettlementStatus @default(ASSESSED)
+  verifiedAt               DateTime?                        @map("verified_at") @db.Timestamptz(6)
+  verificationEvidence     Json?                            @map("verification_evidence")
+  failureCode              String?                          @map("failure_code") @db.Text
+  attemptCount             Int                              @default(0) @map("attempt_count")
+  lastAttemptAt            DateTime?                        @map("last_attempt_at") @db.Timestamptz(6)
+  nextRetryAt              DateTime?                        @map("next_retry_at") @db.Timestamptz(6)
+  manualReviewAt           DateTime?                        @map("manual_review_at") @db.Timestamptz(6)
+  manualReviewReason       String?                          @map("manual_review_reason") @db.Text
+  verificationLeaseOwner   String?                          @map("verification_lease_owner") @db.Text
+  verificationLeaseUntil   DateTime?                        @map("verification_lease_until") @db.Timestamptz(6)
+  createdAt                DateTime                         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                DateTime                         @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([status, nextRetryAt])
+  @@index([routeId, sourceChain, createdAt])
+  @@index([sourceTx])
+  @@map("bridge_service_fee_settlements")
+}
+
+model ClaimAllocation {
+  wallet            String   @id @db.Text
+  amountBaseUnits   Decimal  @map("amount_base_units") @db.Decimal(40, 0)
+  enabled           Boolean  @default(true)
+  reservedByClaimId String?  @map("reserved_by_claim_id") @db.Text
+  reservedUntil     DateTime? @map("reserved_until") @db.Timestamptz(6)
+  claimedAt         DateTime? @map("claimed_at") @db.Timestamptz(6)
+  note              String?  @db.Text
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("claim_allocations")
+}
+
+model ClaimChallenge {
+  id         String   @id @db.Text
+  wallet     String   @db.Text
+  message    String   @db.Text
+  nonceHash  String   @unique @map("nonce_hash") @db.Text
+  expiresAt  DateTime @map("expires_at") @db.Timestamptz(6)
+  consumedAt DateTime? @map("consumed_at") @db.Timestamptz(6)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([wallet, expiresAt])
+  @@map("claim_challenges")
+}
+
+model Claim {
+  id                   String      @id @db.Text
+  wallet               String      @db.Text
+  allocationBaseUnits  Decimal     @map("allocation_base_units") @db.Decimal(40, 0)
+  amountBaseUnits      Decimal     @map("amount_base_units") @db.Decimal(40, 0)
+  status               ClaimStatus @default(RESERVED)
+  idempotencyKey       String      @unique @map("idempotency_key") @db.Text
+  submitIdempotencyKey String?     @unique @map("submit_idempotency_key") @db.Text
+  reservationExpiresAt DateTime    @map("reservation_expires_at") @db.Timestamptz(6)
+  sourceTx             String?     @map("source_tx") @db.Text
+  failureCode          String?     @map("failure_code") @db.Text
+  attemptCount         Int         @default(0) @map("attempt_count")
+  nextRetryAt          DateTime?   @map("next_retry_at") @db.Timestamptz(6)
+  workerLeaseOwner     String?     @map("worker_lease_owner") @db.Text
+  workerLeaseUntil     DateTime?   @map("worker_lease_until") @db.Timestamptz(6)
+  finalizedAt          DateTime?   @map("finalized_at") @db.Timestamptz(6)
+  createdAt            DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime    @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([wallet, status])
+  @@index([status, nextRetryAt])
+  @@index([status, reservationExpiresAt])
+  @@map("claims")
+}
+
+model WorkerHeartbeat {
+  workerId    String   @id @map("worker_id") @db.Text
+  workerType  String   @map("worker_type") @db.Text
+  version     String   @db.Text
+  startedAt   DateTime @map("started_at") @db.Timestamptz(6)
+  heartbeatAt DateTime @map("heartbeat_at") @db.Timestamptz(6)
+
+  @@index([workerType, heartbeatAt])
+  @@map("worker_heartbeats")
+}
+
+model ApiRateLimitWindow {
+  key             String   @id
+  count           Int      @default(0)
+  windowStartedAt DateTime @default(now()) @map("window_started_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("api_rate_limit_windows")
+}

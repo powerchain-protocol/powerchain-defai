@@ -1,0 +1,40 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "@powerchain/backend": [
+        "../backend/src/index.ts"
+      ],
+      "@powerchain/backend/*": [
+        "../backend/src/*"
+      ],
+      "@powerchain/database": [
+        "../../packages/database/src/index.ts"
+      ],
+      "@powerchain/database/*": [
+        "../../packages/database/src/*"
+      ]
+    },
+    "baseUrl": "."
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

@@ -1,0 +1,8 @@
+import fs from 'node:fs'; import path from 'node:path';
+const root=process.cwd(); const apiRoot=path.join(root,'apps/bridge/app/api/v1');
+const files=[]; function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name); if(e.isDirectory())walk(p); else if(e.name==='route.ts')files.push(p);}} walk(apiRoot);
+const routes=files.map(file=>{const src=fs.readFileSync(file,'utf8'); const rel=path.relative(path.join(root,'apps/bridge/app'),path.dirname(file)).split(path.sep).map(x=>/^\[(.+)\]$/.test(x)?`:${x.slice(1,-1)}`:x).join('/'); const methods=['GET','POST','PUT','PATCH','DELETE'].filter(m=>new RegExp(`export\\s+async\\s+function\\s+${m}\\b|export\\s+function\\s+${m}\\b`).test(src)); return {path:`/${rel}`,methods};}).sort((a,b)=>a.path.localeCompare(b.path));
+const ts=`export interface ApiRouteDefinition { path: string; methods: readonly ("GET" | "POST" | "PUT" | "PATCH" | "DELETE")[]; }\n\nexport const API_ROUTES: readonly ApiRouteDefinition[] = ${JSON.stringify(routes,null,2).replace(/"(GET|POST|PUT|PATCH|DELETE)"/g,'"$1"')} as const;\n`;
+fs.mkdirSync(path.join(root,'apps/bridge/config'),{recursive:true}); fs.writeFileSync(path.join(root,'apps/bridge/config/api-routes.ts'),ts);
+const actions=[]; for(const r of routes)for(const method of r.methods){const auth=r.path.includes('/operator/')?'operator':'public'; actions.push({name:r.path.replace(/^\/api\/v1\//,'').replaceAll('/', '.').replace(/:([^.]+)/g,'$1')+'.'+method.toLowerCase(),method,path:r.path,auth,idempotent:method==='GET'});} fs.writeFileSync(path.join(root,'apps/bridge/actions.json'),JSON.stringify({actions},null,2)+'\n');
+console.log(`Generated ${routes.length} API routes / ${actions.length} actions`);

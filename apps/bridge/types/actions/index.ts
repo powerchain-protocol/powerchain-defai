@@ -1,0 +1,12 @@
+export type PowerChainActionName = "health"
+  | "fees.policy"
+  | "fees.collection-plan"
+  | "operator.fees"
+  | "operator.fees.propose"
+  | "operator.fees.ledger"
+  | "operator.fees.policies"
+  | "operator.fees.revenue"
+  | "operator.fees.reconciliation"
+  | "operator.fees.export"
+  | "operator.fees.reverify"
+  | "governance.fees.proposal";

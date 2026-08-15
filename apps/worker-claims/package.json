@@ -1,0 +1,21 @@
+{
+  "name": "@powerchain/worker-claims",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file-if-exists=../../.env --env-file-if-exists=../../.env.local --import tsx src/main.ts",
+    "dev": "node --env-file-if-exists=../../.env --env-file-if-exists=../../.env.local --import tsx --watch src/main.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@powerchain/backend": "workspace:*",
+    "@powerchain/database": "workspace:*",
+    "@powerchain/runtime": "workspace:*",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "26.1.2"
+  }
+}

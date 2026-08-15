@@ -1,0 +1,312 @@
+{
+  "actions": [
+    {
+      "name": "assets.bridge.get",
+      "method": "GET",
+      "path": "/api/v1/assets/bridge",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "bridge.history.get",
+      "method": "GET",
+      "path": "/api/v1/bridge/history",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "bridge.quote.post",
+      "method": "POST",
+      "path": "/api/v1/bridge/quote",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "bridge.runtime.get",
+      "method": "GET",
+      "path": "/api/v1/bridge/runtime",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "bridge.transfers.post",
+      "method": "POST",
+      "path": "/api/v1/bridge/transfers",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "bridge.transfers.id.get",
+      "method": "GET",
+      "path": "/api/v1/bridge/transfers/:id",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "bridge.transfers.id.events.get",
+      "method": "GET",
+      "path": "/api/v1/bridge/transfers/:id/events",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "claims.challenge.post",
+      "method": "POST",
+      "path": "/api/v1/claims/challenge",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "claims.eligibility.get",
+      "method": "GET",
+      "path": "/api/v1/claims/eligibility",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "claims.reserve.post",
+      "method": "POST",
+      "path": "/api/v1/claims/reserve",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "claims.status.id.get",
+      "method": "GET",
+      "path": "/api/v1/claims/status/:id",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "claims.submit.post",
+      "method": "POST",
+      "path": "/api/v1/claims/submit",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "data.pwrc.get",
+      "method": "GET",
+      "path": "/api/v1/data/pwrc",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "data.pwrc.integrity.get",
+      "method": "GET",
+      "path": "/api/v1/data/pwrc/integrity",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "data.pwrc.snapshot.get",
+      "method": "GET",
+      "path": "/api/v1/data/pwrc/snapshot",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "data.solana.get",
+      "method": "GET",
+      "path": "/api/v1/data/solana",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "data.sui.get",
+      "method": "GET",
+      "path": "/api/v1/data/sui",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "fees.collection-plan.get",
+      "method": "GET",
+      "path": "/api/v1/fees/collection-plan",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "fees.policy.get",
+      "method": "GET",
+      "path": "/api/v1/fees/policy",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "health.get",
+      "method": "GET",
+      "path": "/api/v1/health",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "market.prices.get",
+      "method": "GET",
+      "path": "/api/v1/market/prices",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "operator.fees.get",
+      "method": "GET",
+      "path": "/api/v1/operator/fees",
+      "auth": "operator",
+      "idempotent": true
+    },
+    {
+      "name": "operator.fees.post",
+      "method": "POST",
+      "path": "/api/v1/operator/fees",
+      "auth": "operator",
+      "idempotent": false
+    },
+    {
+      "name": "operator.fees.export.get",
+      "method": "GET",
+      "path": "/api/v1/operator/fees/export",
+      "auth": "operator",
+      "idempotent": true
+    },
+    {
+      "name": "operator.fees.ledger.get",
+      "method": "GET",
+      "path": "/api/v1/operator/fees/ledger",
+      "auth": "operator",
+      "idempotent": true
+    },
+    {
+      "name": "operator.fees.policies.get",
+      "method": "GET",
+      "path": "/api/v1/operator/fees/policies",
+      "auth": "operator",
+      "idempotent": true
+    },
+    {
+      "name": "operator.fees.proposals.id.post",
+      "method": "POST",
+      "path": "/api/v1/operator/fees/proposals/:id",
+      "auth": "operator",
+      "idempotent": false
+    },
+    {
+      "name": "operator.fees.reconciliation.get",
+      "method": "GET",
+      "path": "/api/v1/operator/fees/reconciliation",
+      "auth": "operator",
+      "idempotent": true
+    },
+    {
+      "name": "operator.fees.revenue.get",
+      "method": "GET",
+      "path": "/api/v1/operator/fees/revenue",
+      "auth": "operator",
+      "idempotent": true
+    },
+    {
+      "name": "operator.fees.settlements.id.reverify.post",
+      "method": "POST",
+      "path": "/api/v1/operator/fees/settlements/:id/reverify",
+      "auth": "operator",
+      "idempotent": false
+    },
+    {
+      "name": "providers.diagnostics.get",
+      "method": "GET",
+      "path": "/api/v1/providers/diagnostics",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "providers.health.get",
+      "method": "GET",
+      "path": "/api/v1/providers/health",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "providers.readiness.get",
+      "method": "GET",
+      "path": "/api/v1/providers/readiness",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "ready.get",
+      "method": "GET",
+      "path": "/api/v1/ready",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "transactions.solana.signature.get",
+      "method": "GET",
+      "path": "/api/v1/transactions/solana/:signature",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "transactions.sui.digest.get",
+      "method": "GET",
+      "path": "/api/v1/transactions/sui/:digest",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "version.get",
+      "method": "GET",
+      "path": "/api/v1/version",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "wallet.activity.get",
+      "method": "GET",
+      "path": "/api/v1/wallet/activity",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "wallet.overview.get",
+      "method": "GET",
+      "path": "/api/v1/wallet/overview",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "wallet.portfolio.get",
+      "method": "GET",
+      "path": "/api/v1/wallet/portfolio",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "wallet.solana.get",
+      "method": "GET",
+      "path": "/api/v1/wallet/solana",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "wallet.solana.pwrc-transfers.get",
+      "method": "GET",
+      "path": "/api/v1/wallet/solana/pwrc-transfers",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "wallet.sui.get",
+      "method": "GET",
+      "path": "/api/v1/wallet/sui",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "workers.readiness.get",
+      "method": "GET",
+      "path": "/api/v1/workers/readiness",
+      "auth": "public",
+      "idempotent": true
+    }
+  ]
+}

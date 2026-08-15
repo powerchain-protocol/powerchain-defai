@@ -1,0 +1,10 @@
+import fs from "node:fs";
+const must = (p,s) => { const t=fs.readFileSync(p,"utf8"); if(!t.includes(s)) throw new Error(`${p} missing ${s}`); };
+must("apps/bridge/app/api/v1/health/route.ts", 'version: "1.0.0"');
+must("apps/bridge/app/api/v1/ready/route.ts", "checkDatabaseReady");
+must("apps/bridge/app/api/v1/version/route.ts", 'api: "v1"');
+must("packages/runtime/src/index.ts", "tickTimeoutMs");
+must("packages/runtime/src/index.ts", "shutdownTimeoutMs");
+must("packages/database/src/index.ts", "closeDatabase");
+must("apps/bridge/next.config.ts", "Strict-Transport-Security");
+console.log("platform-production-check: PASS");
