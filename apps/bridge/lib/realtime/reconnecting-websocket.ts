@@ -1,3 +1,5 @@
+"use client";
+
 export type ReconnectingWebSocketOptions = {
   minDelayMs?: number;
   maxDelayMs?: number;

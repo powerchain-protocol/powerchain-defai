@@ -29,6 +29,35 @@ function limitValue(value: number | undefined, max = 100) {
   return Math.max(1, Math.min(value ?? 25, max));
 }
 
+
+type SuiHistoryRow = {
+  digest?: unknown;
+  sender?: { address?: unknown } | null;
+  effects?: { status?: unknown; timestamp?: unknown } | { status?: { status?: unknown } } | null;
+  transaction?: { data?: { sender?: unknown } } | null;
+  timestampMs?: unknown;
+};
+
+type SuiGraphqlHistoryResponse = {
+  data?: { transactions?: { pageInfo?: { endCursor?: unknown; hasNextPage?: unknown }; nodes?: unknown[] } };
+};
+
+type SuiRpcHistoryResponse = { nextCursor?: unknown; hasNextPage?: unknown; data?: unknown[] };
+type SuiGraphqlTransactionResponse = { data?: { transactionBlock?: unknown } };
+
+function isSuiHistoryRow(value: unknown): value is SuiHistoryRow & { digest: string } {
+  return Boolean(value && typeof value === "object" && "digest" in value && typeof (value as { digest?: unknown }).digest === "string");
+}
+
+function nestedString(value: unknown, ...keys: string[]): string | null {
+  let current: unknown = value;
+  for (const key of keys) {
+    if (!current || typeof current !== "object" || Array.isArray(current)) return null;
+    current = (current as Record<string, unknown>)[key];
+  }
+  return typeof current === "string" ? current : null;
+}
+
 type SolanaSignatureInfo = {
   signature: string;
   slot: number;
@@ -62,7 +91,7 @@ export async function getSolanaWalletHistory(
   if (heliusApiConfigured()) {
     try {
       const result = await getHeliusTransactionsForAddress(address, {
-        paginationToken: options.paginationToken,
+        ...(options.paginationToken !== undefined ? { paginationToken: options.paginationToken } : {}),
         limit,
       });
       return {
@@ -83,7 +112,10 @@ export async function getSolanaWalletHistory(
 
     // Compatibility-only fallback for deployments still relying on the older enhanced parser endpoint.
     try {
-      const enhanced = await getHeliusAddressTransactions(address, { before: options.before, limit });
+      const enhanced = await getHeliusAddressTransactions(address, {
+        ...(options.before !== undefined ? { before: options.before } : {}),
+        limit,
+      });
       return {
         source: "helius-enhanced-compat" as const,
         enhanced: true,
@@ -181,7 +213,7 @@ export async function getSuiWalletHistory(addressInput: string, options: { curso
         }`,
         variables: { address, first: limit, after: options.cursor || null },
       };
-      const result = await fetchJson<any>(graphqlUrl, {
+      const result = await fetchJson<SuiGraphqlHistoryResponse>(graphqlUrl, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(body),
@@ -200,12 +232,12 @@ export async function getSuiWalletHistory(addressInput: string, options: { curso
             cursorType: "graphql-cursor" as const,
           },
           transactions: transactions.nodes
-            .filter((row: any) => row && typeof row.digest === "string")
-            .map((row: any) => ({
+            .filter(isSuiHistoryRow)
+            .map((row) => ({
               digest: row.digest,
-              sender: row.sender?.address ?? null,
-              status: row.effects?.status ?? null,
-              timestamp: row.effects?.timestamp ?? null,
+              sender: nestedString(row, "sender", "address"),
+              status: nestedString(row, "effects", "status"),
+              timestamp: typeof (row.effects as { timestamp?: unknown } | undefined)?.timestamp === "number" ? (row.effects as { timestamp: number }).timestamp : null,
               explorerUrl: suiscanTransactionUrl(row.digest),
             })),
         };
@@ -217,7 +249,7 @@ export async function getSuiWalletHistory(addressInput: string, options: { curso
   }
 
   const rpc = getSuiRpc();
-  const result = await rpc.client.request<any>(
+  const result = await rpc.client.request<SuiRpcHistoryResponse>(
     "suix_queryTransactionBlocks",
     [
       { filter: { FromOrToAddress: { addr: address } }, options: { showEffects: true, showInput: true } },
@@ -237,12 +269,12 @@ export async function getSuiWalletHistory(addressInput: string, options: { curso
       cursorType: "sui-rpc-cursor" as const,
     },
     transactions: (Array.isArray(result?.data) ? result.data : [])
-      .filter((row: any) => row && typeof row.digest === "string")
-      .map((row: any) => ({
+      .filter(isSuiHistoryRow)
+      .map((row) => ({
         digest: row.digest,
-        sender: row.transaction?.data?.sender ?? null,
-        status: row.effects?.status?.status ?? null,
-        timestamp: row.timestampMs ? Math.floor(Number(row.timestampMs) / 1000) : null,
+        sender: nestedString(row, "transaction", "data", "sender"),
+        status: nestedString(row, "effects", "status", "status"),
+        timestamp: typeof row.timestampMs === "string" || typeof row.timestampMs === "number" ? Math.floor(Number(row.timestampMs) / 1000) : null,
         explorerUrl: suiscanTransactionUrl(row.digest),
       })),
   };
@@ -268,7 +300,7 @@ export async function getSuiWalletOverview(addressInput: string, options: { curs
 export async function getSolanaTransactionDetails(signature: string) {
   if (!SOLANA_SIGNATURE.test(signature)) throw new Error("invalid Solana transaction signature");
   const rpc = getSolanaRpc();
-  const transaction = await rpc.client.request<any>(
+  const transaction = await rpc.client.request<unknown>(
     "getTransaction",
     [signature, { commitment: "finalized", encoding: "jsonParsed", maxSupportedTransactionVersion: 0 }],
     { cacheTtlMs: 2_000, staleIfErrorMs: 10_000, requestBudgetMs: 8_000 },
@@ -288,7 +320,7 @@ export async function getSuiTransactionDetails(digest: string) {
   const graphqlUrl = suiGraphqlUrl();
   if (graphqlUrl) {
     try {
-      const result = await fetchJson<any>(graphqlUrl, {
+      const result = await fetchJson<SuiGraphqlTransactionResponse>(graphqlUrl, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
@@ -313,7 +345,7 @@ export async function getSuiTransactionDetails(digest: string) {
     }
   }
   const rpc = getSuiRpc();
-  const transaction = await rpc.client.request<any>(
+  const transaction = await rpc.client.request<unknown>(
     "sui_getTransactionBlock",
     [digest, { showInput: true, showEffects: true, showEvents: true, showBalanceChanges: true, showObjectChanges: true }],
     { cacheTtlMs: 2_000, staleIfErrorMs: 10_000, requestBudgetMs: 8_000 },

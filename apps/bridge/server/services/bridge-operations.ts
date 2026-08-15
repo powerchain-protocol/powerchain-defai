@@ -5,6 +5,7 @@ import { normalizeSuiAddress } from "@mysten/sui/utils";
 import { PublicKey } from "@solana/web3.js";
 import { retrySerializableTransaction } from "@powerchain/database";
 import { prisma } from "@powerchain/database/prisma";
+import type { PrismaTransactionClient } from "@powerchain/database/prisma";
 import { assessActiveServiceFee } from "@powerchain/backend";
 import { buildBridgeIntent } from "./bridge-intent";
 import { checkBridgeRuntime } from "./bridge-runtime";
@@ -96,7 +97,7 @@ export async function createBridgeTransfer(input: { raw: unknown; idempotencyKey
   if (!runtime.capabilities["transfer-submit"]) throw new Error("BRIDGE_RUNTIME_BLOCKED");
   if (runtime.snapshotId !== runtimeSnapshotId) throw new Error("RUNTIME_SNAPSHOT_STALE");
 
-  return retrySerializableTransaction(() => prisma.$transaction(async (tx) => {
+  return retrySerializableTransaction(() => prisma.$transaction(async (tx: PrismaTransactionClient) => {
     const existingByKey = await tx.bridgeTransfer.findUnique({ where: { idempotencyKey: input.idempotencyKey } });
     if (existingByKey) {
       if (existingByKey.quoteId !== quoteId || existingByKey.intentCommitment !== intentCommitment) throw new Error("IDEMPOTENCY_KEY_REUSED");
@@ -135,4 +136,23 @@ export async function getBridgeTransfer(id: string) {
   const transfer = await prisma.bridgeTransfer.findUnique({ where: { id }, include: { quote: true } });
   if (!transfer) throw new Error("TRANSFER_NOT_FOUND");
   return transfer;
+}
+
+
+export async function attachBridgeSourceTransaction(input: { transferId: string; sourceTx: string }) {
+  if (!/^[0-9a-f-]{36}$/i.test(input.transferId)) throw new Error("INVALID_TRANSFER_ID");
+  const sourceTx = input.sourceTx.trim();
+  if (!sourceTx || sourceTx.length > 128) throw new Error("INVALID_SOURCE_TRANSACTION");
+  return retrySerializableTransaction(() => prisma.$transaction(async (tx: PrismaTransactionClient) => {
+    const row = await tx.bridgeTransfer.findUnique({ where: { id: input.transferId } });
+    if (!row) throw new Error("TRANSFER_NOT_FOUND");
+    if (row.sourceTx) {
+      if (row.sourceTx === sourceTx) return row;
+      throw new Error("SOURCE_TRANSACTION_ALREADY_ATTACHED");
+    }
+    if (row.status !== "CREATED") throw new Error("TRANSFER_NOT_AWAITING_SOURCE_TRANSACTION");
+    const reused = await tx.bridgeTransfer.findUnique({ where: { sourceTx } });
+    if (reused && reused.id !== row.id) throw new Error("SOURCE_TRANSACTION_REUSED");
+    return tx.bridgeTransfer.update({ where: { id: row.id }, data: { sourceTx, status: "SOURCE_SUBMITTED", failureCode: null } });
+  }, { isolationLevel: "Serializable" }));
 }

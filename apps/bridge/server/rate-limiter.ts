@@ -1,6 +1,7 @@
 import "server-only";
 import { createHash } from "node:crypto";
 import { prisma } from "@powerchain/database/prisma";
+import type { PrismaTransactionClient } from "@powerchain/database/prisma";
 
 type Scope = "operator" | "governance" | "public-read" | "mutation";
 const DEFAULTS: Record<Scope, { limit: number; windowMs: number }> = {
@@ -20,7 +21,7 @@ export async function enforceRateLimit(scope: Scope, headers: Headers, actor?: s
   const policy = DEFAULTS[scope];
   const key = hashKey(scope, actor?.trim() || clientIdentity(headers));
   const now = new Date();
-  return prisma.$transaction(async (tx) => {
+  return prisma.$transaction(async (tx: PrismaTransactionClient) => {
     const current = await tx.apiRateLimitWindow.findUnique({ where: { key } });
     if (!current || now.getTime() - current.windowStartedAt.getTime() >= policy.windowMs) {
       await tx.apiRateLimitWindow.upsert({ where: { key }, create: { key, count: 1, windowStartedAt: now }, update: { count: 1, windowStartedAt: now } });

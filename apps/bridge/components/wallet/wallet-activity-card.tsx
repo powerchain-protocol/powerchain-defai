@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { useWalletOverview } from "@/hooks/use-wallet-overview";
 import { useClaimEligibility } from "@/hooks/use-claim-eligibility";
+import type { WalletActivityItem } from "@/lib/types/wallet-api";
 
 function short(value: string, left = 7, right = 7) {
   return value.length <= left + right + 3 ? value : `${value.slice(0, left)}…${value.slice(-right)}`;
@@ -56,7 +57,7 @@ export function WalletActivityCard({ solanaAddress, suiAddress }: { solanaAddres
         </div>
         {activity.length ? (
           <div className="divide-y divide-slate-100 dark:divide-slate-900">
-            {activity.slice(0, 20).map((row: any) => (
+            {activity.slice(0, 20).map((row: WalletActivityItem) => (
               <a key={`${row.chain}:${row.id}`} href={row.explorerUrl || undefined} target={row.explorerUrl ? "_blank" : undefined} rel={row.explorerUrl ? "noreferrer" : undefined} className="grid min-h-14 grid-cols-[auto_1fr] gap-3 px-4 py-3 text-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 sm:grid-cols-[72px_1fr_auto] dark:hover:bg-slate-900/60">
                 <div className="text-xs font-semibold text-slate-500">{row.chain}</div>
                 <div className="min-w-0"><div className="truncate font-medium">{row.label}</div><div className="mt-1 truncate font-mono text-xs text-slate-500">{short(row.id)}</div></div>

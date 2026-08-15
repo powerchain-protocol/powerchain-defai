@@ -6,6 +6,7 @@ import bs58 from "bs58";
 import nacl from "tweetnacl";
 import { retrySerializableTransaction } from "@powerchain/database";
 import { prisma } from "@powerchain/database/prisma";
+import type { PrismaTransactionClient } from "@powerchain/database/prisma";
 
 const CHALLENGE_TTL_MS = 5 * 60_000;
 const RESERVATION_TTL_MS = 10 * 60_000;
@@ -67,7 +68,7 @@ export async function reserveClaim(input: { raw: unknown; idempotencyKey: string
   const now = new Date();
   const expiresAt = new Date(now.getTime() + RESERVATION_TTL_MS);
   const claimId = randomUUID();
-  return retrySerializableTransaction(() => prisma.$transaction(async (tx) => {
+  return retrySerializableTransaction(() => prisma.$transaction(async (tx: PrismaTransactionClient) => {
     const existingByKey = await tx.claim.findUnique({ where: { idempotencyKey: input.idempotencyKey } });
     if (existingByKey) {
       if (existingByKey.wallet !== wallet) throw new Error("CLAIM_IDEMPOTENCY_KEY_REUSED");
@@ -105,7 +106,7 @@ export async function submitReservedClaim(input: { raw: unknown; idempotencyKey:
   const wallet = walletAddress(body.wallet);
   if (!claimId) throw new Error("CLAIM_ID_REQUIRED");
   const now = new Date();
-  return retrySerializableTransaction(() => prisma.$transaction(async (tx) => {
+  return retrySerializableTransaction(() => prisma.$transaction(async (tx: PrismaTransactionClient) => {
     const claim = await tx.claim.findUnique({ where: { id: claimId } });
     if (!claim || claim.wallet !== wallet) throw new Error("CLAIM_NOT_FOUND");
     if (claim.submitIdempotencyKey && claim.submitIdempotencyKey !== input.idempotencyKey) throw new Error("CLAIM_SUBMIT_IDEMPOTENCY_KEY_REUSED");

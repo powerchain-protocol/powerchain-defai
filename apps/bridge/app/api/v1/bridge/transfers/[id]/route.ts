@@ -12,7 +12,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
       id: row.id, quoteId: row.quoteId, routeId: row.routeId, direction: row.direction, status: row.status,
       principalBaseUnits: row.principalBaseUnits.toFixed(0), sourceAddress: row.sourceAddress, destinationAddress: row.destinationAddress,
       sourceTx: row.sourceTx, destinationTx: row.destinationTx, sourceFinalityRef: row.sourceFinalityRef, destinationFinalityRef: row.destinationFinalityRef,
-      runtimeSnapshotId: row.runtimeSnapshotId, intentCommitment: row.intentCommitment, createdAt: row.createdAt.toISOString(), updatedAt: row.updatedAt.toISOString(),
+      runtimeSnapshotId: row.runtimeSnapshotId, intentCommitment: row.intentCommitment, wormholeOperationId: row.wormholeOperationId, wormholeEmitterChain: row.wormholeEmitterChain, wormholeEmitter: row.wormholeEmitter, wormholeSequence: row.wormholeSequence, wormholeVaaHash: row.wormholeVaaHash, sourceVerifiedAt: row.sourceVerifiedAt?.toISOString() ?? null, messageObservedAt: row.messageObservedAt?.toISOString() ?? null, destinationVerifiedAt: row.destinationVerifiedAt?.toISOString() ?? null, reconciliationEvidence: row.reconciliationEvidence, createdAt: row.createdAt.toISOString(), updatedAt: row.updatedAt.toISOString(),
     }}, { headers: { "cache-control": "no-store, max-age=0" } });
   } catch (error) {
     const code = error instanceof Error ? error.message : "TRANSFER_STATUS_FAILED";

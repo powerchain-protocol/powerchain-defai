@@ -47,6 +47,16 @@ export type HeliusAddressTransaction = {
   confirmationStatus?: string | null;
 };
 
+
+type HeliusAddressHistoryResponse = {
+  error?: { message?: string };
+  result?: { data?: unknown[]; paginationToken?: unknown };
+};
+
+function isHeliusAddressTransaction(value: unknown): value is HeliusAddressTransaction {
+  return Boolean(value && typeof value === "object" && "signature" in value && typeof (value as { signature?: unknown }).signature === "string");
+}
+
 export function heliusApiConfigured() {
   return Boolean(env("HELIUS_API_KEY"));
 }
@@ -66,7 +76,7 @@ export async function getHeliusTransactionsForAddress(
   const url = new URL(heliusRpcApiBase());
   url.searchParams.set("api-key", apiKey);
 
-  const result = await fetchJson<any>(url, {
+  const result = await fetchJson<HeliusAddressHistoryResponse>(url, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
@@ -91,7 +101,7 @@ export async function getHeliusTransactionsForAddress(
   const payload = result?.result;
   if (!payload || !Array.isArray(payload.data)) throw new Error("invalid Helius getTransactionsForAddress response");
   return {
-    data: payload.data.filter((row: any) => row && typeof row.signature === "string") as HeliusAddressTransaction[],
+    data: payload.data.filter(isHeliusAddressTransaction),
     paginationToken: typeof payload.paginationToken === "string" ? payload.paginationToken : null,
   };
 }

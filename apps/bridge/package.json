@@ -6,7 +6,10 @@
     "dev": "next dev --turbopack --port 3000",
     "build": "next build",
     "start": "next start --port 3000",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "predev": "pnpm -w prisma:generate",
+    "prebuild": "pnpm -w prisma:generate",
+    "pretypecheck": "pnpm -w prisma:generate"
   },
   "dependencies": {
     "@mysten/sui": "2.23.1",
@@ -23,7 +26,8 @@
     "@solana/wallet-adapter-react": "0.15.39",
     "@solana/wallet-adapter-react-ui": "0.9.39",
     "@mysten/dapp-kit-react": "2.1.14",
-    "@wormhole-foundation/wormhole-connect": "6.0.0"
+    "@wormhole-foundation/wormhole-connect": "6.0.0",
+    "@powerchain/protocol": "workspace:*"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.1.14",

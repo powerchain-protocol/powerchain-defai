@@ -1,0 +1,30 @@
+{
+  "name": "@powerchain/protocol",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./addresses": "./src/addresses.ts",
+    "./explorers": "./src/explorers.ts",
+    "./fees": "./src/fees.ts",
+    "./integrations": "./src/integrations.ts",
+    "./signatures": "./src/signatures.ts",
+    "./transactions": "./src/transactions.ts",
+    "./validate": "./src/validate.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/*.test.ts"
+  },
+  "dependencies": {
+    "@solana/web3.js": "1.98.4",
+    "bs58": "6.0.0",
+    "tweetnacl": "1.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "26.1.2",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3"
+  }
+}

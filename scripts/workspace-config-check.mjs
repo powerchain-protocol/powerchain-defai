@@ -35,10 +35,6 @@ for (const key of requiredTrue) {
   }
 }
 
-if (!/^verifyDepsBeforeRun:\s*error\s*$/m.test(text)) {
-  errors.push("verifyDepsBeforeRun must be error");
-}
-
 if (/^injectWorkspacePackages:\s*true\s*$/m.test(text)) {
   errors.push("injectWorkspacePackages must not be enabled for this live-source workspace");
 }

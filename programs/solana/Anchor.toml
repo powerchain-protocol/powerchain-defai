@@ -1,0 +1,16 @@
+[toolchain]
+anchor_version = "0.32.1"
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.localnet]
+powerchain_bridge = "Fg6PaFpoGXkYsidMpWxTWqkZxxV2qTnAXg2YS4JpT5jA"
+
+[provider]
+cluster = "Localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "pnpm exec tsx tests/powerchain-bridge.ts"

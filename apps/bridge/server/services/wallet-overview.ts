@@ -14,13 +14,16 @@ export async function getCrossChainWalletOverview(input: {
   const limit = Math.max(1, Math.min(input.limit ?? 25, 50));
   const solanaPromise = input.solanaAddress
     ? getSolanaWalletOverview(input.solanaAddress, {
-        before: input.solanaBefore,
-        paginationToken: input.solanaPaginationToken,
+        ...(input.solanaBefore !== undefined ? { before: input.solanaBefore } : {}),
+        ...(input.solanaPaginationToken !== undefined ? { paginationToken: input.solanaPaginationToken } : {}),
         limit,
       })
     : Promise.resolve(null);
   const suiPromise = input.suiAddress
-    ? getSuiWalletOverview(input.suiAddress, { cursor: input.suiCursor, limit })
+    ? getSuiWalletOverview(input.suiAddress, {
+        ...(input.suiCursor !== undefined ? { cursor: input.suiCursor } : {}),
+        limit,
+      })
     : Promise.resolve(null);
 
   const [solanaResult, suiResult] = await Promise.allSettled([solanaPromise, suiPromise]);

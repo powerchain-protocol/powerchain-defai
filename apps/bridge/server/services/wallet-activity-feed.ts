@@ -3,7 +3,7 @@ import "server-only";
 import { decodeWalletActivityCursor, encodeWalletActivityCursor, type WalletActivityCursor } from "../../lib/wallet/cursor";
 import { getCrossChainWalletOverview } from "./wallet-overview";
 
-function nextPart(pagination: any) {
+function nextPart(pagination: { nextCursor?: unknown; cursorType?: unknown } | null | undefined) {
   const value = typeof pagination?.nextCursor === "string" ? pagination.nextCursor : null;
   const kind = pagination?.cursorType;
   if (!value) return null;
@@ -23,12 +23,12 @@ export async function getWalletActivityFeed(input: {
   const solana = decoded?.solana;
   const sui = decoded?.sui;
   const overview = await getCrossChainWalletOverview({
-    solanaAddress: input.solanaAddress,
-    suiAddress: input.suiAddress,
+    ...(input.solanaAddress !== undefined ? { solanaAddress: input.solanaAddress } : {}),
+    ...(input.suiAddress !== undefined ? { suiAddress: input.suiAddress } : {}),
     solanaPaginationToken: solana?.kind === "helius-pagination-token" ? solana.value : null,
     solanaBefore: solana?.kind === "signature" ? solana.value : null,
     suiCursor: sui?.value ?? null,
-    limit: input.limit,
+    ...(input.limit !== undefined ? { limit: input.limit } : {}),
   });
   const next: WalletActivityCursor = {
     v: 1,

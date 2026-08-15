@@ -12,7 +12,12 @@ function decimalText(value: unknown): string | null {
   return String(value);
 }
 
-function toPolicyView(policy: any): ServiceFeePolicyView {
+type PolicyRow = {
+  id: string; routeId: string; sourceChain: string; assetId: string; feeBps: number; recipient: string; enabled: boolean; version: number;
+  minFeeBaseUnits: unknown; maxFeeBaseUnits: unknown; effectiveFrom: Date; policyCommitment: string | null;
+};
+
+function toPolicyView(policy: PolicyRow): ServiceFeePolicyView {
   return {
     id: policy.id,
     routeId: policy.routeId,

@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { WalletOverviewResponse } from "@/lib/types/wallet-api";
 
 type State = {
-  data: any;
+  data: WalletOverviewResponse | null;
   loading: boolean;
   error: string | null;
   updatedAt: number | null;

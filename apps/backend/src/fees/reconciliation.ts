@@ -32,7 +32,7 @@ export async function serviceFeeIntegrityReport(input: { since: Date; limit?: nu
   const policyById = new Map(policies.map((row) => [row.id, row]));
   const quoteById = new Map(quotes.map((row) => [row.id, row]));
   const issues: ServiceFeeIntegrityIssue[] = [];
-  const push = (row: any, code: string, detail?: string) => {
+  const push = (row: { id: string; transferId: string }, code: string, detail?: string) => {
     if (issues.length < 200) issues.push({ settlementId: row.id, transferId: row.transferId, code, ...(detail ? { detail } : {}) });
   };
 

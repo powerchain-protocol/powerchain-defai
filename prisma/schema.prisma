@@ -99,8 +99,21 @@ model BridgeTransfer {
   intentCommitment     String               @map("intent_commitment") @db.Text
   idempotencyKey       String               @unique @map("idempotency_key") @db.Text
   status               BridgeTransferStatus @default(CREATED)
-  sourceTx             String?              @map("source_tx") @db.Text
+  sourceTx             String?              @unique @map("source_tx") @db.Text
   destinationTx        String?              @map("destination_tx") @db.Text
+  wormholeOperationId  String?              @unique @map("wormhole_operation_id") @db.Text
+  wormholeEmitterChain Int?                 @map("wormhole_emitter_chain")
+  wormholeEmitter      String?              @map("wormhole_emitter") @db.Text
+  wormholeSequence     String?              @map("wormhole_sequence") @db.Text
+  wormholeVaaHash      String?              @map("wormhole_vaa_hash") @db.Text
+  sourceVerifiedAt     DateTime?            @map("source_verified_at") @db.Timestamptz(6)
+  messageObservedAt    DateTime?            @map("message_observed_at") @db.Timestamptz(6)
+  destinationVerifiedAt DateTime?           @map("destination_verified_at") @db.Timestamptz(6)
+  reconciliationEvidence Json?              @map("reconciliation_evidence")
+  bridgeWorkerLeaseOwner String?            @map("bridge_worker_lease_owner") @db.Text
+  bridgeWorkerLeaseUntil DateTime?           @map("bridge_worker_lease_until") @db.Timestamptz(6)
+  bridgeAttemptCount   Int                  @default(0) @map("bridge_attempt_count")
+  bridgeNextRetryAt    DateTime?            @map("bridge_next_retry_at") @db.Timestamptz(6)
   sourceFinalityRef    String?              @map("source_finality_ref") @db.Text
   destinationFinalityRef String?             @map("destination_finality_ref") @db.Text
   failureCode          String?              @map("failure_code") @db.Text
@@ -113,6 +126,8 @@ model BridgeTransfer {
   @@index([destinationAddress, createdAt])
   @@index([sourceTx])
   @@index([destinationTx])
+  @@index([status, bridgeNextRetryAt])
+  @@index([bridgeWorkerLeaseUntil])
   @@map("bridge_transfers")
 }
 
@@ -277,4 +292,26 @@ model ApiRateLimitWindow {
   updatedAt       DateTime @updatedAt @map("updated_at")
 
   @@map("api_rate_limit_windows")
+}
+
+enum ProtocolDeploymentChain {
+  SOLANA
+  SUI
+  CROSS_CHAIN
+}
+
+model ProtocolDeployment {
+  id        String                  @id @db.Text
+  name      String                  @db.Text
+  chain     ProtocolDeploymentChain
+  network   String                  @db.Text
+  address   String                  @db.Text
+  enabled   Boolean                 @default(true)
+  metadata  Json?
+  createdAt DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime                @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([chain, network, name])
+  @@index([chain, network, enabled])
+  @@map("protocol_deployments")
 }

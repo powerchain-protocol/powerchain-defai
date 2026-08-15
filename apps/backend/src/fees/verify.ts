@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { prisma } from "@powerchain/database/prisma";
+import type { PrismaTransactionClient } from "@powerchain/database/prisma";
 import { verifySolanaToken2022ServiceFee } from "./solana";
 import { verifySuiServiceFee } from "./sui";
 import { ensureServiceFeeSettlementForTransfer } from "./settlement";
@@ -25,7 +26,7 @@ function maxAttempts(env: NodeJS.ProcessEnv = process.env): number {
 
 export async function recordServiceFeeVerificationError(transferId: string, errorCode: string, env: NodeJS.ProcessEnv = process.env) {
   const now = new Date();
-  return prisma.$transaction(async (tx) => {
+  return prisma.$transaction(async (tx: PrismaTransactionClient) => {
     const current = await tx.bridgeServiceFeeSettlement.findUnique({ where: { transferId } });
     if (!current || current.status === "VERIFIED" || current.status === "WAIVED" || current.status === "MANUAL_REVIEW") return current;
     const attemptCount = current.attemptCount + 1;
@@ -56,15 +57,15 @@ export async function verifyServiceFeeForTransfer(transferId: string, env: NodeJ
 
   const result = settlement.sourceChain === "SOLANA"
     ? await verifySolanaToken2022ServiceFee({
-        rpcUrls: urls(env.SOLANA_RPC_URL, env.HELIUS_RPC_URL, env.SOLANA_RPC_FALLBACK_URL, env.HELIUS_RPC_FALLBACK_URL),
+        rpcUrls: urls(env.POWERCHAIN_SOLANA_RPC_URL, env.HELIUS_RPC_URL, env.POWERCHAIN_SOLANA_RPC_FALLBACK_URL, env.HELIUS_RPC_FALLBACK_URL),
         signature: transfer.sourceTx,
-        mint: env.PWRC_SOLANA_MINT?.trim() ?? "",
+        mint: env.POWERCHAIN_PWRC_SOLANA_MINT?.trim() ?? "",
         recipientWallet: settlement.recipient,
         expectedBaseUnits: settlement.feeBaseUnits.toFixed(0),
         ...(env.SOLANA_RPC_TIMEOUT_MS ? { timeoutMs: Number(env.SOLANA_RPC_TIMEOUT_MS) } : {}),
       })
     : await verifySuiServiceFee({
-        rpcUrls: urls(env.SUI_RPC_URL, env.SUI_RPC_FALLBACK_URL),
+        rpcUrls: urls(env.POWERCHAIN_SUI_GRPC_URL, env.POWERCHAIN_SUI_RPC_URL, env.POWERCHAIN_SUI_RPC_FALLBACK_URL),
         digest: transfer.sourceTx,
         coinType: env.WPWRC_SUI_COIN_TYPE?.trim() ?? env.SUI_WPWRC_COIN_TYPE?.trim() ?? "",
         recipient: settlement.recipient,
@@ -72,7 +73,7 @@ export async function verifyServiceFeeForTransfer(transferId: string, env: NodeJ
       });
 
   const now = new Date();
-  return prisma.$transaction(async (tx) => {
+  return prisma.$transaction(async (tx: PrismaTransactionClient) => {
     const current = await tx.bridgeServiceFeeSettlement.findUnique({ where: { transferId } });
     if (!current) throw new Error("SERVICE_FEE_SETTLEMENT_NOT_FOUND");
     if (["VERIFIED", "WAIVED", "MANUAL_REVIEW"].includes(current.status)) return current;

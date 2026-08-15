@@ -1,6 +1,6 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { parseBoundedInteger } from "@powerchain/runtime";
-import { PrismaClient } from "./generated/prisma/client";
+import { Prisma, PrismaClient } from "./generated/prisma/client";
 
 const connectionString = process.env.DATABASE_URL?.trim();
 if (!connectionString) throw new Error("DATABASE_URL_REQUIRED");
@@ -21,3 +21,6 @@ const adapter = new PrismaPg({
 });
 export const prisma = globalForPrisma.__powerchainPrisma ?? new PrismaClient({ adapter });
 if (process.env.NODE_ENV !== "production") globalForPrisma.__powerchainPrisma = prisma;
+
+export type PrismaTransactionClient = Prisma.TransactionClient;
+export type PrismaJsonValue = Prisma.InputJsonValue;

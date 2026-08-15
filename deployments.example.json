@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0",
+  "network": "mainnet",
+  "solana": {
+    "bridgeProgramId": "SET_REAL_PROGRAM_ID",
+    "pwrcMint": "SET_REAL_PWRC_TOKEN_2022_MINT",
+    "nttManager": "SET_REAL_NTT_MANAGER",
+    "nttTransceiver": "SET_REAL_NTT_TRANSCEIVER",
+    "wormholeEmitter": "SET_REAL_EMITTER"
+  },
+  "sui": {
+    "bridgePackageId": "SET_REAL_PACKAGE_ID",
+    "bridgeObjectId": "SET_REAL_SHARED_OBJECT_ID",
+    "wpwrcCoinType": "SET_REAL_WPWRC_COIN_TYPE",
+    "nttManager": "SET_REAL_NTT_MANAGER",
+    "nttTransceiver": "SET_REAL_NTT_TRANSCEIVER",
+    "wormholeEmitter": "SET_REAL_EMITTER"
+  }
+}

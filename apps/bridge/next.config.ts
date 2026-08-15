@@ -21,7 +21,7 @@ const config: NextConfig = {
   reactStrictMode: true,
   compress: true,
   productionBrowserSourceMaps: false,
-  transpilePackages: ["@powerchain/backend", "@powerchain/database", "@powerchain/runtime"],
+  transpilePackages: ["@powerchain/backend", "@powerchain/database", "@powerchain/runtime", "@powerchain/protocol"],
   serverExternalPackages: ["@prisma/adapter-pg", "@prisma/client", "pg"],
   experimental: { optimizePackageImports: ["@mysten/sui", "@solana/web3.js"] },
   async headers() { return [{ source: "/:path*", headers: securityHeaders }]; },

@@ -7,13 +7,15 @@ PowerChain Bridge stays at version `1.0.0`.
 The consolidated source tree passed all source-level production gates, including:
 
 - workspace/package/version integrity;
-- TypeScript/TSX syntax parsing across 239 source files;
+- TypeScript/TSX syntax parsing across 284 source files;
 - bridge core and runtime wiring;
 - claim/assets and claim/bridge orchestration;
 - RPC/data/provider checks;
 - wallet/portfolio and wallet-flow checks;
 - service-fee checks;
-- UI/UX checks;
+- UI/UX checks, including active navigation, route-level loading/error recovery and mobile wallet ergonomics;
+- Markdown MD012/MD022/MD032 structure checks;
+- runtime environment-file packaging guard;
 - canonical operation recovery/journal checks;
 - API registry/filesystem route coverage;
 - local relative import resolution;
@@ -62,7 +64,27 @@ pnpm db:migrate:deploy
 
 Live deployment additionally requires the real Solana/Sui RPC endpoints, PWRC/wPWRC identifiers, Wormhole NTT manager/transceiver deployment data, signer/HSM configuration, fee policy, and wallet execution tests. Source checks do not replace those external-system validations.
 
-
 ## 2026-08-15 pnpm 11.21.0 dependency-aware gate
 
 The source tree is pinned to `pnpm@11.21.0`. A direct `corepack prepare pnpm@11.21.0 --activate` was attempted in this execution environment and failed before installation because the registry request for `pnpm-11.21.0.tgz` could not be completed. Source-level production, migration-parity, environment, workspace-import, and TypeScript syntax gates pass; dependency-aware Prisma/Next gates must run where registry access is available.
+
+## 2026-08-15 UI/UX and release-artifact refinement
+
+This pass additionally completed the following source-level checks after the Bridge UI/UX changes:
+
+- TypeScript/TSX syntax gate: PASS;
+- type-hygiene gate: PASS;
+- Markdown structure gate with MD012/MD022/MD032: PASS;
+- workspace/import/environment-artifact gate: PASS;
+- Bridge UI/UX production gate: PASS;
+- Wallet UI/UX and wallet-flow gates: PASS;
+- wallet action-safety gate: PASS;
+- review/recovery gate: PASS;
+- claim/bridge orchestration UI/UX gate: PASS;
+- operation-recovery UI/UX gate: PASS;
+- protocol source gate: PASS;
+- full production source gate: PASS.
+
+The release tree now contains only environment templates; runtime `.env`, `.env.local`, and `.env.production` files were removed from the artifact and are rejected by the workspace source gate.
+
+The uploaded source still does not include `pnpm-lock.yaml`. This execution environment also runs Node `22.16.0`, has no installed pnpm binary, and cannot reach `registry.npmjs.org`, so a real pnpm dependency resolution, Prisma generation, Next.js typecheck, and production build cannot be truthfully marked PASS here. Generate and commit the lockfile with the pinned pnpm version in a network-enabled Node 24/26 environment before using frozen-lockfile CI.

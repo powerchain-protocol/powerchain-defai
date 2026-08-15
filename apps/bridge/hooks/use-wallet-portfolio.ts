@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { WalletPortfolioResponse } from "@/lib/types/wallet-api";
 
 export function useWalletPortfolio(solanaAddress?: string | null, suiAddress?: string | null) {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<WalletPortfolioResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const generation = useRef(0);

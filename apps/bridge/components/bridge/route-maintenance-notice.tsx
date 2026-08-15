@@ -1,3 +1,5 @@
+"use client";
+
 export function RouteMaintenanceNotice({ startsAt, endsAt, message, blocking = false }: { startsAt?: string | Date | null; endsAt?: string | Date | null; message?: string | null; blocking?: boolean }) {
   const start = toTime(startsAt); const end = toTime(endsAt); const now = Date.now();
   const active = start !== null && start <= now && (end === null || end > now);

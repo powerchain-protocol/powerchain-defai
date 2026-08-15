@@ -5,3 +5,24 @@ html { min-width: 320px; background: #f8fafc; }
 body { margin: 0; min-height: 100vh; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
 button, a, input, select { -webkit-tap-highlight-color: transparent; }
 :focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+@media (max-width: 639px) {
+  .wallet-icon-only .wallet-adapter-button {
+    width: 2.5rem;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    justify-content: center;
+  }
+  .wallet-icon-only .wallet-adapter-button-start-icon {
+    margin-right: 0;
+  }
+  .sui-wallet-compact button {
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    padding-inline: 0.7rem;
+  }
+}

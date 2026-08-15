@@ -50,6 +50,13 @@
       "idempotent": true
     },
     {
+      "name": "bridge.transfers.id.source.post",
+      "method": "POST",
+      "path": "/api/v1/bridge/transfers/:id/source",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
       "name": "claims.challenge.post",
       "method": "POST",
       "path": "/api/v1/claims/challenge",
@@ -137,6 +144,13 @@
       "name": "health.get",
       "method": "GET",
       "path": "/api/v1/health",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "integrations.get",
+      "method": "GET",
+      "path": "/api/v1/integrations",
       "auth": "public",
       "idempotent": true
     },

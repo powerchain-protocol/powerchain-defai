@@ -5,6 +5,13 @@ import { solscanTransactionUrl } from "../../lib/explorers/links";
 const ADDRESS = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
 
 function env(name: string) { return process.env[name]?.trim() || null; }
+type HeliusTransferRow = {
+  signature?: unknown; mint?: unknown; amount?: unknown; slot?: unknown; blockTime?: unknown; type?: unknown;
+  fromUserAccount?: unknown; toUserAccount?: unknown; decimals?: unknown; feeAmount?: unknown; confirmationStatus?: unknown;
+};
+type HeliusTransferResponse = { error?: { message?: string }; result?: { data?: unknown[]; paginationToken?: unknown } };
+function isTransferRow(value: unknown): value is HeliusTransferRow { return Boolean(value && typeof value === "object"); }
+
 
 export async function getPwrcTransfers(address: string, options: { paginationToken?: string | null; limit?: number } = {}) {
   if (!ADDRESS.test(address)) throw new Error("invalid Solana address");
@@ -29,7 +36,7 @@ export async function getPwrcTransfers(address: string, options: { paginationTok
       ...(options.paginationToken ? { paginationToken: options.paginationToken } : {}),
     }],
   };
-  const response = await fetchJson<any>(url, {
+  const response = await fetchJson<HeliusTransferResponse>(url, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(body),
@@ -45,8 +52,8 @@ export async function getPwrcTransfers(address: string, options: { paginationTok
     fallbackReason: null,
     paginationToken: typeof result.paginationToken === "string" ? result.paginationToken : null,
     transfers: result.data
-      .filter((row: any) => row && typeof row.signature === "string" && row.mint === mint && typeof row.amount === "string" && /^\d+$/.test(row.amount))
-      .map((row: any) => ({
+      .filter((row): row is HeliusTransferRow & { signature: string; amount: string } => isTransferRow(row) && typeof row.signature === "string" && row.mint === mint && typeof row.amount === "string" && /^\d+$/.test(row.amount))
+      .map((row) => ({
         signature: row.signature,
         slot: typeof row.slot === "number" ? row.slot : null,
         blockTime: typeof row.blockTime === "number" ? row.blockTime : null,

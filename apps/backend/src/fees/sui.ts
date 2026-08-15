@@ -1,9 +1,13 @@
-import { SuiClient } from "@mysten/sui/client";
+import { createPowerChainSuiClient } from "../sui/client";
 import type { ServiceFeeVerificationResult } from "./types";
 
+type BalanceChangeLike = { coinType?: unknown; amount?: unknown; owner?: unknown };
+
 function ownerAddress(owner: unknown): string | null {
+  if (typeof owner === "string") return owner;
   if (!owner || typeof owner !== "object") return null;
-  if ("AddressOwner" in owner && typeof (owner as { AddressOwner?: unknown }).AddressOwner === "string") return (owner as { AddressOwner: string }).AddressOwner;
+  const record = owner as Record<string, unknown>;
+  for (const key of ["AddressOwner", "addressOwner", "address"]) if (typeof record[key] === "string") return record[key] as string;
   return null;
 }
 
@@ -15,32 +19,33 @@ export async function verifySuiServiceFee(input: {
   expectedBaseUnits: string;
 }): Promise<ServiceFeeVerificationResult> {
   let lastError = "SERVICE_FEE_SUI_RPC_UNAVAILABLE";
-  for (const url of input.rpcUrls.filter(Boolean)) {
+  const candidates = input.rpcUrls.filter(Boolean);
+  for (const baseUrl of candidates.length ? candidates : [process.env.POWERCHAIN_SUI_GRPC_URL ?? ""]) {
+    if (!baseUrl) continue;
     try {
-      const client = new SuiClient({ url });
-      const tx = await client.getTransactionBlock({
+      const client = createPowerChainSuiClient({ ...process.env, POWERCHAIN_SUI_GRPC_URL: baseUrl });
+      const result = await client.core.waitForTransaction({
         digest: input.digest,
-        options: { showEffects: true, showBalanceChanges: true },
+        timeout: 15_000,
+        include: { effects: true, balanceChanges: true, transaction: true },
       });
-      const status = tx.effects?.status?.status;
-      if (status !== "success") {
-        return { verified: false, finalized: Boolean(tx.checkpoint), sourceTx: input.digest, expectedBaseUnits: input.expectedBaseUnits, recipient: input.recipient, errorCode: "SERVICE_FEE_SUI_TX_FAILED", evidence: { url, status } };
+      const tx = result.Transaction ?? result.FailedTransaction;
+      if (!tx || result.FailedTransaction || !tx.effects?.status?.success) {
+        return { verified: false, finalized: true, sourceTx: input.digest, expectedBaseUnits: input.expectedBaseUnits, recipient: input.recipient, errorCode: "SERVICE_FEE_SUI_TX_FAILED", evidence: { baseUrl } };
       }
-      if (!tx.checkpoint) { lastError = "SERVICE_FEE_SUI_TX_NOT_CHECKPOINTED"; continue; }
       let credited = 0n;
-      for (const change of tx.balanceChanges ?? []) {
-        if (change.coinType !== input.coinType) continue;
-        if (ownerAddress(change.owner) !== input.recipient) continue;
-        const amount = BigInt(change.amount);
+      for (const raw of (tx.balanceChanges ?? []) as unknown as BalanceChangeLike[]) {
+        if (raw.coinType !== input.coinType || ownerAddress(raw.owner) !== input.recipient) continue;
+        const amount = typeof raw.amount === "bigint" ? raw.amount : typeof raw.amount === "string" && /^-?\d+$/.test(raw.amount) ? BigInt(raw.amount) : 0n;
         if (amount > 0n) credited += amount;
       }
       const expected = BigInt(input.expectedBaseUnits);
       if (credited !== expected) {
-        return { verified: false, finalized: true, sourceTx: input.digest, expectedBaseUnits: input.expectedBaseUnits, recipient: input.recipient, errorCode: "SERVICE_FEE_SUI_AMOUNT_MISMATCH", evidence: { url, checkpoint: tx.checkpoint, creditedBaseUnits: credited.toString(), coinType: input.coinType } };
+        return { verified: false, finalized: true, sourceTx: input.digest, expectedBaseUnits: input.expectedBaseUnits, recipient: input.recipient, errorCode: "SERVICE_FEE_SUI_AMOUNT_MISMATCH", evidence: { baseUrl, creditedBaseUnits: credited.toString(), coinType: input.coinType } };
       }
-      return { verified: true, finalized: true, sourceTx: input.digest, expectedBaseUnits: input.expectedBaseUnits, recipient: input.recipient, evidence: { url, checkpoint: tx.checkpoint, creditedBaseUnits: credited.toString(), coinType: input.coinType } };
+      return { verified: true, finalized: true, sourceTx: input.digest, expectedBaseUnits: input.expectedBaseUnits, recipient: input.recipient, evidence: { baseUrl, creditedBaseUnits: credited.toString(), coinType: input.coinType } };
     } catch (error) {
-      lastError = error instanceof Error ? error.message : "SERVICE_FEE_SUI_RPC_ERROR";
+      lastError = error instanceof Error ? error.message : "SERVICE_FEE_SUI_GRPC_ERROR";
     }
   }
   return { verified: false, finalized: false, sourceTx: input.digest, expectedBaseUnits: input.expectedBaseUnits, recipient: input.recipient, errorCode: lastError, evidence: {} };

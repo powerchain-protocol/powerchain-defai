@@ -3,6 +3,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { PublicKey } from "@solana/web3.js";
 import { normalizeSuiAddress } from "@mysten/sui/utils";
 import { prisma } from "@powerchain/database/prisma";
+import type { PrismaJsonValue, PrismaTransactionClient } from "@powerchain/database/prisma";
 
 export type FeeChain = "SOLANA" | "SUI";
 
@@ -76,9 +77,9 @@ export async function createServiceFeePolicyProposal(input: {
     }
   }
   const expiresAt = new Date(Date.now() + 24 * 60 * 60_000);
-  return prisma.$transaction(async (tx) => {
+  return prisma.$transaction(async (tx: PrismaTransactionClient) => {
     const proposal = await tx.bridgeGovernanceProposal.create({ data: {
-      id: randomUUID(), kind: "SERVICE_FEE_POLICY_UPDATE", status: "PENDING", payload: input.payload as any,
+      id: randomUUID(), kind: "SERVICE_FEE_POLICY_UPDATE", status: "PENDING", payload: input.payload as unknown as PrismaJsonValue,
       payloadHash, idempotencyKey, proposedBy: input.proposedBy, requestId: input.requestId, expiresAt,
     }});
     await tx.bridgeAuditEvent.create({ data: {
@@ -89,13 +90,13 @@ export async function createServiceFeePolicyProposal(input: {
   });
 }
 
-async function lockFeeProposal(tx: any, id: string) {
-  await tx.$queryRawUnsafe('SELECT id FROM bridge_governance_proposals WHERE id = $1 FOR UPDATE', id);
+async function lockFeeProposal(tx: PrismaTransactionClient, id: string) {
+  await tx.$queryRaw`SELECT id FROM bridge_governance_proposals WHERE id = ${id} FOR UPDATE`;
   return tx.bridgeGovernanceProposal.findUnique({ where: { id } });
 }
 
 export async function applyServiceFeePolicyProposal(input: { id: string; approvedBy: string; requestId: string }) {
-  return prisma.$transaction(async (tx: any) => {
+  return prisma.$transaction(async (tx: PrismaTransactionClient) => {
     const proposal = await lockFeeProposal(tx, input.id);
     if (!proposal) throw new Error("GOVERNANCE_PROPOSAL_NOT_FOUND");
     if (proposal.kind !== "SERVICE_FEE_POLICY_UPDATE") throw new Error("GOVERNANCE_PROPOSAL_KIND_MISMATCH");
@@ -132,7 +133,7 @@ export async function applyServiceFeePolicyProposal(input: { id: string; approve
 }
 
 export async function rejectServiceFeePolicyProposal(input: { id: string; approvedBy: string; requestId: string; reason?: string }) {
-  return prisma.$transaction(async (tx: any) => {
+  return prisma.$transaction(async (tx: PrismaTransactionClient) => {
     const proposal = await lockFeeProposal(tx, input.id);
     if (!proposal) throw new Error("GOVERNANCE_PROPOSAL_NOT_FOUND");
     if (proposal.kind !== "SERVICE_FEE_POLICY_UPDATE") throw new Error("GOVERNANCE_PROPOSAL_KIND_MISMATCH");

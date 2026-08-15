@@ -8,13 +8,12 @@ export class BridgeActionError extends Error {
 }
 
 function requestId() {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
-  if (typeof crypto !== "undefined" && "getRandomValues" in crypto) {
-    const bytes = new Uint8Array(16);
-    crypto.getRandomValues(bytes);
-    return `pc-${Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
-  }
-  throw new BridgeActionError("CRYPTO_UNAVAILABLE", "Secure browser randomness is required for bridge actions.", 0);
+  const webCrypto = globalThis.crypto as Crypto | undefined;
+  if (!webCrypto) throw new BridgeActionError("CRYPTO_UNAVAILABLE", "Secure browser randomness is required for bridge actions.", 0);
+  if (typeof webCrypto.randomUUID === "function") return webCrypto.randomUUID();
+  const bytes = new Uint8Array(16);
+  webCrypto.getRandomValues(bytes);
+  return `pc-${Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
 }
 
 export function createIdempotencyKey(prefix = "bridge") {

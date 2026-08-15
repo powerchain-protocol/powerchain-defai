@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { WalletActivityPage } from "@/lib/types/wallet-api";
 
 export function useWalletActivityFeed(solanaAddress?: string | null, suiAddress?: string | null, limit = 25) {
-  const [pages, setPages] = useState<any[]>([]);
+  const [pages, setPages] = useState<WalletActivityPage[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

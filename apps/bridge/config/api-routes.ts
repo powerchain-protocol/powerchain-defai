@@ -44,6 +44,12 @@ export const API_ROUTES: readonly ApiRouteDefinition[] = [
     ]
   },
   {
+    "path": "/api/v1/bridge/transfers/:id/source",
+    "methods": [
+      "POST"
+    ]
+  },
+  {
     "path": "/api/v1/claims/challenge",
     "methods": [
       "POST"
@@ -117,6 +123,12 @@ export const API_ROUTES: readonly ApiRouteDefinition[] = [
   },
   {
     "path": "/api/v1/health",
+    "methods": [
+      "GET"
+    ]
+  },
+  {
+    "path": "/api/v1/integrations",
     "methods": [
       "GET"
     ]

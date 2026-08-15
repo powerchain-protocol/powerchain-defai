@@ -16,7 +16,7 @@ Canonical pins:
 - `.nvmrc`: `26.5.0`
 - `.node-version`: `26.5.0`
 - `packageManager`: `pnpm@11.21.0`
-- `engines.node`: `>=24.18.0 <27`
+- `engines.node`: `>=24.0.0 <27`
 
 The wider engine range intentionally retains Node 24 LTS production compatibility for providers that have not enabled Node 26 Current yet. Local development and CI that opt into the repository pin use Node 26.5.0.
 

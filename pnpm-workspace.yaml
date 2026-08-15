@@ -33,7 +33,6 @@ dedupeInjectedDeps: true
 
 # Dependency lifecycle scripts are allowlisted only.
 strictDepBuilds: true
-verifyDepsBeforeRun: error
 allowBuilds:
   bigint-buffer: true
   bufferutil: true

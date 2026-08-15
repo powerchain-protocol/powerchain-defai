@@ -1,8 +1,9 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { WalletChainOverview } from "@/lib/types/wallet-api";
 
 type Chain = "SOLANA" | "SUI";
-type State = { data: any; loading: boolean; error: string | null; updatedAt: number | null };
+type State = { data: WalletChainOverview | null; loading: boolean; error: string | null; updatedAt: number | null };
 
 export function useWalletChainData(chain: Chain, address?: string | null) {
   const [state, setState] = useState<State>({ data: null, loading: false, error: null, updatedAt: null });

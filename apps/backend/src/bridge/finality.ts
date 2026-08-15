@@ -1,4 +1,13 @@
 import { assertServiceFeeVerified } from "../fees/settlement";
-export async function finality(t:any){ await assertServiceFeeVerified(t.id);
-  return completeTransferAfterFinalityAndReconciliation({transferId:t.id}); }
-async function completeTransferAfterFinalityAndReconciliation(x:any){ return x; }
+
+export interface FinalizableTransfer { id: string }
+export interface CompletionRequest { transferId: string }
+
+export async function finality(transfer: FinalizableTransfer) {
+  await assertServiceFeeVerified(transfer.id);
+  return completeTransferAfterFinalityAndReconciliation({ transferId: transfer.id });
+}
+
+async function completeTransferAfterFinalityAndReconciliation(input: CompletionRequest): Promise<CompletionRequest> {
+  return input;
+}

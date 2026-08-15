@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { PwrcTransfersResponse } from "@/lib/types/wallet-api";
 
 export function usePwrcTransfers(address?: string | null, limit = 10) {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<PwrcTransfersResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const controller = useRef<AbortController | null>(null);

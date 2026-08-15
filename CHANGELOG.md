@@ -1,9 +1,23 @@
 # Changelog
+
 - Hardened pnpm 11.21.0 workspace configuration: local package linking/preference, workspace protocol saving, strict peers/engines/store integrity, cycle rejection, deterministic recursive installs, and workspace configuration validation.
 
 ## 1.0.0
 
+### Bridge UI/UX refinement
+
+- Moved the Wormhole NTT transfer surface ahead of secondary chain/runtime diagnostics on the primary Bridge page.
+- Added active-route navigation state, mobile scrollbar suppression and a keyboard-accessible skip link.
+- Added compact mobile wallet controls and a focus-trapped wallet chooser with Escape/backdrop close and focus restoration.
+- Added route-level Bridge and History loading/error states with safe recovery copy.
+- Added responsive History cards, validated status filtering and removed the `status as never` escape hatch.
+- Hardened live-chain response parsing so nested API data is narrowed from `unknown` before display.
+- Added an embedded Wormhole loading state and clearer NTT configuration failure presentation.
+- Added repository Markdown auto-fix plus MD012 enforcement alongside existing MD022/MD032 checks.
+- Removed ignored runtime `.env`, `.env.local`, and `.env.production` files from the release tree and added a workspace source gate preventing them from being packaged again.
+
 ### Operations hardening
+
 - Hard-bounded worker ticks; timeout now stops the worker fail-closed instead of permitting a later overlapping tick.
 - Cooperative shutdown checks between claim/fee jobs.
 - Explicit Prisma 7 PostgreSQL driver-adapter pool configuration.
@@ -49,10 +63,11 @@
 
 - Pin local Node.js to 26.5.0 via `.nvmrc` and `.node-version`.
 - Add nvm-aware local setup and runtime checks.
-- Keep production-compatible Node engine range `>=24.18.0 <27` so Node 24 LTS deployments remain supported while local development uses Node 26 Current.
+- Keep production-compatible Node engine range `>=24.0.0 <27` so Node 24 LTS deployments remain supported while local development uses Node 26 Current.
 - Keep pnpm pinned to 11.21.0.
 
 ### Production platform hardening
+
 - Added canonical `/api/v1/health`, `/api/v1/ready`, and `/api/v1/version` endpoints.
 - Added database readiness probe and graceful Prisma disconnect support.
 - Added worker tick timeouts and bounded cleanup timeouts to prevent hung workers during incidents or shutdown.
@@ -68,3 +83,25 @@
 - Unified claim mutation request IDs and response security headers.
 - Prisma and Supabase migration mirrors must now be byte-identical.
 - Added `pnpm failure-safety:production:check`.
+
+## TypeScript and Markdown build hardening
+
+- Removed deprecated TypeScript `baseUrl` usage and made path mappings explicit.
+- Added explicit Node/React ambient types to workspace tsconfig boundaries.
+- Fixed `exactOptionalPropertyTypes` pagination/cursor calls.
+- Added explicit Prisma transaction-client annotations and robust raw-query result typing.
+- Migrated legacy Sui client usage to the Sui SDK v2 JSON-RPC export path.
+- Audited `use client` boundaries and retained `server-only` for server modules.
+- Fixed Markdown MD022 and MD032 spacing across repository documentation.
+- Added `type-hygiene:production:check` to the production verification pipeline.
+- Added real wallet-signed Wormhole NTT bridge processing: independent Solana/Sui source and destination verification, Wormholescan NTT correlation, bridge worker leases/retries, source-transaction attachment, exact principal reconciliation, and fee-gated completion.
+
+## Compiler, protocol, and workspace recovery hardening
+
+- Accepted Node.js 24.x through 26.x at runtime while retaining Node 26.5.0 in `.nvmrc` for the preferred local toolchain.
+- Removed deprecated TypeScript `baseUrl` usage and kept explicit `paths` mappings.
+- Added the protocol package, Solana Anchor auxiliary intent program, Sui Move auxiliary intent package, integration registry, explorer helpers, transaction/signature/fee validation utilities, wallet provider, connect modal, and toast system.
+- Migrated Sui backend transaction verification to `SuiGrpcClient` and the Sui Core API.
+- Upgraded Prisma packages to 7.9.1 and made Prisma generation a prerequisite for direct Bridge/worker development and build entry points.
+- Added `pnpm doctor` and pnpm-only recovery tooling for workspaces contaminated by `npm update` or incomplete lifecycle installation.
+- Expanded production checks to cover the Bridge worker and `@powerchain/protocol` package explicitly.

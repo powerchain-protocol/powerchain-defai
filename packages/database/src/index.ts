@@ -28,7 +28,7 @@ export async function closeDatabase() {
 
 export async function getWorkerReadiness(input: { requiredTypes?: string[]; maxAgeMs?: number } = {}) {
   const { prisma } = await import("./prisma");
-  const requiredTypes = input.requiredTypes ?? ["claims", "fees"];
+  const requiredTypes = input.requiredTypes ?? ["claims", "fees", "bridge"];
   const maxAgeMs = Math.max(5_000, Math.min(300_000, input.maxAgeMs ?? 60_000));
   const rows = await prisma.workerHeartbeat.findMany({
     where: { workerType: { in: requiredTypes } },

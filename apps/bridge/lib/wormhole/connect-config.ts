@@ -39,15 +39,11 @@ export function readPowerChainConnectConfig(): config.WormholeConnectConfig | nu
   if (Object.keys(tokensConfig).length < 2) throw new Error("PWRC_WPWRC_TOKEN_METADATA_REQUIRED");
 
   const { ntt: _ntt, routes: _routes, ...serializable } = raw;
-  return {
-    ...(serializable as config.WormholeConnectConfig),
-    network: (raw.network === "Testnet" || raw.network === "Devnet" ? raw.network : "Mainnet") as config.WormholeConnectConfig["network"],
+  const result = Object.assign({}, serializable, {
+    network: raw.network === "Testnet" || raw.network === "Devnet" ? raw.network : "Mainnet",
     chains: ["Solana", "Sui"],
     routes: [nttExecutorRoute({ ntt: ntt as never })],
-    ui: {
-      ...(object(raw.ui ?? {}, "INVALID_WORMHOLE_UI_CONFIG") as never),
-      title: "PowerChain Bridge",
-      disableUserInputtedTokens: true,
-    },
-  };
+    ui: { title: "PowerChain Bridge", disableUserInputtedTokens: true },
+  });
+  return result as unknown as config.WormholeConnectConfig;
 }

@@ -26,7 +26,10 @@
         "../../packages/database/src/*"
       ]
     },
-    "baseUrl": "."
+    "types": [
+      "node",
+      "react"
+    ]
   },
   "include": [
     "next-env.d.ts",

@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { prisma } from "@powerchain/database/prisma";
+import type { PrismaTransactionClient } from "@powerchain/database/prisma";
 import { matchServiceFeePolicyForQuote } from "./policy";
 import type { ServiceFeeChain } from "./types";
 
@@ -44,7 +45,7 @@ export async function ensureServiceFeeSettlementForTransfer(transferId: string) 
   });
 
   try {
-    return await prisma.$transaction(async (tx) => {
+    return await prisma.$transaction(async (tx: PrismaTransactionClient) => {
       const settlement = await tx.bridgeServiceFeeSettlement.create({
         data: {
           id: randomUUID(),

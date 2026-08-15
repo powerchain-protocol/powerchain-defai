@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "node --env-file-if-exists=../../.env --env-file-if-exists=../../.env.local --import tsx --watch src/main.ts",
     "start": "node --env-file-if-exists=../../.env --env-file-if-exists=../../.env.local --import tsx src/main.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "predev": "pnpm -w prisma:generate",
+    "prestart": "pnpm -w prisma:generate",
+    "pretypecheck": "pnpm -w prisma:generate"
   },
   "dependencies": {
     "@powerchain/backend": "workspace:*",

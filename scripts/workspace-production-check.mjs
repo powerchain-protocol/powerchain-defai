@@ -12,10 +12,12 @@ const readJson = (file) => JSON.parse(fs.readFileSync(file, "utf8"));
 const packageFiles = [
   "package.json",
   "apps/bridge/package.json",
+  "apps/worker-bridge/package.json",
   "apps/worker-claims/package.json",
   "apps/worker-fees/package.json",
   "apps/backend/package.json",
   "packages/database/package.json",
+  "packages/protocol/package.json",
   "packages/runtime/package.json",
 ];
 for (const rel of packageFiles) {
@@ -42,6 +44,18 @@ for (const file of tsconfigFiles) {
   const target = path.resolve(path.dirname(file), data.extends);
   const candidates = [target, `${target}.json`, path.join(target, "tsconfig.json")];
   check(candidates.some(fs.existsSync), `${path.relative(root, file)} extends an existing config`);
+}
+
+const forbiddenRuntimeEnvFiles = [
+  ".env",
+  ".env.local",
+  ".env.production",
+  "apps/bridge/.env",
+  "apps/bridge/.env.local",
+  "apps/bridge/.env.production",
+];
+for (const rel of forbiddenRuntimeEnvFiles) {
+  check(!fs.existsSync(path.join(root, rel)), `${rel} is not packaged in the source tree`);
 }
 
 for (const rel of [".env.example", "apps/bridge/.env.example"]) {
@@ -90,7 +104,7 @@ check(runtime.includes("parseBoundedInteger"), "shared runtime provides bounded 
 check(runtime.includes("AbortController"), "worker supervisor has cooperative shutdown signal");
 check(runtime.includes("POWERCHAIN_WORKER_TICK_FAILED"), "worker supervisor emits structured failure logs");
 
-for (const rel of ["apps/worker-fees/src/main.ts", "apps/worker-claims/src/main.ts"]) {
+for (const rel of ["apps/worker-bridge/src/main.ts", "apps/worker-fees/src/main.ts", "apps/worker-claims/src/main.ts"]) {
   const text = fs.readFileSync(path.join(root, rel), "utf8");
   check(text.includes("parseBoundedInteger"), `${rel} uses bounded environment parsing`);
 }

@@ -1,4 +1,5 @@
 import { prisma } from "@powerchain/database/prisma";
+import type { PrismaTransactionClient } from "@powerchain/database/prisma";
 
 export interface ServiceFeeLeaseClaim {
   transferId: string;
@@ -20,18 +21,17 @@ export async function claimServiceFeeVerificationBatch(input: {
   const leaseMs = Math.max(10_000, Math.min(300_000, Math.trunc(input.leaseMs ?? 60_000)));
   const leaseUntil = new Date(Date.now() + leaseMs);
 
-  return prisma.$transaction(async (tx: any) => {
-    const rows = await tx.$queryRawUnsafe<Array<{ id: string; transfer_id: string }>>(
-      `SELECT id, transfer_id
-         FROM bridge_service_fee_settlements
-        WHERE status IN ('ASSESSED','SUBMITTED','RETRY_WAIT')
-          AND (next_retry_at IS NULL OR next_retry_at <= NOW())
-          AND (verification_lease_until IS NULL OR verification_lease_until <= NOW())
-        ORDER BY COALESCE(next_retry_at, created_at), created_at, id
-        FOR UPDATE SKIP LOCKED
-        LIMIT $1`,
-      limit,
-    );
+  return prisma.$transaction(async (tx: PrismaTransactionClient) => {
+    const rows = (await tx.$queryRaw`
+      SELECT id, transfer_id
+        FROM bridge_service_fee_settlements
+       WHERE status IN ('ASSESSED','SUBMITTED','RETRY_WAIT')
+         AND (next_retry_at IS NULL OR next_retry_at <= NOW())
+         AND (verification_lease_until IS NULL OR verification_lease_until <= NOW())
+       ORDER BY COALESCE(next_retry_at, created_at), created_at, id
+       FOR UPDATE SKIP LOCKED
+       LIMIT ${limit}
+    `) as Array<{ id: string; transfer_id: string }>;
     if (rows.length === 0) return [];
     const ids = rows.map((row) => row.id);
     await tx.bridgeServiceFeeSettlement.updateMany({

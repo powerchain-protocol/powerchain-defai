@@ -24,7 +24,7 @@ Production source for **PWRC ↔ wPWRC** bridging between Solana and Sui using W
 
 ## Requirements
 
-- Node.js 26.5.0 for local development via nvm (`.nvmrc`); supported runtime range is >=24.18.0 <27
+- Node.js 26.5.0 for local development via nvm (`.nvmrc`); supported runtime range is >=24.0.0 <27
 - pnpm 11.21.0
 - PostgreSQL / Supabase-compatible PostgreSQL
 - Dedicated Solana primary + independent fallback RPC
@@ -33,7 +33,6 @@ Production source for **PWRC ↔ wPWRC** bridging between Solana and Sui using W
 - Real deployed Wormhole NTT manager/transceiver/token configuration
 
 No custom NTT address or program ID is invented by this repository. Missing production deployment configuration fails closed.
-
 
 ### Node / nvm
 
@@ -47,7 +46,7 @@ pnpm node:check
 pnpm nvm:check
 ```
 
-The package engine range remains `>=24.18.0 <27` so the repository can run on Node 24 LTS in production platforms that have not enabled Node 26 yet, while local development tracks the latest Node 26 Current release.
+The package engine range remains `>=24.0.0 <27` so the repository can run on Node 24 LTS in production platforms that have not enabled Node 26 yet, while local development tracks the latest Node 26 Current release.
 
 ## Setup
 
@@ -113,6 +112,19 @@ The browser uses one canonical session recovery key/channel:
 
 It stores recovery metadata only. It does not contain keys, signatures, authorization proofs or provider credentials. Existing legacy suffixed keys are import-only compatibility aliases and are immediately normalized into the canonical key.
 
+## Documentation and UI quality
+
+The Bridge UI keeps the Wormhole NTT transfer action ahead of secondary diagnostics, exposes active navigation state, provides compact mobile wallet controls, and includes recoverable Bridge/History loading and error states. See `docs/UI_UX_REFINEMENT.md`.
+
+Markdown quality is enforced in the repository rather than suppressed:
+
+```bash
+pnpm docs:fix
+pnpm docs:lint
+```
+
+The Markdown gate includes MD012, MD022 and MD032 spacing checks.
+
 ## Production verification
 
 ```bash
@@ -137,8 +149,27 @@ The full-production gate checks versions, routes, workers, DB-backed bridge/clai
 - `prisma/` — canonical Prisma schema and migrations.
 - `supabase/migrations/` — mirrored SQL migration set for Supabase deployments.
 
-The root `.env.example` is the canonical environment contract. The bridge app contains the same browser/server template because Next.js loads environment files from its application root when run as a filtered workspace.
+The root `.env.example` is the canonical environment contract. The bridge app contains the same browser/server template because Next.js loads environment files from its application root when run as a filtered workspace. Release/source archives must not contain `.env`, `.env.local`, or `.env.production`; deployment values belong in the runtime secret/configuration system.
 
 ## Workspace hardening
 
 See `docs/WORKSPACE.md` for canonical pnpm 11.21.0 workspace settings, local linking, strict dependency checks, and CI lockfile policy.
+
+## Protocol programs and integrations
+
+- `programs/solana/powerchain_bridge` — auxiliary Anchor intent/audit program. It does not replace Wormhole NTT.
+- `contracts/sui/powerchain_bridge` — auxiliary Sui Move intent/audit package.
+- `packages/protocol` — canonical addresses, explorer helpers, signatures, fees, transaction IDs, validation and integration registry.
+- `apps/bridge/config/integrations.ts` — browser-safe enablement flags for Cetus, Orca, Walrus, Meteora, Raydium and Jupiter.
+- `apps/backend/src/bridge` — direct finalized-chain verification and Wormhole NTT correlation.
+
+Custom PowerChain program/package IDs are placeholders until real deployments
+are supplied. `pnpm protocol:sync` writes deployment IDs from environment values;
+production validation must not treat placeholders as deployed addresses.
+
+## Mixed npm/pnpm recovery
+
+Do not run `npm update` in this workspace. If npm has already populated
+`node_modules`, use `pnpm clean:package-manager`, remove workspace
+`node_modules` folders, and run `pnpm install` again. See
+`docs/BUILD_RECOVERY.md`.

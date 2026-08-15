@@ -3,6 +3,7 @@ import bs58 from "bs58";
 import { Connection, PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js";
 import { TOKEN_2022_PROGRAM_ID, createAssociatedTokenAccountIdempotentInstruction, createTransferCheckedInstruction, getAssociatedTokenAddressSync } from "@solana/spl-token";
 import { prisma } from "@powerchain/database/prisma";
+import type { PrismaTransactionClient } from "@powerchain/database/prisma";
 
 const MEMO_PROGRAM_ID = new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
 const PWRC_DECIMALS = 9;
@@ -114,7 +115,7 @@ export async function verifyClaimPayout(claimId: string) {
 export async function finalizeClaimPayout(claimId: string) {
   const evidence = await verifyClaimPayout(claimId);
   if (!evidence.finalized) return null;
-  return prisma.$transaction(async (tx) => {
+  return prisma.$transaction(async (tx: PrismaTransactionClient) => {
     const claim = await tx.claim.findUnique({ where: { id: claimId } });
     if (!claim) throw new Error("CLAIM_NOT_FOUND");
     if (claim.status === "FINALIZED") return claim;

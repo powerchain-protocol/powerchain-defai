@@ -1,0 +1,10 @@
+[package]
+name = "powerchain_bridge"
+version = "1.0.0"
+edition = "2024"
+
+[addresses]
+powerchain_bridge = "0x0" # PLACEHOLDER: replaced by Sui publish/deployment metadata
+
+[dependencies]
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "mainnet" }
