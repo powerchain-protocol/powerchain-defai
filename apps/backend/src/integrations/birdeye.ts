@@ -1,0 +1,4 @@
+import { fetchIntegrationJson } from "./http";import { integrationEndpoints } from "../config/endpoints";
+function key(){const value=process.env.BIRDEYE_API_KEY?.trim()||process.env.POWERCHAIN_BIRDEYE_API_KEY?.trim();if(!value)throw new Error("BIRDEYE_API_KEY_REQUIRED");return value}
+export async function fetchBirdeyePrices(addresses:readonly string[],chain:"solana"|"sui"="solana"){if(addresses.length<1||addresses.length>100)throw new Error("BIRDEYE_ADDRESS_COUNT_INVALID");const url=new URL(`${process.env.BIRDEYE_API_URL?.trim()||integrationEndpoints().birdeye}/defi/multi_price`);url.searchParams.set("list_address",addresses.join(","));return fetchIntegrationJson<unknown>(url.toString(),{headers:{"X-API-KEY":key(),"x-chain":chain}})}
+export function birdeyeStatus(){return{provider:"birdeye" as const,configured:Boolean(process.env.BIRDEYE_API_KEY?.trim()||process.env.POWERCHAIN_BIRDEYE_API_KEY?.trim()),batchLimit:100}}

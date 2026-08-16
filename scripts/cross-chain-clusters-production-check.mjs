@@ -1,0 +1,15 @@
+import fs from "node:fs";
+import path from "node:path";
+const root=process.cwd(); const read=(p)=>fs.readFileSync(path.join(root,p),"utf8"); const exists=(p)=>fs.existsSync(path.join(root,p));
+const required=["clusters/package.json","clusters/src/index.ts","shared/blockchain/package.json","shared/blockchain/src/index.ts","shared/blockchain/src/addresses.ts","shared/blockchain/src/routes.ts","apps/backend/src/services/blockchains.ts","apps/bridge/app/api/v1/blockchains/route.ts","apps/bridge/app/api/v1/clusters/route.ts","docs/CROSS_CHAIN_CLUSTERS.md"];
+for(const file of required) if(!exists(file)) throw new Error(`CROSS_CHAIN_FOUNDATION_MISSING:${file}`);
+const clusters=read("clusters/src/index.ts"); for(const token of ["solana:mainnet","solana:testnet","solana:devnet","solana:localnet","sui:mainnet","sui:testnet","sui:devnet","sui:localnet","mainnet-beta","grpc-core"]) if(!clusters.includes(token)) throw new Error(`CLUSTER_REGISTRY_MISSING:${token}`);
+const addresses=read("shared/blockchain/src/addresses.ts"); for(const token of ["bs58.decode","length === 32","normalizeSuiAddress","padStart(64","normalizeSuiCoinType"]) if(!addresses.includes(token)) throw new Error(`ADDRESS_NORMALIZATION_MISSING:${token}`);
+const routes=read("shared/blockchain/src/routes.ts"); for(const token of ["SOLANA_TO_SUI","SUI_TO_SOLANA","CROSS_CHAIN_DESTINATION_MUST_DIFFER"]) if(!routes.includes(token)) throw new Error(`CROSS_CHAIN_ROUTE_MISSING:${token}`);
+const payer=read("apps/backend/src/payments/payer.ts"); if(!payer.includes("normalizeChainAddress")) throw new Error("PAYER_MUST_USE_SHARED_CHAIN_NORMALIZER");
+const bridgeOps=read("apps/bridge/server/services/bridge-operations.ts"); if(!bridgeOps.includes("normalizeChainAddress")||bridgeOps.includes("new PublicKey(value.trim())")) throw new Error("BRIDGE_ADDRESS_NORMALIZATION_NOT_SHARED");
+const suiClient=read("apps/backend/src/sui/client.ts"); if(!suiClient.includes("parseSuiNetwork")) throw new Error("SUI_CLIENT_CLUSTER_REGISTRY_NOT_WIRED");
+const rpc=read("apps/backend/src/services/rpc.ts"); if(!rpc.includes("activeClusters")||!rpc.includes("solanaConfig")||!rpc.includes("suiConfig")) throw new Error("RPC_CLUSTER_CONTEXT_MISSING");
+const blockchains=read("apps/backend/src/services/blockchains.ts"); for(const token of ["CROSS_CHAIN_PAIRS","POWERCHAIN_CLUSTERS","wormhole-ntt","authoritativeForBridgeAccounting: false"]) if(!blockchains.includes(token)) throw new Error(`BLOCKCHAIN_SERVICE_MISSING:${token}`);
+const protocol=read("packages/protocol/src/index.ts"); if(!protocol.includes("@powerchain/blockchain")) throw new Error("PROTOCOL_BLOCKCHAIN_REEXPORT_MISSING");
+console.log("cross-chain/clusters production: PASS — shared Solana/Sui clusters, addresses and cross-chain direction policy wired");

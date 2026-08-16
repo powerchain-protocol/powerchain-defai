@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { enforceBridgeRuntimeRequest } from "@/server/http/bridge-runtime-guard";
-import { createClaimChallenge } from "@/server/services/claim-service";
+import { createClaimChallenge } from "@powerchain/backend";
 export const dynamic = "force-dynamic";
 export async function POST(request: Request) {
   const blocked = await enforceBridgeRuntimeRequest("claim"); if (blocked) return blocked;

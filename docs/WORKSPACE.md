@@ -1,6 +1,6 @@
 # Workspace
 
-PowerChain Bridge is a pnpm 11.21.0 workspace. The root `pnpm-workspace.yaml` is the canonical project-level pnpm configuration; `.npmrc` contains registry/auth-compatible settings only.
+PowerChain Bridge is a pnpm 11.22.0 workspace. The root `pnpm-workspace.yaml` is the canonical project-level pnpm configuration; `.npmrc` contains registry/auth-compatible settings only.
 
 ## Layout
 
@@ -26,4 +26,4 @@ pnpm install:ci         # CI/reproducible install after pnpm-lock.yaml exists
 pnpm build:production
 ```
 
-Production/CI should commit `pnpm-lock.yaml` and use `pnpm install:ci`. Vercel can switch from `--no-frozen-lockfile` to `--frozen-lockfile` after the lockfile is generated with pnpm 11.21.0.
+Production/CI should commit `pnpm-lock.yaml` and use `pnpm install:ci`. Vercel can switch from `--no-frozen-lockfile` to `--frozen-lockfile` after the lockfile is generated with pnpm 11.22.0.

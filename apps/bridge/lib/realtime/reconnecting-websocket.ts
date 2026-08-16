@@ -26,6 +26,8 @@ export type RealtimeStats = {
   lastMessageAt?: number;
   lastCloseAt?: number;
   lastPongAt?: number;
+  endpointIndex: number;
+  endpointCount: number;
 };
 
 export class ReconnectingWebSocket {
@@ -51,17 +53,33 @@ export class ReconnectingWebSocket {
   private lastCloseAt: number | undefined;
   private lastPongAt: number | undefined;
   private readonly listeners = new Map<string, Set<(event: Event) => void>>();
+  private endpointIndex = 0;
 
-  constructor(private readonly url: () => string, private readonly options: ReconnectingWebSocketOptions = {}) {}
+  constructor(private readonly url: () => string | readonly string[], private readonly options: ReconnectingWebSocketOptions = {}) {}
+
+  private urls() {
+    const value = this.url();
+    const candidates = (Array.isArray(value) ? value : [value]).map((item) => item.trim()).filter(Boolean);
+    if (!candidates.length) throw new Error("REALTIME_WEBSOCKET_URL_REQUIRED");
+    return [...new Set(candidates)];
+  }
+
+  private currentUrl() {
+    const urls = this.urls();
+    const index = this.endpointIndex % urls.length;
+    return { url: urls[index]!, index, count: urls.length };
+  }
 
   connect() {
     if (typeof window === "undefined" || this.stopped || this.socket?.readyState === WebSocket.OPEN || this.socket?.readyState === WebSocket.CONNECTING) return;
     this.connectionAttempts += 1;
     this.emitState("connecting");
-    const socket = new WebSocket(this.url(), this.options.protocols);
+    const selected = this.currentUrl();
+    const socket = new WebSocket(selected.url, this.options.protocols);
     this.socket = socket;
     socket.addEventListener("open", () => {
       this.attempt = 0;
+      this.endpointIndex = selected.index;
       this.lastOpenAt = Date.now();
       this.emitState("open");
       this.startHeartbeat();
@@ -113,6 +131,8 @@ export class ReconnectingWebSocket {
       ...(this.lastMessageAt === undefined ? {} : { lastMessageAt: this.lastMessageAt }),
       ...(this.lastCloseAt === undefined ? {} : { lastCloseAt: this.lastCloseAt }),
       ...(this.lastPongAt === undefined ? {} : { lastPongAt: this.lastPongAt }),
+      endpointIndex: this.currentUrl().index,
+      endpointCount: this.currentUrl().count,
     };
   }
 
@@ -142,6 +162,7 @@ export class ReconnectingWebSocket {
       this.emitState("exhausted");
       return;
     }
+    this.endpointIndex = (this.endpointIndex + 1) % this.urls().length;
     const min = Math.max(250, this.options.minDelayMs ?? 750);
     const max = Math.max(min, this.options.maxDelayMs ?? 30_000);
     const delay = Math.min(max, min * 2 ** Math.min(this.attempt++, 6));

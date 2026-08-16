@@ -232,3 +232,101 @@ console.log("POWERCHAIN_UIUX_FULLY_WIRED_CHECK_PASS version=1.0.0");
   if (!hook.includes("canOpenWalletSignature") || !hook.includes("!stale")) fail("wallet signing must respect runtime freshness");
 }
 console.log("POWERCHAIN_UIUX_RUNTIME_EXECUTION_CHECK_PASS version=1.0.0");
+
+// Application-shell coherence: route boundaries, navigation, footer, and reduced-motion safety.
+for (const rel of [
+  "apps/bridge/app/not-found.tsx",
+  "apps/bridge/app/claim/loading.tsx",
+  "apps/bridge/app/claim/error.tsx",
+  "apps/bridge/app/wallet/loading.tsx",
+  "apps/bridge/app/wallet/error.tsx",
+  "apps/bridge/app/integrations/loading.tsx",
+  "apps/bridge/app/integrations/error.tsx",
+  "apps/bridge/components/navigation/app-footer.tsx",
+]) mustExist(rel);
+mustContain("apps/bridge/app/layout.tsx", "<AppFooter />");
+mustContain("apps/bridge/app/layout.tsx", 'href="#main-content"');
+mustContain("apps/bridge/app/not-found.tsx", "No wallet action or transfer was submitted");
+mustContain("apps/bridge/app/globals.css", "prefers-reduced-motion: reduce");
+mustContain("apps/bridge/app/integrations/page.tsx", "Wormhole NTT is the only cross-chain principal movement protocol");
+mustContain("apps/bridge/app/history/page.tsx", "Clear filters");
+console.log("POWERCHAIN_UIUX_APP_SHELL_CHECK_PASS version=1.0.0");
+
+// PowerChain dashboard redesign: canonical local artwork, responsive shell, live settlement evidence, and recent operations.
+for (const rel of [
+  "apps/bridge/components/navigation/app-sidebar.tsx",
+  "apps/bridge/components/navigation/mobile-bottom-navigation.tsx",
+  "apps/bridge/components/navigation/brand-logo.tsx",
+  "apps/bridge/components/bridge/network-settlement-overview.tsx",
+  "apps/bridge/components/bridge/recent-transfers-card.tsx",
+  "apps/bridge/components/bridge/bridge-trust-strip.tsx",
+  "apps/bridge/public/brand/logo-dark.png",
+  "apps/bridge/public/brand/logo-white.png",
+  "apps/bridge/public/brand/logo-green.png",
+  "apps/bridge/public/tokens/pwrc.png",
+  "apps/bridge/public/tokens/wpwrc.png",
+  "apps/bridge/app/icon.png",
+]) mustExist(rel);
+mustContain("apps/bridge/app/layout.tsx", "<AppSidebar />");
+mustContain("apps/bridge/app/layout.tsx", "<MobileBottomNavigation />");
+mustContain("apps/bridge/app/bridge/page.tsx", "<NetworkSettlementOverview />");
+mustContain("apps/bridge/app/bridge/page.tsx", "<RecentTransfersCard />");
+mustContain("apps/bridge/components/bridge/wormhole-ntt-panel.tsx", "/tokens/wpwrc.png");
+mustContain("apps/bridge/components/bridge/wormhole-ntt-panel.tsx", "/tokens/pwrc.png");
+mustContain("apps/bridge/components/bridge/network-settlement-overview.tsx", "No synthetic TPS, TVL, success-rate");
+mustContain("apps/bridge/components/bridge/recent-transfers-card.tsx", "/api/v1/bridge/history?limit=5");
+const shellCss = read("apps/bridge/app/globals.css");
+for (const token of [".pc-glass", ".pc-cinematic-panel", ".pc-button-light", ".pc-button-primary", "linear-gradient", "backdrop-filter"]) if (!shellCss.includes(token)) fail(`cinematic theme primitive missing ${token}`);
+if (shellCss.includes("#22c55e") || shellCss.includes("emerald")) fail("cinematic palette must not use emerald/bright-green tokens");
+console.log("POWERCHAIN_UIUX_DASHBOARD_REDESIGN_CHECK_PASS version=1.0.0");
+
+// Navigation and live-operation polish: consistent SVG navigation, abort-safe refresh, and visible data freshness.
+for (const rel of [
+  "apps/bridge/components/navigation/navigation-icon.tsx",
+  "apps/bridge/components/navigation/app-sidebar.tsx",
+  "apps/bridge/components/navigation/mobile-bottom-navigation.tsx",
+  "apps/bridge/components/navigation/mobile-navigation-menu.tsx",
+]) mustExist(rel);
+mustContain("apps/bridge/components/navigation/app-sidebar.tsx", "<NavigationIcon");
+mustContain("apps/bridge/components/navigation/mobile-bottom-navigation.tsx", "<NavigationIcon");
+mustContain("apps/bridge/components/navigation/mobile-navigation-menu.tsx", "<NavigationIcon");
+mustContain("apps/bridge/components/bridge/recent-transfers-card.tsx", "activeController.current?.abort()");
+mustContain("apps/bridge/components/bridge/recent-transfers-card.tsx", "Refreshing…");
+mustContain("apps/bridge/components/bridge/recent-transfers-card.tsx", "Showing the last successful transfer snapshot");
+mustContain("apps/bridge/components/bridge/provider-status-strip.tsx", "Checked {freshness}");
+console.log("POWERCHAIN_UIUX_NAVIGATION_REFRESH_CHECK_PASS version=1.0.0");
+
+// Provider/fallback truthfulness and bridge refresh ergonomics.
+mustContain("apps/bridge/lib/wormhole/connect-config.ts", "Parameters<typeof nttExecutorRoute>[0]");
+if (read("apps/bridge/lib/wormhole/connect-config.ts").includes("as never")) fail("Wormhole NTT config must not use as never escape hatches");
+mustContain("apps/bridge/hooks/use-provider-health.ts", "refreshing");
+mustContain("apps/bridge/components/bridge/provider-status-strip.tsx", 'aria-busy={refreshing}');
+mustContain("apps/bridge/components/bridge/provider-status-strip.tsx", 'disabled={refreshing}');
+mustContain("apps/backend/src/sui/client.ts", "healthyEndpointCount");
+mustContain("apps/backend/src/sui/client.ts", "Promise.all(endpoints.map");
+mustContain("apps/bridge/server/services/provider-health.ts", "healthyEndpointCount >= 2");
+mustContain("apps/bridge/components/bridge/network-settlement-overview.tsx", "Healthy endpoints");
+mustContain("apps/bridge/components/bridge/active-transfer-banner.tsx", "top-20");
+console.log("POWERCHAIN_UIUX_PROVIDER_REDUNDANCY_CHECK_PASS version=1.0.0");
+const providerHealthService = read("apps/bridge/server/services/provider-health.ts");
+const settlementOverview = read("apps/bridge/components/bridge/network-settlement-overview.tsx");
+const providerHook = read("apps/bridge/hooks/use-provider-health.ts");
+const mobileActionBar = read("apps/bridge/components/bridge/mobile-action-bar.tsx");
+if (!providerHealthService.includes('endpoint.healthy && endpoint.circuit === "closed"')) fail("Provider readiness must count only healthy closed-circuit endpoints");
+if (!providerHealthService.includes('redundancy: "none" as const, configuredEndpoints: suiEndpointCount')) fail("Failed Sui health probes must not claim configured endpoints as live redundancy");
+for (const required of ["Fallback readiness", "Endpoint diagnostics", "Healthy endpoints"]) if (!settlementOverview.includes(required)) fail(`Network settlement overview missing ${required}`);
+if (!providerHook.includes('window.addEventListener("offline", onOffline)') || !providerHook.includes('online,')) fail("Provider health hook must expose browser offline state");
+if (mobileActionBar.includes("backdrop-blur")) fail("Mobile action bar must use a solid surface instead of backdrop blur");
+console.log("POWERCHAIN_UIUX_ENDPOINT_DIAGNOSTICS_CHECK_PASS version=1.0.0");
+
+// Cinematic transaction workspace and explicit pre-wallet review boundary.
+mustContain("apps/bridge/components/trade/trade-workspace.tsx", "Finality verified");
+mustContain("apps/bridge/components/trade/trade-workspace.tsx", "Cetus-routed swap");
+mustContain("apps/bridge/components/trade/swap-interface.tsx", "Review swap");
+mustContain("apps/bridge/components/trade/swap-interface.tsx", "Confirm & open wallet");
+mustContain("apps/bridge/components/trade/swap-interface.tsx", "Aggregator route deviation");
+mustContain("apps/bridge/components/trade/swap-interface.tsx", "Payer & signer");
+mustContain("apps/bridge/components/trade/swap-interface.tsx", 'aria-modal="true"');
+if (!shellCss.includes("@keyframes trade-reveal") || !shellCss.includes(".pc-review-sheet")) fail("cinematic transaction transition/review primitives missing");
+console.log("POWERCHAIN_UIUX_TRANSACTION_REVIEW_CHECK_PASS version=1.0.0");
+

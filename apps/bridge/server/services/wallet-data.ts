@@ -1,3 +1,4 @@
+import { normalizeTransactionId } from "@powerchain/backend/services/transactions";
 import "server-only";
 
 import { getSolanaRpc, getSuiRpc } from "../rpc/providers";
@@ -8,12 +9,7 @@ import {
   heliusApiConfigured,
 } from "./helius";
 import { fetchJson } from "../../lib/data/http-client";
-import {
-  solscanAccountUrl,
-  solscanTransactionUrl,
-  suiscanAccountUrl,
-  suiscanTransactionUrl,
-} from "../../lib/explorers/links";
+import { solscanAccountUrl, solscanTransactionUrl, suiscanAccountUrl, suiscanTransactionUrl } from "@powerchain/backend/services/explorer";
 
 const SOLANA_ADDRESS = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
 const SOLANA_SIGNATURE = /^[1-9A-HJ-NP-Za-km-z]{64,100}$/;
@@ -298,7 +294,7 @@ export async function getSuiWalletOverview(addressInput: string, options: { curs
 }
 
 export async function getSolanaTransactionDetails(signature: string) {
-  if (!SOLANA_SIGNATURE.test(signature)) throw new Error("invalid Solana transaction signature");
+  signature = normalizeTransactionId("SOLANA", signature);
   const rpc = getSolanaRpc();
   const transaction = await rpc.client.request<unknown>(
     "getTransaction",
@@ -316,7 +312,7 @@ export async function getSolanaTransactionDetails(signature: string) {
 }
 
 export async function getSuiTransactionDetails(digest: string) {
-  if (!SUI_DIGEST.test(digest)) throw new Error("invalid Sui transaction digest");
+  digest = normalizeTransactionId("SUI", digest);
   const graphqlUrl = suiGraphqlUrl();
   if (graphqlUrl) {
     try {

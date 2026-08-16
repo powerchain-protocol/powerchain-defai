@@ -1,16 +1,14 @@
-import { closeDatabase, heartbeatWorker, removeWorkerHeartbeat } from "@powerchain/database";
+import { createWorkerHeartbeat, workerRuntimeConfig } from "@powerchain/backend/workers";
+import { closeDatabase } from "@powerchain/database";
 import { claimServiceFeeVerificationBatch, recordServiceFeeVerificationError, releaseServiceFeeVerificationLease, verifyServiceFeeForTransfer } from "@powerchain/backend";
-import { parseBoundedInteger, runSupervisedWorker, throwIfAborted, type SupervisedWorkerContext } from "@powerchain/runtime";
+import { runSupervisedWorker, throwIfAborted, type SupervisedWorkerContext } from "@powerchain/runtime";
 
-const workerId = process.env.POWERCHAIN_FEE_WORKER_ID?.trim() || `fee-${process.pid}`;
-const intervalMs = parseBoundedInteger(process.env.POWERCHAIN_FEE_WORKER_INTERVAL_MS, 5_000, { min: 1_000, max: 300_000 });
-const batchSize = parseBoundedInteger(process.env.POWERCHAIN_FEE_WORKER_BATCH_SIZE, 100, { min: 1, max: 250 });
-const leaseMs = parseBoundedInteger(process.env.POWERCHAIN_FEE_WORKER_LEASE_MS, 60_000, { min: 10_000, max: 300_000 });
-const startedAt = new Date();
+const { workerId, idleMs: intervalMs, leaseMs, batchSize } = workerRuntimeConfig("fees");
+const heartbeat = createWorkerHeartbeat({ workerId, kind: "fees" });
 
 async function tick({ signal }: SupervisedWorkerContext) {
   throwIfAborted(signal);
-  await heartbeatWorker({ workerId, workerType: "fees", version: "1.0.0", startedAt });
+  await heartbeat.beat();
   const claims = await claimServiceFeeVerificationBatch({ workerId, limit: batchSize, leaseMs });
   for (const claim of claims) {
     throwIfAborted(signal);
@@ -32,5 +30,5 @@ await runSupervisedWorker({
   tickTimeoutMs: 120_000,
   shutdownTimeoutMs: 15_000,
   run: tick,
-  cleanup: async () => { await removeWorkerHeartbeat(workerId); await closeDatabase(); },
+  cleanup: async () => { await heartbeat.stop(); await closeDatabase(); },
 });

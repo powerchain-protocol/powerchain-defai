@@ -29,7 +29,7 @@ export function CopyAddress({ value, label = "address" }: { value: string; label
       onClick={() => void copy()}
       title={value}
       aria-label={`Copy ${label}`}
-      className="inline-flex min-h-9 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 font-mono text-xs font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-slate-700 motion-reduce:transition-none"
+      className="inline-flex min-h-9 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 font-mono text-xs font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-slate-700 motion-reduce:transition-none"
     >
       <span>{compact(value)}</span>
       <span className={`font-sans text-[11px] ${state === "error" ? "text-red-600 dark:text-red-400" : "text-slate-500"}`} aria-live="polite">{state === "copied" ? "Copied" : state === "error" ? "Failed" : "Copy"}</span>

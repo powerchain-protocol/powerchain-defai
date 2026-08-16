@@ -1,5 +1,6 @@
 import "server-only";
-import { getSolanaRpc, getSuiRpc } from "../rpc/providers";
+import { getSolanaRpc } from "../rpc/providers";
+import { getPowerChainSuiBalance, probePowerChainSuiGrpc } from "@powerchain/backend";
 import { baseUnitsToDecimal } from "../../lib/data/decimal";
 
 const SOLANA_ADDRESS = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
@@ -44,7 +45,6 @@ type SolanaTokenAmount = { amount: string; decimals: number; uiAmountString?: st
 type SolanaTokenAccounts = { context?: { slot?: number }; value?: Array<{ account?: { data?: { parsed?: { info?: { tokenAmount?: SolanaTokenAmount } } } } }> };
 type SolanaSupply = { context?: { slot?: number }; value?: SolanaTokenAmount };
 type SolanaBalance = { context?: { slot?: number }; value?: number };
-type SuiBalance = { coinType?: string; coinObjectCount?: number; totalBalance?: string; lockedBalance?: Record<string, string> };
 
 function tokenAccountTotal(result: SolanaTokenAccounts) {
   let total = 0n;
@@ -107,41 +107,32 @@ export async function getSolanaPwrcSnapshot(owner?: string) {
 
 export async function getSuiWpwrcSnapshot(owner?: string) {
   const coinType = configuredWpwrcCoinType();
-  const runtime = getSuiRpc();
-  const latestCheckpoint = await runtime.client.request<string>("sui_getLatestCheckpointSequenceNumber", [], {
-    cacheTtlMs: 1_000,
-    staleIfErrorMs: 5_000,
-    requestBudgetMs: 8_000,
-  });
+  const probe = await probePowerChainSuiGrpc();
   const result: Record<string, unknown> = {
     chain: "SUI",
     asset: "wPWRC",
     coinType,
-    latestCheckpoint,
-    checkedAt: new Date().toISOString(),
-    source: "chain-rpc",
+    latestCheckpoint: null,
+    referenceGasPrice: probe.referenceGasPrice,
+    grpcEndpointIndex: probe.endpointIndex,
+    grpcEndpointCount: probe.endpointCount,
+    checkedAt: probe.checkedAt,
+    source: "sui-grpc",
     authoritativeForBridgeAccounting: false,
   };
   if (!owner) return result;
   const address = normalizeSuiAddress(owner);
   const [wrapped, sui] = await Promise.all([
-    runtime.client.request<SuiBalance>("suix_getBalance", [address, coinType], {
-      cacheTtlMs: 1_000,
-      staleIfErrorMs: 5_000,
-      requestBudgetMs: 8_000,
-    }),
-    runtime.client.request<SuiBalance>("suix_getBalance", [address, "0x2::sui::SUI"], {
-      cacheTtlMs: 1_000,
-      staleIfErrorMs: 5_000,
-      requestBudgetMs: 8_000,
-    }),
+    getPowerChainSuiBalance(address, coinType),
+    getPowerChainSuiBalance(address, "0x2::sui::SUI"),
   ]);
-  const wrappedBase = /^\d+$/.test(wrapped.totalBalance ?? "") ? wrapped.totalBalance! : "0";
-  const suiBase = /^\d+$/.test(sui.totalBalance ?? "") ? sui.totalBalance! : "0";
+  const wrappedBase = /^\d+$/.test(wrapped.balanceBaseUnits) ? wrapped.balanceBaseUnits : "0";
+  const suiBase = /^\d+$/.test(sui.balanceBaseUnits) ? sui.balanceBaseUnits : "0";
   result.owner = address;
   result.balanceBaseUnits = wrappedBase;
   result.balance = baseUnitsToDecimal(wrappedBase, 9);
-  result.coinObjectCount = wrapped.coinObjectCount ?? null;
+  result.coinObjectBalanceBaseUnits = wrapped.coinBalanceBaseUnits;
+  result.addressBalanceBaseUnits = wrapped.addressBalanceBaseUnits;
   result.nativeBalanceMist = suiBase;
   result.nativeBalanceSui = baseUnitsToDecimal(suiBase, 9);
   return result;

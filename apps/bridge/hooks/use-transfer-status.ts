@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { isTerminalTransferStatus, normalizeTransferStatus } from "../lib/bridge/transfer-status";
 import { useNetworkOnline } from "./use-network-online";
 import { ReconnectingWebSocket } from "../lib/realtime/reconnecting-websocket";
-import { publicRealtimeUrl, transferRealtimeUrl } from "../lib/realtime/transport-policy";
+import { publicRealtimeUrls, transferRealtimeUrl } from "../lib/realtime/transport-policy";
 
 export type TransferEvent = { id: string; status?: string; createdAt?: string; [key: string]: unknown };
 export type TransferStatusSnapshot = { transferId: string; status: string; version?: number; events?: TransferEvent[] };
@@ -180,12 +180,12 @@ export function useTransferStatus(transferId: string | null | undefined) {
     };
 
     const startWebSocket = () => {
-      const base = publicRealtimeUrl();
-      if (!base || stopped || terminalRef.current || !navigator.onLine) return false;
+      const bases = publicRealtimeUrls();
+      if (!bases.length || stopped || terminalRef.current || !navigator.onLine) return false;
       try {
         websocket?.close(1000, "replace");
         websocket = new ReconnectingWebSocket(
-          () => transferRealtimeUrl(base, transferId, cursor.current),
+          () => bases.map((base) => transferRealtimeUrl(base, transferId, cursor.current)),
           { minDelayMs: 750, maxDelayMs: 8_000, maxReconnectAttempts: 3 },
         );
         websocket.addEventListener("message", (event) => {

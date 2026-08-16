@@ -1,0 +1,309 @@
+{
+  "schema": "powerchain-postman-flows/v2",
+  "version": "1.0.0",
+  "title": "PowerChain | DeFAI API Flows",
+  "architecture": "docs/POSTMAN_FLOWS_ARCHITECTURE.md",
+  "masterFlow": {
+    "id": "powerchain-main-flow",
+    "name": "PowerChain DeFAI API — Main Flow",
+    "sequence": [
+      "platform-preflight",
+      "operation-condition",
+      "sui-swap-review|solana-swap-review|bridge-create-monitor",
+      "display-result"
+    ],
+    "note": "Use Platform Preflight first, then route to exactly one child flow. Visual Condition/Validate/Delay blocks are configured in Postman Flows from the same collection requests."
+  },
+  "note": "This manifest describes the visual Flow architecture and also generates a Collection Runner artifact. It is not presented as a native Postman Flows canvas export.",
+  "flows": [
+    {
+      "id": "platform-preflight",
+      "name": "Platform Preflight",
+      "purpose": "Validate public security, cluster, RPC and token-information readiness before transactional flows.",
+      "inputs": [],
+      "visualBlocks": [
+        "Start",
+        "HTTP Request",
+        "Validate",
+        "Condition",
+        "Evaluate",
+        "Display"
+      ],
+      "securityBoundary": null,
+      "terminalStatuses": null,
+      "nonTerminalStatuses": null,
+      "steps": [
+        {
+          "order": 1,
+          "stage": "Security policy",
+          "action": "security.policy.get",
+          "method": "GET",
+          "path": "/api/v1/security/policy",
+          "domain": "shared",
+          "query": null,
+          "requestBody": null,
+          "captures": null
+        },
+        {
+          "order": 2,
+          "stage": "Clusters",
+          "action": "clusters.get",
+          "method": "GET",
+          "path": "/api/v1/clusters",
+          "domain": "shared",
+          "query": null,
+          "requestBody": null,
+          "captures": null
+        },
+        {
+          "order": 3,
+          "stage": "RPC status",
+          "action": "rpc.status.get",
+          "method": "GET",
+          "path": "/api/v1/rpc/status",
+          "domain": "shared",
+          "query": null,
+          "requestBody": null,
+          "captures": null
+        },
+        {
+          "order": 4,
+          "stage": "Token information",
+          "action": "token.information.get",
+          "method": "GET",
+          "path": "/api/v1/token/information",
+          "domain": "shared",
+          "query": null,
+          "requestBody": null,
+          "captures": null
+        }
+      ]
+    },
+    {
+      "id": "sui-swap-review",
+      "name": "Sui Swap Review",
+      "purpose": "Balance preflight, quote and unsigned transaction preparation. Wallet signing and submission happen outside Postman.",
+      "inputs": [
+        "suiWallet",
+        "suiInputAsset",
+        "suiInputCoinType",
+        "suiOutputCoinType",
+        "swapAmountBaseUnits",
+        "slippageBps"
+      ],
+      "visualBlocks": [
+        "Start",
+        "HTTP Request",
+        "Validate",
+        "Condition",
+        "Evaluate",
+        "Display"
+      ],
+      "securityBoundary": "The returned Sui transaction is unsigned. The connected wallet signs and submits it outside Postman.",
+      "terminalStatuses": null,
+      "nonTerminalStatuses": null,
+      "steps": [
+        {
+          "order": 1,
+          "stage": "Balance",
+          "action": "swap.balance.get",
+          "method": "GET",
+          "path": "/api/v1/swap/balance",
+          "domain": "swap",
+          "query": "?address={{suiWallet}}&asset={{suiInputAsset}}",
+          "requestBody": null,
+          "captures": null
+        },
+        {
+          "order": 2,
+          "stage": "Quote",
+          "action": "swap.quote.post",
+          "method": "POST",
+          "path": "/api/v1/swap/quote",
+          "domain": "swap",
+          "query": null,
+          "requestBody": "{\n  \"payer\": \"{{suiWallet}}\",\n  \"fromCoinType\": \"{{suiInputCoinType}}\",\n  \"toCoinType\": \"{{suiOutputCoinType}}\",\n  \"amountBaseUnits\": \"{{swapAmountBaseUnits}}\",\n  \"slippageBps\": {{slippageBps}}\n}",
+          "captures": {
+            "suiMinimumOutBaseUnits": "data.minimumOutBaseUnits",
+            "suiQuoteId": "data.quoteId"
+          }
+        },
+        {
+          "order": 3,
+          "stage": "Prepare unsigned transaction",
+          "action": "swap.transaction.post",
+          "method": "POST",
+          "path": "/api/v1/swap/transaction",
+          "domain": "swap",
+          "query": null,
+          "requestBody": "{\n  \"payer\": \"{{suiWallet}}\",\n  \"fromCoinType\": \"{{suiInputCoinType}}\",\n  \"toCoinType\": \"{{suiOutputCoinType}}\",\n  \"amountBaseUnits\": \"{{swapAmountBaseUnits}}\",\n  \"slippageBps\": {{slippageBps}},\n  \"minimumOutBaseUnits\": \"{{suiMinimumOutBaseUnits}}\"\n}",
+          "captures": null
+        }
+      ]
+    },
+    {
+      "id": "solana-swap-review",
+      "name": "Solana Swap Review",
+      "purpose": "Jupiter order preparation and signed-payload execution boundary. Postman never creates the wallet signature.",
+      "inputs": [
+        "solanaWallet",
+        "solanaInputMint",
+        "solanaOutputMint",
+        "swapAmountBaseUnits",
+        "slippageBps",
+        "signedTransaction"
+      ],
+      "visualBlocks": [
+        "Start",
+        "HTTP Request",
+        "Validate",
+        "Condition",
+        "Evaluate",
+        "Display"
+      ],
+      "securityBoundary": "Copy the unsigned transaction to the connected wallet, sign outside Postman, then provide only the signed serialized payload to the execute request.",
+      "terminalStatuses": null,
+      "nonTerminalStatuses": null,
+      "steps": [
+        {
+          "order": 1,
+          "stage": "Create Jupiter order",
+          "action": "swap.solana.order.post",
+          "method": "POST",
+          "path": "/api/v1/swap/solana/order",
+          "domain": "swap",
+          "query": null,
+          "requestBody": "{\n  \"payer\": \"{{solanaWallet}}\",\n  \"inputMint\": \"{{solanaInputMint}}\",\n  \"outputMint\": \"{{solanaOutputMint}}\",\n  \"amountBaseUnits\": \"{{swapAmountBaseUnits}}\",\n  \"slippageBps\": {{slippageBps}}\n}",
+          "captures": {
+            "jupiterRequestId": "data.requestId",
+            "jupiterUnsignedTransaction": "data.transaction",
+            "jupiterMinimumOutputBaseUnits": "data.otherAmountThreshold",
+            "jupiterLastValidBlockHeight": "data.lastValidBlockHeight"
+          }
+        },
+        {
+          "order": 2,
+          "stage": "Execute wallet-signed payload",
+          "action": "swap.solana.execute.post",
+          "method": "POST",
+          "path": "/api/v1/swap/solana/execute",
+          "domain": "swap",
+          "query": null,
+          "requestBody": "{\n  \"payer\": \"{{solanaWallet}}\",\n  \"signedTransaction\": \"{{signedTransaction}}\",\n  \"requestId\": \"{{jupiterRequestId}}\",\n  \"inputMint\": \"{{solanaInputMint}}\",\n  \"outputMint\": \"{{solanaOutputMint}}\",\n  \"amountBaseUnits\": \"{{swapAmountBaseUnits}}\",\n  \"slippageBps\": {{slippageBps}},\n  \"minimumOutputBaseUnits\": \"{{jupiterMinimumOutputBaseUnits}}\"\n}",
+          "captures": null
+        }
+      ]
+    },
+    {
+      "id": "bridge-create-monitor",
+      "name": "Bridge Create & Monitor",
+      "purpose": "Read Bridge readiness/routes, issue a bound quote, create persisted transfer state, then inspect authoritative persisted status/events.",
+      "inputs": [
+        "bridgeDirection",
+        "bridgePrincipalBaseUnits",
+        "bridgeSourceAddress",
+        "bridgeDestinationAddress",
+        "bridgeIdempotencyKey"
+      ],
+      "visualBlocks": [
+        "Start",
+        "HTTP Request",
+        "Validate",
+        "Condition",
+        "Evaluate",
+        "Delay",
+        "Display"
+      ],
+      "securityBoundary": "Postman observes API state only. Source wallet signing, destination finality and Wormhole NTT reconciliation remain external trust boundaries.",
+      "terminalStatuses": [
+        "COMPLETED",
+        "FAILED"
+      ],
+      "nonTerminalStatuses": [
+        "CREATED",
+        "SOURCE_SUBMITTING",
+        "SOURCE_SUBMITTED",
+        "SOURCE_FINALIZED",
+        "MESSAGE_OBSERVED",
+        "DESTINATION_SUBMITTED",
+        "DESTINATION_FINALIZED",
+        "RECONCILIATION_REQUIRED"
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "stage": "Runtime",
+          "action": "bridge.runtime.get",
+          "method": "GET",
+          "path": "/api/v1/bridge/runtime",
+          "domain": "bridge",
+          "query": null,
+          "requestBody": null,
+          "captures": null
+        },
+        {
+          "order": 2,
+          "stage": "Routes",
+          "action": "bridge.routes.get",
+          "method": "GET",
+          "path": "/api/v1/bridge/routes",
+          "domain": "bridge",
+          "query": null,
+          "requestBody": null,
+          "captures": null
+        },
+        {
+          "order": 3,
+          "stage": "Quote",
+          "action": "bridge.quote.post",
+          "method": "POST",
+          "path": "/api/v1/bridge/quote",
+          "domain": "bridge",
+          "query": null,
+          "requestBody": "{\n  \"direction\": \"{{bridgeDirection}}\",\n  \"principalBaseUnits\": \"{{bridgePrincipalBaseUnits}}\",\n  \"sourceAddress\": \"{{bridgeSourceAddress}}\",\n  \"destinationAddress\": \"{{bridgeDestinationAddress}}\"\n}",
+          "captures": {
+            "bridgeQuoteId": "data.quoteId",
+            "bridgeIntentCommitment": "data.intentCommitment",
+            "bridgeRuntimeSnapshotId": "data.runtimeSnapshotId"
+          }
+        },
+        {
+          "order": 4,
+          "stage": "Create transfer",
+          "action": "bridge.transfers.post",
+          "method": "POST",
+          "path": "/api/v1/bridge/transfers",
+          "domain": "bridge",
+          "query": null,
+          "requestBody": "{\n  \"quoteId\": \"{{bridgeQuoteId}}\",\n  \"intentCommitment\": \"{{bridgeIntentCommitment}}\",\n  \"runtimeSnapshotId\": \"{{bridgeRuntimeSnapshotId}}\"\n}",
+          "captures": {
+            "id": "data.id",
+            "transferId": "data.id"
+          }
+        },
+        {
+          "order": 5,
+          "stage": "Transfer status",
+          "action": "bridge.transfers.id.get",
+          "method": "GET",
+          "path": "/api/v1/bridge/transfers/:id",
+          "domain": "bridge",
+          "query": null,
+          "requestBody": null,
+          "captures": null
+        },
+        {
+          "order": 6,
+          "stage": "Transfer events",
+          "action": "bridge.transfers.id.events.get",
+          "method": "GET",
+          "path": "/api/v1/bridge/transfers/:id/events",
+          "domain": "bridge",
+          "query": null,
+          "requestBody": null,
+          "captures": null
+        }
+      ]
+    }
+  ]
+}

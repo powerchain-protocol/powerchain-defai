@@ -16,7 +16,7 @@ export function WalletSessionBanner({ solanaAddress, suiAddress, walletChanged =
           </div>
           {walletChanged ? <p className="mt-2 text-sm font-medium text-amber-900 dark:text-amber-200">Wallet identity changed. Refresh balances and eligibility before opening a new signature.</p> : null}
         </div>
-        {onRefresh ? <button type="button" onClick={onRefresh} disabled={refreshing} className="min-h-10 rounded-xl border border-slate-300 bg-white px-3.5 text-sm font-semibold text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-wait disabled:opacity-60 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">{refreshing ? "Refreshing…" : "Refresh session"}</button> : null}
+        {onRefresh ? <button type="button" onClick={onRefresh} disabled={refreshing} className="min-h-10 rounded-xl border border-slate-300 bg-white px-3.5 text-sm font-semibold text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] disabled:cursor-wait disabled:opacity-60 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">{refreshing ? "Refreshing…" : "Refresh session"}</button> : null}
       </div>
     </section>
   );

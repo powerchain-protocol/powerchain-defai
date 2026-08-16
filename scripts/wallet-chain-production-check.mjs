@@ -16,7 +16,8 @@ const checks = [
   ["apps/bridge/hooks/use-wallet-overview.ts", ["AbortController", "generation", "wallet/overview", "cache: \"no-store\""]],
   ["apps/bridge/components/wallet/wallet-chain-data-card.tsx", ["useClaimEligibility", "PWRC balance", "Claim eligibility", "Recent transactions", "Explorer"]],
   ["apps/bridge/components/wallet/wallet-activity-card.tsx", ["useWalletOverview", "useClaimEligibility", "Cross-chain wallet activity", "reconciliation-owned"]],
-  ["apps/bridge/lib/explorers/links.ts", ["solscan.io", "suiscan.xyz", "solscanTransactionUrl", "suiscanTransactionUrl"]],
+  ["apps/bridge/lib/explorers/links.ts", ["@powerchain/backend/services/explorer", "solscanTransactionUrl", "suiscanTransactionUrl"]],
+  ["apps/backend/src/services/explorer.ts", ["solscan.io", "suiscan.xyz", "solscanTransactionUrl", "suiscanTransactionUrl"]],
 ];
 for (const [file, tokens] of checks) {
   if (!fs.existsSync(file)) { console.error(`FAIL missing ${file}`); failed = true; continue; }

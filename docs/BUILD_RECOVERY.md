@@ -6,14 +6,13 @@ installation before running pnpm again.
 ```bash
 nvm use
 corepack enable
-corepack prepare pnpm@11.21.0 --activate
+corepack prepare pnpm@11.22.0 --activate
 pnpm clean:package-manager
 rm -rf node_modules apps/*/node_modules packages/*/node_modules
 pnpm install
 ```
 
-Node `24.14.0` is accepted by the repository engine range. `.nvmrc` remains the
-recommended Node 26 local runtime.
+Node `24.14.0` is accepted by the repository engine range. `.nvmrc` targets the Node 24 LTS line and `nvm use` may use any supported Node 24.x installation.
 
 `pnpm install` runs `prisma generate` in `postinstall`, so the generated Prisma
 client exists before editor/typecheck/build work begins.

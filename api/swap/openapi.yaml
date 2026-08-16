@@ -1,0 +1,58 @@
+openapi: 3.1.0
+info:
+  title: PowerChain Swap API
+  version: 1.0.0
+  description: Swap-only contract for wallet-owned Solana Jupiter and Sui Cetus execution.
+servers:
+  - url: /
+security:
+  - ApiKey: []
+paths:
+  /api/v1/swap/balance:
+    get:
+      summary: Swap Balance Get
+      responses:
+        "200":
+          description: Swap API response
+  /api/v1/swap/openapi:
+    get:
+      summary: Swap Openapi Get
+      responses:
+        "200":
+          description: Swap API response
+  /api/v1/swap/quote:
+    post:
+      summary: Swap Quote Post
+      responses:
+        "200":
+          description: Swap API response
+  /api/v1/swap/receipt:
+    post:
+      summary: Swap Receipt Post
+      responses:
+        "200":
+          description: Swap API response
+  /api/v1/swap/solana/execute:
+    post:
+      summary: Swap Solana Execute Post
+      responses:
+        "200":
+          description: Swap API response
+  /api/v1/swap/solana/order:
+    post:
+      summary: Swap Solana Order Post
+      responses:
+        "200":
+          description: Swap API response
+  /api/v1/swap/transaction:
+    post:
+      summary: Swap Transaction Post
+      responses:
+        "200":
+          description: Swap API response
+components:
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-Api-Key

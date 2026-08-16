@@ -24,7 +24,7 @@ Dependency-aware validation remains:
 ```bash
 nvm use
 corepack enable
-corepack prepare pnpm@11.21.0 --activate
+corepack prepare pnpm@11.22.0 --activate
 pnpm install
 pnpm validate:all
 ```

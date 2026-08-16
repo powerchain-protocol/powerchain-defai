@@ -3,12 +3,13 @@ import "server-only";
 import { createHash } from "node:crypto";
 import { checkProviderReadiness } from "./provider-health";
 import { checkPwrcAssetIntegrity } from "./asset-integrity";
+import { getTokenInformation } from "./token-information";
 
 export type BridgeRuntimeStatus = "ready" | "degraded" | "blocked";
 export type BridgeRuntimeCapability = "quote" | "wallet-signature" | "transfer-submit" | "claim" | "status-tracking";
 
 export type BridgeRuntimeCheck = {
-  id: "solana-finalized" | "sui-checkpoint" | "provider-redundancy" | "asset-integrity";
+  id: "solana-finalized" | "sui-checkpoint" | "provider-redundancy" | "asset-integrity" | "information-commitment";
   ok: boolean;
   blocking: boolean;
   detail?: string;
@@ -46,6 +47,8 @@ export async function checkBridgeRuntime() {
   const sui = readiness?.providers.find((provider) => provider.provider === "sui");
   const redundancyReduced = Boolean(readiness?.providers.some((provider) => provider.redundancy !== "full"));
 
+  const information = getTokenInformation();
+
   const checks: BridgeRuntimeCheck[] = [
     {
       id: "solana-finalized",
@@ -71,6 +74,14 @@ export async function checkBridgeRuntime() {
       blocking: true,
       detail: integrity?.healthy ? `PWRC asset fingerprint ${integrity.assetFingerprint}` : integrityResult.status === "rejected" ? settledError(integrityResult.reason) : "PWRC/wPWRC asset integrity check failed",
     },
+    {
+      id: "information-commitment",
+      ok: information.runtime.verification.runtimeVerified,
+      blocking: true,
+      detail: information.runtime.verification.runtimeVerified
+        ? `token information ${information.informationCommitment.digest}`
+        : `token information verification failed: ${information.runtime.verification.failures.join(", ")}`,
+    },
   ];
 
   const blocked = checks.some((check) => check.blocking && !check.ok);
@@ -92,6 +103,8 @@ export async function checkBridgeRuntime() {
     solanaHead: solana?.head ?? null,
     suiHead: sui?.head ?? null,
     assetFingerprint: integrity?.assetFingerprint ?? null,
+    informationCommitment: information.informationCommitment.digest,
+    informationVerified: information.runtime.verification.runtimeVerified,
   };
   const snapshotId = stableFingerprint(identity);
   const checkedAt = observedAt.toISOString();
@@ -122,6 +135,7 @@ export async function checkBridgeRuntime() {
           })),
         }
       : null,
+    tokenInformation: { commitment: information.informationCommitment.digest, verified: information.runtime.verification.runtimeVerified, failures: information.runtime.verification.failures },
     assetIntegrity: integrity
       ? {
           healthy: integrity.healthy,

@@ -1,24 +1,24 @@
 # Node.js and nvm
 
-PowerChain Bridge uses Node.js 26.5.0 for local development.
+PowerChain DeFAI supports the Node.js 24 LTS line for local development and deployment.
 
 ```bash
 # nvm 0.40.6+
-nvm install
-nvm use
+nvm install 24
+nvm use 24
 corepack enable
-corepack prepare pnpm@11.21.0 --activate
+corepack prepare pnpm@11.22.0 --activate
 pnpm install
 ```
 
 Canonical pins:
 
-- `.nvmrc`: `26.5.0`
-- `.node-version`: `26.5.0`
-- `packageManager`: `pnpm@11.21.0`
-- `engines.node`: `>=24.0.0 <27`
+- `.nvmrc`: `24`
+- `.node-version`: `24`
+- `packageManager`: `pnpm@11.22.0`
+- `engines.node`: `>=24 <25`
 
-The wider engine range intentionally retains Node 24 LTS production compatibility for providers that have not enabled Node 26 Current yet. Local development and CI that opt into the repository pin use Node 26.5.0.
+The engine range intentionally stays on the Node 24 LTS line for Vercel Functions compatibility. Local development and CI use Node 24.x.
 
 Run:
 

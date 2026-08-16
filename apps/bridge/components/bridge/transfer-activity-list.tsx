@@ -25,7 +25,7 @@ export function TransferActivityList({ events, limit = 8 }: { events: readonly T
             const timestamp = utc(event.createdAt);
             return (
               <li key={event.id} className="flex gap-3 rounded-xl border border-slate-100 px-3 py-2.5 dark:border-slate-800">
-                <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-blue-500" aria-hidden="true" />
+                <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#1c4334]" aria-hidden="true" />
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-semibold text-slate-800 dark:text-slate-200">{status}</p>
                   <p className="mt-0.5 truncate font-mono text-[10px] text-slate-400" title={event.id}>{event.id}</p>

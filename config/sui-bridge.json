@@ -1,0 +1,19 @@
+{
+  "schema": "powerchain-sui-bridge-target/v1",
+  "version": "1.0.0",
+  "packageName": "powerchain_bridge",
+  "module": "powerchain_bridge",
+  "sourceAddress": "0x0",
+  "networkEnv": "POWERCHAIN_SUI_NETWORK",
+  "packageIdEnv": "POWERCHAIN_SUI_BRIDGE_PACKAGE_ID",
+  "configObjectIdEnv": "POWERCHAIN_SUI_BRIDGE_CONFIG_OBJECT_ID",
+  "authorityEnv": "POWERCHAIN_SUI_BRIDGE_AUTHORITY",
+  "informationCommitmentObjectIdEnv": "POWERCHAIN_SUI_INFORMATION_COMMITMENT_OBJECT_ID",
+  "entryFunctions": [
+    "create_information_commitment",
+    "set_authority",
+    "set_paused",
+    "record_intent"
+  ],
+  "principalMovement": "wormhole-ntt-only"
+}

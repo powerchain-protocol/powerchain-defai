@@ -12,6 +12,8 @@ export function useConnectedWallets() {
     solanaConnected: solana.connected,
     solanaConnecting: solana.connecting,
     solanaSignMessage: solana.signMessage,
+    solanaSignTransaction: solana.signTransaction,
+    solanaSendTransaction: solana.sendTransaction,
     suiAddress: suiAccount?.address ?? null,
     suiConnected: Boolean(suiAccount),
     suiWalletName: suiWallet?.name ?? null,

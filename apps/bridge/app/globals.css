@@ -1,28 +1,169 @@
 @import "tailwindcss";
-:root { color-scheme: light; background: #f8fafc; color: #0b1730; }
-@media (prefers-color-scheme: dark) { :root { color-scheme: dark; background: #07142d; color: #f8fafc; } }
-html { min-width: 320px; background: #f8fafc; }
-body { margin: 0; min-height: 100vh; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light;
+  background: #eef1ef;
+  color: #101514;
+  --pc-white: #ffffff;
+  --pc-cloud: #f5f7f6;
+  --pc-mist: #e9eeeb;
+  --pc-onyx: #050807;
+  --pc-onyx-soft: #09110e;
+  --pc-panel: #0b1511;
+  --pc-forest: #173b2d;
+  --pc-forest-soft: #294a3b;
+  --pc-forest-muted: #557568;
+  --pc-border-light: rgba(14, 26, 21, 0.10);
+  --pc-border-dark: rgba(255, 255, 255, 0.09);
+  --pc-shadow: 0 24px 70px rgba(7, 16, 13, 0.10);
+}
+
+html.dark {
+  color-scheme: dark;
+  background: var(--pc-onyx);
+  color: #f1f5f3;
+}
+
+html { min-width: 320px; background: #eef1ef; }
+html.dark { background: var(--pc-onyx); }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 76% -10%, rgba(23, 59, 45, 0.12), transparent 34rem),
+    linear-gradient(180deg, #ffffff 0%, #f4f6f5 42%, #e9eeeb 100%);
+  color: #101514;
+  transition: background-color 220ms ease, color 220ms ease;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.dark body {
+  background:
+    radial-gradient(circle at 76% -8%, rgba(41, 74, 59, 0.22), transparent 34rem),
+    linear-gradient(180deg, #020403 0%, #050807 44%, #09110e 100%);
+  color: #f1f5f3;
+}
+
 button, a, input, select { -webkit-tap-highlight-color: transparent; }
-:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
+:focus-visible { outline: 2px solid #557568; outline-offset: 2px; }
+::selection { background: rgba(41, 74, 59, 0.24); }
 
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 
-@media (max-width: 639px) {
-  .wallet-icon-only .wallet-adapter-button {
-    width: 2.5rem;
-    min-width: 2.5rem;
-    height: 2.5rem;
-    padding: 0;
-    justify-content: center;
-  }
-  .wallet-icon-only .wallet-adapter-button-start-icon {
-    margin-right: 0;
-  }
-  .sui-wallet-compact button {
-    min-width: 2.5rem;
-    min-height: 2.5rem;
-    padding-inline: 0.7rem;
-  }
+/* Restrained cinematic depth: glass is reserved for navigation and hero-level transaction surfaces. */
+.pc-glass {
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid rgba(14, 26, 21, 0.10);
+  box-shadow: var(--pc-shadow);
+  backdrop-filter: blur(20px) saturate(118%);
+  -webkit-backdrop-filter: blur(20px) saturate(118%);
 }
+.dark .pc-glass {
+  background: rgba(7, 12, 10, 0.76);
+  border-color: rgba(255, 255, 255, 0.10);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.36);
+}
+
+.pc-panel {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--pc-border-light);
+  box-shadow: 0 16px 48px rgba(7, 16, 13, 0.07);
+}
+.dark .pc-panel {
+  background: rgba(8, 14, 12, 0.92);
+  border-color: var(--pc-border-dark);
+  box-shadow: 0 18px 56px rgba(0, 0, 0, 0.28);
+}
+
+.pc-cinematic-panel {
+  background:
+    linear-gradient(180deg, rgba(18, 38, 30, 0.98) 0%, rgba(7, 16, 13, 0.99) 62%, rgba(4, 9, 7, 1) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.32);
+}
+
+.pc-button-primary {
+  background: linear-gradient(180deg, #244b3b 0%, #173b2d 55%, #102b21 100%);
+  color: #fff;
+  border: 1px solid rgba(5, 8, 7, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 10px 26px rgba(7,16,13,.14);
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+.pc-button-primary:hover { filter: brightness(1.06); transform: translateY(-1px); box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 14px 32px rgba(7,16,13,.18); }
+.pc-button-primary:active { transform: translateY(0); }
+
+.pc-button-light {
+  background: linear-gradient(180deg, #ffffff 0%, #f5f7f6 54%, #e9eeeb 100%);
+  color: #142019;
+  border: 1px solid rgba(14, 26, 21, 0.12);
+  box-shadow: inset 0 1px 0 #fff, 0 8px 20px rgba(7,16,13,.07);
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+.pc-button-light:hover { transform: translateY(-1px); box-shadow: inset 0 1px 0 #fff, 0 12px 26px rgba(7,16,13,.10); }
+.dark .pc-button-light {
+  background: linear-gradient(180deg, #18221e 0%, #111915 55%, #0b110e 100%);
+  color: #f4f7f5;
+  border-color: rgba(255,255,255,.10);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 10px 24px rgba(0,0,0,.22);
+}
+
+.pc-subtle-shine { position: relative; overflow: hidden; }
+.pc-subtle-shine::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,.10), transparent 36%);
+  opacity: .65;
+}
+
+
+@keyframes trade-reveal {
+  from { opacity: 0; transform: translateY(5px) scale(.997); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.pc-hairline {
+  border-color: rgba(14, 26, 21, 0.09);
+}
+.dark .pc-hairline {
+  border-color: rgba(255, 255, 255, 0.085);
+}
+
+.pc-review-sheet {
+  background: linear-gradient(180deg, rgba(255,255,255,.98) 0%, rgba(245,247,246,.98) 100%);
+  border: 1px solid rgba(14, 26, 21, 0.11);
+  box-shadow: 0 26px 80px rgba(7, 16, 13, 0.16);
+}
+.dark .pc-review-sheet {
+  background: linear-gradient(180deg, rgba(17,25,21,.98) 0%, rgba(7,12,10,.99) 100%);
+  border-color: rgba(255,255,255,.10);
+  box-shadow: 0 28px 90px rgba(0,0,0,.44);
+}
+
+@media (max-width: 639px) {
+  .wallet-icon-only .wallet-adapter-button { width: 2.5rem; min-width: 2.5rem; height: 2.5rem; padding: 0; justify-content: center; }
+  .wallet-icon-only .wallet-adapter-button-start-icon { margin-right: 0; }
+  .sui-wallet-compact button { min-width: 2.5rem; min-height: 2.5rem; padding-inline: 0.7rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .pc-button-primary:hover, .pc-button-light:hover { transform: none; }
+}
+
+.bridge-dark-panel { background: #07100d; color: #f8fafc; }
+.dark .bridge-dark-panel { background: #07100d; }
+.dark .wallet-adapter-button { background: #0b1511; border: 1px solid rgba(255,255,255,.1); }
+.dark .wallet-adapter-button:hover { background: #102019; }
+
+html.dark { scrollbar-color: #33443b #050807; }
+html:not(.dark) { scrollbar-color: #cbd5d1 #eef1ef; }

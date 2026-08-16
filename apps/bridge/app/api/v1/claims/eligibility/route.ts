@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getClaimEligibility } from "@/server/services/claim-service";
+import { getClaimEligibility } from "@powerchain/backend";
 export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   try {

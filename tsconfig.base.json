@@ -38,6 +38,21 @@
       ],
       "@powerchain/protocol/*": [
         "./packages/protocol/src/*"
+      ],
+      "@powerchain/blockchain": [
+        "./shared/blockchain/src/index.ts"
+      ],
+      "@powerchain/blockchain/*": [
+        "./shared/blockchain/src/*"
+      ],
+      "@powerchain/clusters": [
+        "./clusters/src/index.ts"
+      ],
+      "@powerchain/swap-core": [
+        "./packages/swap-core/src/index.ts"
+      ],
+      "@powerchain/swap-core/*": [
+        "./packages/swap-core/src/*"
       ]
     },
     "types": [

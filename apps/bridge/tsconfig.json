@@ -24,6 +24,18 @@
       ],
       "@powerchain/database/*": [
         "../../packages/database/src/*"
+      ],
+      "@powerchain/chat": [
+        "../chat/src/index.ts"
+      ],
+      "@powerchain/chat/*": [
+        "../chat/src/*"
+      ],
+      "@powerchain/staking": [
+        "../staking/src/index.ts"
+      ],
+      "@powerchain/staking/*": [
+        "../staking/src/*"
       ]
     },
     "types": [

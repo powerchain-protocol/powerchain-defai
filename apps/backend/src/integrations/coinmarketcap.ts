@@ -1,0 +1,4 @@
+import { fetchIntegrationJson } from "./http";import { integrationEndpoints } from "../config/endpoints";
+function key(){const value=process.env.COINMARKETCAP_API_KEY?.trim()||process.env.CMC_API_KEY?.trim()||process.env.POWERCHAIN_COINMARKETCAP_API_KEY?.trim();if(!value)throw new Error("COINMARKETCAP_API_KEY_REQUIRED");return value}
+export async function fetchCoinMarketCapQuotes(symbols:readonly string[],convert="USD"){const url=new URL(`${integrationEndpoints().coinmarketcap}/v3/cryptocurrency/quotes/latest`);url.searchParams.set("symbol",symbols.join(","));url.searchParams.set("convert",convert);return fetchIntegrationJson<unknown>(url.toString(),{headers:{"X-CMC_PRO_API_KEY":key()}})}
+export function coinMarketCapStatus(){return{provider:"coinmarketcap" as const,configured:Boolean(process.env.COINMARKETCAP_API_KEY?.trim()||process.env.CMC_API_KEY?.trim()||process.env.POWERCHAIN_COINMARKETCAP_API_KEY?.trim()),endpoint:"/v3/cryptocurrency/quotes/latest"}}

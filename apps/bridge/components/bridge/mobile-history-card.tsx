@@ -10,7 +10,7 @@ export function MobileHistoryCard({ transferId, route, amount, symbol = "PWRC", 
       </div>
       <div className="mt-3 flex items-end justify-between gap-3 border-t border-slate-100 pt-3 dark:border-slate-800">
         <div><p className="text-[10px] uppercase tracking-wide text-slate-400">Principal</p><p className="mt-0.5 text-sm font-semibold tabular-nums text-slate-950 dark:text-white">{amount} {symbol}</p>{updatedAt ? <p className="mt-1 text-[10px] text-slate-400">Updated {updatedAt}</p> : null}</div>
-        {href ? <a href={href} className="inline-flex min-h-9 items-center rounded-lg px-2.5 text-xs font-bold text-blue-600 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-blue-400 dark:hover:bg-blue-950/40">Details</a> : null}
+        {href ? <a href={href} className="inline-flex min-h-9 items-center rounded-lg px-2.5 text-xs font-bold text-[#294a3b] hover:bg-[#f1f4f2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] dark:text-[#adc0b6] dark:hover:bg-[#09110e]/60">Details</a> : null}
       </div>
     </article>
   );

@@ -1,0 +1,1 @@
+export function coinbasePayStatus(){return{provider:"coinbase-pay" as const,configured:Boolean(process.env.COINBASE_PAY_APP_ID?.trim()),serverSecretConfigured:Boolean(process.env.COINBASE_PAY_API_SECRET?.trim()),enabled:process.env.POWERCHAIN_COINBASE_PAY_ENABLED==="true"}}

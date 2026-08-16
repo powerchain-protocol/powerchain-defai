@@ -8,7 +8,7 @@ function ChainState({ name, ok, detail }: { name: string; ok?: boolean; detail?:
       <p className="text-sm font-medium text-slate-950 dark:text-white">{name}</p>
       {detail ? <p className="truncate text-xs text-slate-500 dark:text-slate-400">{detail}</p> : null}
     </div>
-    <span className={`rounded-full px-2 py-1 text-xs font-medium ${ok ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300" : "bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300"}`}>
+    <span className={`rounded-full px-2 py-1 text-xs font-medium ${ok ? "bg-[#f1f4f2] text-[#294a3b] dark:bg-[#09110e]/60 dark:text-[#d0dcd6]" : "bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300"}`}>
       {ok ? "Verified" : "Attention"}
     </span>
   </div>;

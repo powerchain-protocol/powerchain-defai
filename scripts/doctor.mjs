@@ -14,20 +14,20 @@ const exists = (relativePath) => fs.existsSync(path.join(root, relativePath));
 const readJson = (relativePath) => JSON.parse(fs.readFileSync(path.join(root, relativePath), "utf8"));
 const semver = (input) => input.replace(/^v/, "").split(".").map((part) => Number(part));
 const nodeVersion = semver(process.version);
-if (nodeVersion[0] >= 24 && nodeVersion[0] < 27) pass(`Node ${process.version} satisfies >=24.0.0 <27`);
-else fail(`Node ${process.version} is unsupported; use Node 24.x, 25.x, or .nvmrc Node 26.5.0`);
+if (nodeVersion[0] === 24) pass(`Node ${process.version} satisfies Node 24.x LTS`);
+else fail(`Node ${process.version} is unsupported; use .nvmrc Node 24.x`);
 
 const manifest = readJson("package.json");
-if (manifest.packageManager === "pnpm@11.21.0") pass("packageManager is pnpm@11.21.0");
+if (manifest.packageManager === "pnpm@11.22.0") pass("packageManager is pnpm@11.22.0");
 else fail(`packageManager mismatch: ${manifest.packageManager ?? "missing"}`);
 
 const pnpm = spawnSync("pnpm", ["--version"], { cwd: root, encoding: "utf8" });
 if (pnpm.status === 0) {
   const version = pnpm.stdout.trim();
-  if (version === "11.21.0") pass(`pnpm ${version}`);
-  else fail(`pnpm ${version || "unknown"}; expected 11.21.0`);
+  if (version === "11.22.0") pass(`pnpm ${version}`);
+  else fail(`pnpm ${version || "unknown"}; expected 11.22.0`);
 } else {
-  fail("pnpm is unavailable; run: corepack enable && corepack prepare pnpm@11.21.0 --activate");
+  fail("pnpm is unavailable; run: corepack enable && corepack prepare pnpm@11.22.0 --activate");
 }
 
 for (const lockfile of ["package-lock.json", "npm-shrinkwrap.json", "yarn.lock"]) {
@@ -79,10 +79,12 @@ const generatedClient = "packages/database/src/generated/prisma/client.ts";
 if (exists(generatedClient)) pass("Prisma client is generated");
 else fail("Prisma client is not generated; run: pnpm prisma:generate");
 
-for (const rel of [".env.example", ".env", ".env.local", ".env.production", "apps/bridge/.env.example"]) {
+for (const rel of [".env.example", ".env.local.example", ".env.production.example", "apps/bridge/.env.example"]) {
   if (exists(rel)) pass(`${rel} exists`);
   else fail(`${rel} missing`);
 }
+if (exists(".env") || exists(".env.local")) pass("local runtime environment exists");
+else warn("No local runtime environment yet; run: pnpm env:bootstrap");
 
 const baseTsconfig = fs.readFileSync(path.join(root, "tsconfig.base.json"), "utf8");
 if (/"baseUrl"\s*:/.test(baseTsconfig)) fail("tsconfig.base.json still contains deprecated baseUrl");

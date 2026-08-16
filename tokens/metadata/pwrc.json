@@ -1,0 +1,34 @@
+{
+  "name": "PowerChain",
+  "symbol": "PWRC",
+  "description": "Canonical PowerChain utility token on Solana. Cross-chain representation on Sui is wPWRC through Wormhole NTT.",
+  "image": "/tokens/pwrc.png",
+  "properties": {
+    "category": "token",
+    "chain": "solana",
+    "standard": "Token-2022",
+    "decimals": 9,
+    "canonicalAssetId": "powerchain-pwrc",
+    "powerchain": {
+      "informationCommitment": "f6bfd1627686fbff066ee68045a0808be4c1fc69350f3ff35fb501fa28ce51b5",
+      "informationCommitmentAlgorithm": "sha256",
+      "informationCanonicalization": "powerchain-stable-json-v1",
+      "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+      "bridgeProtocol": "Wormhole NTT",
+      "principalRule": "1:1",
+      "links": {
+        "website": "https://powerchain.app",
+        "swap": "https://swap.powerchain.app",
+        "bridge": "https://bridge.powerchain.app",
+        "socials": {
+          "x": null,
+          "discord": null,
+          "telegram": null,
+          "github": null
+        },
+        "socialPolicy": "verified-only"
+      }
+    }
+  },
+  "external_url": "https://powerchain.app"
+}

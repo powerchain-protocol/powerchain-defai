@@ -1,0 +1,121 @@
+openapi: 3.1.0
+info:
+  title: PowerChain DeFAI API
+  version: 1.0.0
+  description: Browser-safe PowerChain DeFAI API. Wormhole NTT is the sole PWRC/wPWRC cross-chain principal-movement protocol.
+servers:
+  - url: https://powerchain.app
+paths:
+  /api/v1/openapi:
+    get:
+      summary: OpenAPI document
+      responses: { "200": { description: OpenAPI JSON } }
+  /api/v1/blockchains:
+    get:
+      summary: Active Solana and Sui blockchain runtime contexts
+      responses: { "200": { description: Browser-safe chain and active-cluster metadata } }
+  /api/v1/clusters:
+    get:
+      summary: Supported Solana/Sui clusters and cross-chain pairs
+      responses: { "200": { description: Cluster registry; non-authoritative for settlement } }
+  /api/v1/currencies:
+    get:
+      summary: Supported currencies and stablecoins
+      responses: { "200": { description: Browser-safe currency registry } }
+  /api/v1/rpc/status:
+    get:
+      summary: Solana RPC and Sui gRPC endpoint readiness
+      responses:
+        "200": { description: Non-authoritative RPC readiness }
+        "503": { description: RPC provider unavailable }
+  /api/v1/market/prices:
+    get:
+      summary: Validated SOL/SUI/PWRC/USDC/EURC USD prices
+      responses: { "200": { description: Non-authoritative price observations } }
+  /api/v1/market/rates:
+    get:
+      summary: Derived cross-asset rates
+      responses: { "200": { description: Non-authoritative cross rate } }
+  /api/v1/calculators/transaction:
+    post:
+      summary: Exact base-unit transaction calculator
+      responses: { "200": { description: Deterministic fee and slippage amounts } }
+  /api/v1/security/policy:
+    get:
+      summary: Browser-safe request security policy
+      responses: { "200": { description: Public request limits without secrets } }
+  /api/v1/token/information:
+    get:
+      summary: Canonical PWRC/wPWRC information commitment
+      responses:
+        "200": { description: Token information commitment verified }
+        "503": { description: Runtime verification failed }
+  /api/v1/bridge/runtime:
+    get:
+      summary: Bridge runtime readiness
+      responses: { "200": { description: Bridge readiness snapshot } }
+  /api/v1/bridge/quote:
+    post:
+      summary: Wormhole NTT bridge quote
+      responses: { "200": { description: Validated bridge quote } }
+  /api/v1/bridge/history:
+    get:
+      summary: Persisted bridge transaction history
+      responses: { "200": { description: Cursor-paginated bridge transactions } }
+  /api/v1/swap/quote:
+    post:
+      summary: Sui Cetus swap quote
+      responses: { "200": { description: Validated Sui swap quote } }
+  /api/v1/swap/solana/order:
+    post:
+      summary: Solana Jupiter Swap V2 order
+      responses: { "200": { description: Unsigned wallet-owned swap transaction } }
+  /api/v1/swap/solana/execute:
+    post:
+      summary: Submit signed Jupiter Swap V2 transaction
+      responses: { "200": { description: Execution result } }
+  /api/v1/tokens/trusted:
+    get:
+      summary: Trusted token registry
+      responses: { "200": { description: Trusted token list } }
+  /api/v1/pools:
+    get:
+      summary: Normalized DEX pools
+      responses: { "200": { description: Pool observations } }
+  /api/v1/portfolio:
+    get:
+      summary: Connected-wallet portfolio
+      responses: { "200": { description: Portfolio balances } }
+  /api/v1/operations/status:
+    get:
+      summary: Database, worker and queue readiness
+      responses: { "200": { description: Operational status } }
+  /api/v1/chat:
+    post:
+      summary: Advisory-only DeFAI assistant
+      responses: { "200": { description: Read-only assistant response } }
+  /api/v1/staking/status:
+    get:
+      summary: Deployment-gated staking readiness
+      responses: { "200": { description: Staking runtime status without fabricated APR } }
+  /api/v1/integrations:
+    get:
+      summary: Provider integration readiness
+      responses: { "200": { description: Provider readiness without secrets } }
+  /api/v1/metadata/solana:
+    get:
+      summary: Solana asset metadata
+      responses: { "200": { description: Helius DAS and Metaplex metadata context } }
+  /api/v1/payments/solana-pay:
+    post:
+      summary: Build Solana Pay URL
+      responses: { "200": { description: Solana Pay request URL } }
+components:
+  schemas:
+    TokenInformationCommitment:
+      type: object
+      required: [algorithm, canonicalization, digest]
+      properties:
+        algorithm: { const: sha256 }
+        canonicalization: { const: powerchain-stable-json-v1 }
+        digest: { type: string, pattern: "^[0-9a-f]{64}$" }

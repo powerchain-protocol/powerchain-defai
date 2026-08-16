@@ -1,24 +1,9 @@
 import { PublicKey } from "@solana/web3.js";
 import { normalizeSuiAddress } from "@mysten/sui/utils";
-import { createPowerChainSuiClient } from "../sui/client";
+import { withPowerChainSuiClient } from "../sui/client";
+import { solanaRpcRequest } from "../services/rpc";
 import { directionChains, nttBridgeConfig } from "./config";
 import type { BridgeChain, BridgeDirection, VerifiedChainTransaction } from "./types";
-
-const timeoutMs = 10_000;
-async function rpc<T>(url: string, method: string, params: unknown[]): Promise<T> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const response = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }), signal: controller.signal, cache: "no-store" });
-    if (!response.ok) throw new Error(`RPC_HTTP_${response.status}`);
-    const body = await response.json() as { result?: T; error?: { message?: string } };
-    if (body.error) throw new Error(`RPC_ERROR:${body.error.message ?? "unknown"}`);
-    if (body.result === undefined) throw new Error("RPC_RESULT_MISSING");
-    return body.result;
-  } finally { clearTimeout(timer); }
-}
-function required(name: string) { const v=process.env[name]?.trim(); if(!v) throw new Error(`${name}_REQUIRED`); return v; }
-function solanaRpcUrl() { return process.env.POWERCHAIN_SOLANA_RPC_URL?.trim() || process.env.SOLANA_RPC_URL?.trim() || required("POWERCHAIN_SOLANA_RPC_URL"); }
 
 type SolanaTx = {
   slot: number;
@@ -31,7 +16,7 @@ function balanceFor(list: SolanaTokenBalance[] | undefined, owner: string, mint:
 
 async function verifySolana(txHash: string, expectedWallet: string, expectedDelta: bigint, role: "source"|"destination"): Promise<VerifiedChainTransaction> {
   const config=nttBridgeConfig(); const wallet=new PublicKey(expectedWallet).toBase58();
-  const tx=await rpc<SolanaTx|null>(solanaRpcUrl(),"getTransaction",[txHash,{commitment:"finalized",encoding:"jsonParsed",maxSupportedTransactionVersion:0}]);
+  const tx=await solanaRpcRequest<SolanaTx|null>("getTransaction",[txHash,{commitment:"finalized",encoding:"jsonParsed",maxSupportedTransactionVersion:0}]);
   if(!tx) throw new Error("SOURCE_TRANSACTION_NOT_FINALIZED");
   if(!tx.meta || tx.meta.err) throw new Error("SOLANA_TRANSACTION_FAILED");
   const keys=solanaKeys(tx); if(!keys.some((k)=>k.pubkey===config.solana.manager)) throw new Error("SOLANA_NTT_MANAGER_NOT_INVOKED");
@@ -53,8 +38,7 @@ function suiOwner(value: unknown): string | null {
 async function verifySui(txHash: string, expectedWallet: string, expectedDelta: bigint, role:"source"|"destination"): Promise<VerifiedChainTransaction> {
   const config = nttBridgeConfig();
   const wallet = normalizeSuiAddress(expectedWallet);
-  const client = createPowerChainSuiClient();
-  const result = await client.core.waitForTransaction({ digest: txHash, timeout: 15_000, include: { effects: true, balanceChanges: true, transaction: true } });
+  const result = await withPowerChainSuiClient((client) => client.core.waitForTransaction({ digest: txHash, timeout: 15_000, include: { effects: true, balanceChanges: true, transaction: true } }));
   const tx = result.Transaction ?? result.FailedTransaction;
   if (!tx || result.FailedTransaction || !tx.effects?.status?.success) throw new Error("SUI_TRANSACTION_FAILED");
   const sender = normalizeSuiAddress(tx.transaction?.sender ?? "0x0");

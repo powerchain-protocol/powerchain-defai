@@ -2,7 +2,8 @@
 import fs from "node:fs";
 
 const must = [
-  ["apps/bridge/lib/bridge/asset-registry.ts", ["assertOneToOnePrincipal", "wpwrc-sui", "pwrc-solana"]],
+  ["apps/bridge/lib/bridge/asset-registry.ts", ["assertOneToOnePrincipal", "POWERCHAIN_ASSET_REGISTRY", "PWRC_SOLANA_ASSET", "WPWRC_SUI_ASSET"]],
+  ["packages/protocol/src/assets.ts", ["wpwrc-sui", "pwrc-solana", "POWERCHAIN_INFORMATION_COMMITMENT"]],
   ["apps/bridge/server/services/bridged-assets.ts", ["checkPwrcAssetIntegrity", "authoritativeForBridgeAccounting: false"]],
   ["apps/bridge/app/api/v1/assets/bridge/route.ts", ["Cache-Control", "no-store"]],
   ["apps/bridge/lib/claim/claim-contract.ts", ["ELIGIBLE", "ALREADY_CLAIMED", "claimableBaseUnits"]],

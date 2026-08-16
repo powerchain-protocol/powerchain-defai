@@ -1,6 +1,7 @@
 import "server-only";
 import { RpcEndpointPool } from "./endpoint-pool";
 import { JsonRpcClient } from "./json-rpc-client";
+import { solanaRpcUrls } from "@powerchain/backend/services/rpc";
 
 function env(...names: string[]) {
   for (const name of names) {
@@ -23,12 +24,26 @@ type Chain = "SOLANA" | "SUI";
 type Config = { id: string; url: string; priority: number };
 type Runtime = { pool: RpcEndpointPool; client: JsonRpcClient };
 
+function splitUrls(value: string | undefined) {
+  return (value ?? "").split(",").map((item) => item.trim()).filter(Boolean);
+}
+
 function configs(prefix: Chain): Config[] {
-  const primary = env(`POWERCHAIN_${prefix}_RPC_URL`, `${prefix}_RPC_URL`);
-  const fallback = env(`POWERCHAIN_${prefix}_RPC_FALLBACK_URL`, `${prefix}_RPC_FALLBACK_URL`);
+  const ordered = prefix === "SOLANA"
+    ? solanaRpcUrls()
+    : [
+        env(`POWERCHAIN_${prefix}_RPC_URL`, `${prefix}_RPC_URL`),
+        env(`POWERCHAIN_${prefix}_RPC_FALLBACK_URL`, `${prefix}_RPC_FALLBACK_URL`),
+        ...splitUrls(env(`POWERCHAIN_${prefix}_RPC_FALLBACK_URLS`, `${prefix}_RPC_FALLBACK_URLS`)),
+      ].filter((value): value is string => Boolean(value));
+  const seen = new Set<string>();
   const result: Config[] = [];
-  if (primary) result.push({ id: `${prefix.toLowerCase()}-primary`, url: primary, priority: 0 });
-  if (fallback && fallback !== primary) result.push({ id: `${prefix.toLowerCase()}-fallback`, url: fallback, priority: 1 });
+  for (const value of ordered) {
+    if (seen.has(value)) continue;
+    seen.add(value);
+    const index = result.length;
+    result.push({ id: index === 0 ? `${prefix.toLowerCase()}-primary` : `${prefix.toLowerCase()}-fallback-${index}`, url: value, priority: index });
+  }
   validate(prefix, result);
   return result;
 }

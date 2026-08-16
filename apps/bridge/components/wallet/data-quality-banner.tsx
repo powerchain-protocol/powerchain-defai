@@ -10,7 +10,7 @@ export function DataQualityBanner({ quality, message, onRefresh, refreshing = fa
     <div role={critical ? "alert" : "status"} className={`rounded-xl border p-3 text-sm ${critical ? "border-rose-200 bg-rose-50 text-rose-900 dark:border-rose-900/60 dark:bg-rose-950/20 dark:text-rose-100" : "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/20 dark:text-amber-100"}`}>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div><strong>{label}.</strong> {message || defaultMessage(quality)}</div>
-        {onRefresh && quality !== "offline" ? <button type="button" disabled={refreshing} onClick={onRefresh} className="min-h-10 shrink-0 rounded-lg border border-current/20 px-3 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-60">{refreshing ? "Refreshing…" : "Refresh"}</button> : null}
+        {onRefresh && quality !== "offline" ? <button type="button" disabled={refreshing} onClick={onRefresh} className="min-h-10 shrink-0 rounded-lg border border-current/20 px-3 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] disabled:opacity-60">{refreshing ? "Refreshing…" : "Refresh"}</button> : null}
       </div>
     </div>
   );

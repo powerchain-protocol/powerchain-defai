@@ -26,7 +26,7 @@ export function BridgedAssetsCard() {
           <article key={asset.id} className="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
             <div className="flex items-center justify-between gap-3">
               <div><div className="font-semibold text-slate-950 dark:text-white">{asset.symbol}</div><div className="text-xs uppercase tracking-wide text-slate-500">{asset.chain} · {asset.kind}</div></div>
-              <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${asset.configured && asset.integrity ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300" : "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300"}`}>{asset.configured && asset.integrity ? "Verified" : asset.configured ? "Needs attention" : "Not configured"}</span>
+              <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${asset.configured && asset.integrity ? "bg-[#f1f4f2] text-[#294a3b] dark:bg-[#09110e]/60 dark:text-[#d0dcd6]" : "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300"}`}>{asset.configured && asset.integrity ? "Verified" : asset.configured ? "Needs attention" : "Not configured"}</span>
             </div>
             <dl className="mt-4 space-y-2 text-sm"><div className="flex justify-between gap-3"><dt className="text-slate-500">Decimals</dt><dd className="font-mono tabular-nums">9</dd></div><div className="flex justify-between gap-3"><dt className="text-slate-500">Identifier</dt><dd className="max-w-[70%] truncate font-mono" title={asset.identifier ?? undefined}>{shorten(asset.identifier)}</dd></div></dl>
           </article>
@@ -34,7 +34,7 @@ export function BridgedAssetsCard() {
       </div>
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-slate-50 p-4 text-sm dark:bg-slate-900">
         <div><strong>1 PWRC principal = 1 wPWRC principal.</strong> Service fees and network gas are separate.</div>
-        <Link href="/bridge" className="font-semibold text-blue-600 hover:underline dark:text-blue-400">Bridge assets</Link>
+        <Link href="/bridge" className="font-semibold text-[#294a3b] hover:underline dark:text-[#adc0b6]">Bridge assets</Link>
       </div>
     </section>
   );

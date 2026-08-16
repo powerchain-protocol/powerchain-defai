@@ -1,39 +1,17 @@
-export type BridgeAssetChain = "SOLANA" | "SUI";
-export type BridgeAssetKind = "native" | "bridged";
+import {
+  POWERCHAIN_ASSET_REGISTRY,
+  PWRC_SOLANA_ASSET,
+  WPWRC_SUI_ASSET,
+  type PowerChainAssetChain,
+  type PowerChainAssetDescriptor,
+  type PowerChainAssetKind,
+} from "@powerchain/protocol";
 
-export type BridgeAssetDescriptor = {
-  id: "pwrc-solana" | "wpwrc-sui";
-  symbol: "PWRC" | "wPWRC";
-  name: string;
-  chain: BridgeAssetChain;
-  kind: BridgeAssetKind;
-  decimals: 9;
-  canonicalAssetId: "powerchain-pwrc";
-  representationOf?: "pwrc-solana";
-};
-
-export const PWRC_SOLANA_ASSET: BridgeAssetDescriptor = {
-  id: "pwrc-solana",
-  symbol: "PWRC",
-  name: "PowerChain",
-  chain: "SOLANA",
-  kind: "native",
-  decimals: 9,
-  canonicalAssetId: "powerchain-pwrc",
-};
-
-export const WPWRC_SUI_ASSET: BridgeAssetDescriptor = {
-  id: "wpwrc-sui",
-  symbol: "wPWRC",
-  name: "Wrapped PowerChain",
-  chain: "SUI",
-  kind: "bridged",
-  decimals: 9,
-  canonicalAssetId: "powerchain-pwrc",
-  representationOf: "pwrc-solana",
-};
-
-export const POWERCHAIN_BRIDGE_ASSETS = [PWRC_SOLANA_ASSET, WPWRC_SUI_ASSET] as const;
+export type BridgeAssetChain = PowerChainAssetChain;
+export type BridgeAssetKind = PowerChainAssetKind;
+export type BridgeAssetDescriptor = PowerChainAssetDescriptor;
+export { PWRC_SOLANA_ASSET, WPWRC_SUI_ASSET };
+export const POWERCHAIN_BRIDGE_ASSETS = POWERCHAIN_ASSET_REGISTRY;
 
 export function bridgeAssetForChain(chain: BridgeAssetChain) {
   return chain === "SOLANA" ? PWRC_SOLANA_ASSET : WPWRC_SUI_ASSET;

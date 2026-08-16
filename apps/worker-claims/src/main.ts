@@ -1,11 +1,10 @@
-import { closeDatabase, heartbeatWorker, removeWorkerHeartbeat } from "@powerchain/database";
+import { createWorkerHeartbeat, workerRuntimeConfig } from "@powerchain/backend/workers";
+import { closeDatabase } from "@powerchain/database";
 import { claimClaimPayoutBatch, finalizeClaimPayout, recordClaimRetry, releaseClaimLease, submitClaimPayout } from "@powerchain/backend";
-import { parseBoundedInteger, runSupervisedWorker, throwIfAborted } from "@powerchain/runtime";
+import { runSupervisedWorker, throwIfAborted } from "@powerchain/runtime";
 
-const workerId = process.env.POWERCHAIN_CLAIM_WORKER_ID?.trim() || `claim-${process.pid}`;
-const startedAt = new Date();
-const idleMs = parseBoundedInteger(process.env.POWERCHAIN_CLAIM_WORKER_INTERVAL_MS, 5_000, { min: 1_000, max: 300_000 });
-const leaseMs = parseBoundedInteger(process.env.POWERCHAIN_CLAIM_WORKER_LEASE_MS, 60_000, { min: 10_000, max: 300_000 });
+const { workerId, idleMs, leaseMs, batchSize } = workerRuntimeConfig("claims");
+const heartbeat = createWorkerHeartbeat({ workerId, kind: "claims" });
 
 await runSupervisedWorker({
   name: "claim-worker",
@@ -15,8 +14,8 @@ await runSupervisedWorker({
   shutdownTimeoutMs: 15_000,
   run: async ({ signal }) => {
     throwIfAborted(signal);
-    await heartbeatWorker({ workerId, workerType: "claims", version: "1.0.0", startedAt });
-    const jobs = await claimClaimPayoutBatch({ workerId, limit: 50, leaseMs });
+    await heartbeat.beat();
+    const jobs = await claimClaimPayoutBatch({ workerId, limit: batchSize, leaseMs });
     for (const job of jobs) {
       throwIfAborted(signal);
       try {
@@ -28,5 +27,5 @@ await runSupervisedWorker({
       }
     }
   },
-  cleanup: async () => { await removeWorkerHeartbeat(workerId); await closeDatabase(); },
+  cleanup: async () => { await heartbeat.stop(); await closeDatabase(); },
 });

@@ -1,0 +1,2122 @@
+{
+  "info": {
+    "name": "PowerChain DeFAI API 1.0.0",
+    "description": "PowerChain | DeFAI API Docs. Generated from shared/actions.json. Use the combined collection for shared services, Bridge, and Swap; import api/swagger.yaml or /api/v1/openapi for the full OpenAPI schema. Bridge and Swap also have independent collections under api/bridge and api/swap. X-Api-Key is supported through {{apiKey}}. Never store wallet secrets, treasury keys, provider credentials, or signing material in shared Postman environments.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://powerchain.app",
+      "type": "string"
+    },
+    {
+      "key": "swapUrl",
+      "value": "https://swap.powerchain.app",
+      "type": "string"
+    },
+    {
+      "key": "bridgeUrl",
+      "value": "https://bridge.powerchain.app",
+      "type": "string"
+    },
+    {
+      "key": "apiKey",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "id",
+      "value": "replace-me",
+      "type": "string"
+    },
+    {
+      "key": "transferId",
+      "value": "replace-me",
+      "type": "string"
+    },
+    {
+      "key": "suiWallet",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "suiInputCoinType",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "suiOutputCoinType",
+      "value": "0x2::sui::SUI",
+      "type": "string"
+    },
+    {
+      "key": "solanaWallet",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "solanaInputMint",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "solanaOutputMint",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "swapAmountBaseUnits",
+      "value": "1000000000",
+      "type": "string"
+    },
+    {
+      "key": "slippageBps",
+      "value": "50",
+      "type": "string"
+    },
+    {
+      "key": "suiMinimumOutBaseUnits",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "signedTransaction",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "jupiterRequestId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "jupiterMinimumOutputBaseUnits",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bridgeDirection",
+      "value": "SUI_TO_SOLANA",
+      "type": "string"
+    },
+    {
+      "key": "bridgePrincipalBaseUnits",
+      "value": "1000000000",
+      "type": "string"
+    },
+    {
+      "key": "bridgeSourceAddress",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bridgeDestinationAddress",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bridgeQuoteId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bridgeIntentCommitment",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bridgeRuntimeSnapshotId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Assets",
+      "item": [
+        {
+          "name": "Assets Bridge Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/assets/bridge",
+            "description": "assets.bridge.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Blockchains",
+      "item": [
+        {
+          "name": "Blockchains Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/blockchains",
+            "description": "blockchains.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Bridge",
+      "item": [
+        {
+          "name": "Bridge Config Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{bridgeUrl}}/api/v1/bridge/config",
+            "description": "bridge.config.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Bridge History Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{bridgeUrl}}/api/v1/bridge/history",
+            "description": "bridge.history.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Bridge Openapi Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{bridgeUrl}}/api/v1/bridge/openapi",
+            "description": "bridge.openapi.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Bridge Quote Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{bridgeUrl}}/api/v1/bridge/quote",
+            "description": "bridge.quote.post · public · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"direction\": \"{{bridgeDirection}}\",\n  \"principalBaseUnits\": \"{{bridgePrincipalBaseUnits}}\",\n  \"sourceAddress\": \"{{bridgeSourceAddress}}\",\n  \"destinationAddress\": \"{{bridgeDestinationAddress}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Bridge Routes Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{bridgeUrl}}/api/v1/bridge/routes",
+            "description": "bridge.routes.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Bridge Runtime Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{bridgeUrl}}/api/v1/bridge/runtime",
+            "description": "bridge.runtime.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Bridge Transfers Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{bridgeUrl}}/api/v1/bridge/transfers",
+            "description": "bridge.transfers.post · public · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quoteId\": \"{{bridgeQuoteId}}\",\n  \"intentCommitment\": \"{{bridgeIntentCommitment}}\",\n  \"runtimeSnapshotId\": \"{{bridgeRuntimeSnapshotId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Bridge Transfers Id Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{bridgeUrl}}/api/v1/bridge/transfers/{{id}}",
+            "description": "bridge.transfers.id.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Bridge Transfers Id Events Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{bridgeUrl}}/api/v1/bridge/transfers/{{id}}/events",
+            "description": "bridge.transfers.id.events.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Bridge Transfers Id Events Stream Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{bridgeUrl}}/api/v1/bridge/transfers/{{id}}/events/stream",
+            "description": "bridge.transfers.id.events.stream.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Bridge Transfers Id Source Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{bridgeUrl}}/api/v1/bridge/transfers/{{id}}/source",
+            "description": "bridge.transfers.id.source.post · public · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Calculators",
+      "item": [
+        {
+          "name": "Calculators Transaction Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/calculators/transaction",
+            "description": "calculators.transaction.post · public · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Chat",
+      "item": [
+        {
+          "name": "Chat Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/chat",
+            "description": "chat.post · public · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Claims",
+      "item": [
+        {
+          "name": "Claims Challenge Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/claims/challenge",
+            "description": "claims.challenge.post · public · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Claims Eligibility Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/claims/eligibility",
+            "description": "claims.eligibility.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Claims Reserve Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/claims/reserve",
+            "description": "claims.reserve.post · public · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Claims Status Id Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/claims/status/{{id}}",
+            "description": "claims.status.id.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Claims Submit Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/claims/submit",
+            "description": "claims.submit.post · public · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Clusters",
+      "item": [
+        {
+          "name": "Clusters Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/clusters",
+            "description": "clusters.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Currencies",
+      "item": [
+        {
+          "name": "Currencies Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/currencies",
+            "description": "currencies.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Data",
+      "item": [
+        {
+          "name": "Data Pwrc Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/data/pwrc",
+            "description": "data.pwrc.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Data Pwrc Integrity Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/data/pwrc/integrity",
+            "description": "data.pwrc.integrity.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Data Pwrc Snapshot Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/data/pwrc/snapshot",
+            "description": "data.pwrc.snapshot.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Data Solana Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/data/solana",
+            "description": "data.solana.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Data Sui Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/data/sui",
+            "description": "data.sui.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Fees",
+      "item": [
+        {
+          "name": "Fees Collection Plan Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/fees/collection-plan",
+            "description": "fees.collection-plan.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Fees Policy Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/fees/policy",
+            "description": "fees.policy.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Fees Token 2022 Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/fees/token-2022",
+            "description": "fees.token-2022.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/health",
+            "description": "health.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Integrations",
+      "item": [
+        {
+          "name": "Integrations Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/integrations",
+            "description": "integrations.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Integrations Cetus Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/integrations/cetus",
+            "description": "integrations.cetus.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Integrations Market Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/integrations/market",
+            "description": "integrations.market.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Liquidity",
+      "item": [
+        {
+          "name": "Liquidity Positions Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/liquidity/positions",
+            "description": "liquidity.positions.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Liquidity Status Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/liquidity/status",
+            "description": "liquidity.status.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Market",
+      "item": [
+        {
+          "name": "Market Prices Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/market/prices",
+            "description": "market.prices.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Market Rates Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/market/rates",
+            "description": "market.rates.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Market Token Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/market/token",
+            "description": "market.token.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Metadata",
+      "item": [
+        {
+          "name": "Metadata Solana Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/metadata/solana",
+            "description": "metadata.solana.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Metrics",
+      "item": [
+        {
+          "name": "Metrics Bridge Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/metrics/bridge",
+            "description": "metrics.bridge.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Openapi",
+      "item": [
+        {
+          "name": "Openapi Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/openapi",
+            "description": "openapi.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Operations",
+      "item": [
+        {
+          "name": "Operations Status Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/operations/status",
+            "description": "operations.status.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Operator",
+      "item": [
+        {
+          "name": "Operator Fees Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/operator/fees",
+            "description": "operator.fees.get · operator · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Operator Fees Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/operator/fees",
+            "description": "operator.fees.post · operator · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Operator Fees Export Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/operator/fees/export",
+            "description": "operator.fees.export.get · operator · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Operator Fees Ledger Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/operator/fees/ledger",
+            "description": "operator.fees.ledger.get · operator · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Operator Fees Policies Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/operator/fees/policies",
+            "description": "operator.fees.policies.get · operator · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Operator Fees Proposals Id Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/operator/fees/proposals/{{id}}",
+            "description": "operator.fees.proposals.id.post · operator · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Operator Fees Reconciliation Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/operator/fees/reconciliation",
+            "description": "operator.fees.reconciliation.get · operator · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Operator Fees Revenue Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/operator/fees/revenue",
+            "description": "operator.fees.revenue.get · operator · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Operator Fees Settlements Id Reverify Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/operator/fees/settlements/{{id}}/reverify",
+            "description": "operator.fees.settlements.id.reverify.post · operator · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Payments Solana Pay Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/payments/solana-pay",
+            "description": "payments.solana-pay.post · public · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Payments Status Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/payments/status",
+            "description": "payments.status.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pools",
+      "item": [
+        {
+          "name": "Pools Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/pools",
+            "description": "pools.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Portfolio",
+      "item": [
+        {
+          "name": "Portfolio Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/portfolio",
+            "description": "portfolio.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Providers",
+      "item": [
+        {
+          "name": "Providers Diagnostics Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/providers/diagnostics",
+            "description": "providers.diagnostics.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Providers Health Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/providers/health",
+            "description": "providers.health.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Providers Readiness Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/providers/readiness",
+            "description": "providers.readiness.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ready",
+      "item": [
+        {
+          "name": "Ready Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/ready",
+            "description": "ready.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Rpc",
+      "item": [
+        {
+          "name": "Rpc Status Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/rpc/status",
+            "description": "rpc.status.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Security",
+      "item": [
+        {
+          "name": "Security Policy Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/security/policy",
+            "description": "security.policy.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sessions",
+      "item": [
+        {
+          "name": "Sessions Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/sessions",
+            "description": "sessions.post · public · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Staking",
+      "item": [
+        {
+          "name": "Staking Status Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/staking/status",
+            "description": "staking.status.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Swap",
+      "item": [
+        {
+          "name": "Swap Balance Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{swapUrl}}/api/v1/swap/balance",
+            "description": "swap.balance.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Swap Openapi Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{swapUrl}}/api/v1/swap/openapi",
+            "description": "swap.openapi.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Swap Quote Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{swapUrl}}/api/v1/swap/quote",
+            "description": "swap.quote.post · public · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payer\": \"{{suiWallet}}\",\n  \"fromCoinType\": \"{{suiInputCoinType}}\",\n  \"toCoinType\": \"{{suiOutputCoinType}}\",\n  \"amountBaseUnits\": \"{{swapAmountBaseUnits}}\",\n  \"slippageBps\": {{slippageBps}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Swap Receipt Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{swapUrl}}/api/v1/swap/receipt",
+            "description": "swap.receipt.post · public · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Swap Solana Execute Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{swapUrl}}/api/v1/swap/solana/execute",
+            "description": "swap.solana.execute.post · public · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payer\": \"{{solanaWallet}}\",\n  \"signedTransaction\": \"{{signedTransaction}}\",\n  \"requestId\": \"{{jupiterRequestId}}\",\n  \"inputMint\": \"{{solanaInputMint}}\",\n  \"outputMint\": \"{{solanaOutputMint}}\",\n  \"amountBaseUnits\": \"{{swapAmountBaseUnits}}\",\n  \"slippageBps\": {{slippageBps}},\n  \"minimumOutputBaseUnits\": \"{{jupiterMinimumOutputBaseUnits}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Swap Solana Order Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{swapUrl}}/api/v1/swap/solana/order",
+            "description": "swap.solana.order.post · public · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payer\": \"{{solanaWallet}}\",\n  \"inputMint\": \"{{solanaInputMint}}\",\n  \"outputMint\": \"{{solanaOutputMint}}\",\n  \"amountBaseUnits\": \"{{swapAmountBaseUnits}}\",\n  \"slippageBps\": {{slippageBps}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Swap Transaction Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{swapUrl}}/api/v1/swap/transaction",
+            "description": "swap.transaction.post · public · mutation",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payer\": \"{{suiWallet}}\",\n  \"fromCoinType\": \"{{suiInputCoinType}}\",\n  \"toCoinType\": \"{{suiOutputCoinType}}\",\n  \"amountBaseUnits\": \"{{swapAmountBaseUnits}}\",\n  \"slippageBps\": {{slippageBps}},\n  \"minimumOutBaseUnits\": \"{{suiMinimumOutBaseUnits}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Token",
+      "item": [
+        {
+          "name": "Token Information Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/token/information",
+            "description": "token.information.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tokens",
+      "item": [
+        {
+          "name": "Tokens Trusted Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/tokens/trusted",
+            "description": "tokens.trusted.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "Transactions Solana Signature Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/transactions/solana/{{signature}}",
+            "description": "transactions.solana.signature.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Transactions Sui Digest Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/transactions/sui/{{digest}}",
+            "description": "transactions.sui.digest.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Version",
+      "item": [
+        {
+          "name": "Version Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/version",
+            "description": "version.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Wallet",
+      "item": [
+        {
+          "name": "Wallet Activity Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/wallet/activity",
+            "description": "wallet.activity.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Wallet Overview Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/wallet/overview",
+            "description": "wallet.overview.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Wallet Portfolio Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/wallet/portfolio",
+            "description": "wallet.portfolio.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Wallet Solana Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/wallet/solana",
+            "description": "wallet.solana.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Wallet Solana Pwrc Transfers Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/wallet/solana/pwrc-transfers",
+            "description": "wallet.solana.pwrc-transfers.get · public · idempotent"
+          },
+          "response": []
+        },
+        {
+          "name": "Wallet Sui Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/wallet/sui",
+            "description": "wallet.sui.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Workers",
+      "item": [
+        {
+          "name": "Workers Readiness Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/workers/readiness",
+            "description": "workers.readiness.get · public · idempotent"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

@@ -11,4 +11,4 @@ Validation performed for this improvement pass:
 - TypeScript parser sweep: PASS (243 TS/TSX files, 0 syntax errors; parser available in execution environment was TypeScript 5.8.3).
 - Node typings aligned to 26.1.2 across all first-party workspaces.
 
-The execution container itself is not running the repository's pinned Node 26.5.0 toolchain and cannot currently bootstrap pnpm from the npm registry, so dependency-aware `pnpm install`, Prisma generation/validation, `tsc --noEmit`, and `next build` are not claimed here.
+The execution container itself is not running the repository's pinned Node 24.x toolchain and cannot currently bootstrap pnpm from the npm registry, so dependency-aware `pnpm install`, Prisma generation/validation, `tsc --noEmit`, and `next build` are not claimed here.

@@ -1,3 +1,4 @@
+export * from "./audit";
 export { prisma } from "./prisma";
 
 export async function heartbeatWorker(input: { workerId: string; workerType: string; version: string; startedAt: Date }) {
@@ -78,3 +79,6 @@ export async function retrySerializableTransaction<T>(
   }
   throw lastError instanceof Error ? lastError : new Error("POWERCHAIN_TRANSACTION_RETRY_EXHAUSTED");
 }
+
+export * from "./queries";
+export * from "./types/db";

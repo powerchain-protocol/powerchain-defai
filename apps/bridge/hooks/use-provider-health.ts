@@ -8,11 +8,14 @@ export function useProviderHealth(refreshMs = 30_000) {
   const [data, setData] = useState<ProviderHealthPayload>();
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [lastSuccessfulAt, setLastSuccessfulAt] = useState<number>();
+  const [online, setOnline] = useState(true);
   const requestGeneration = useRef(0);
   const activeController = useRef<AbortController>();
 
   const refresh = useCallback(async () => {
+    setRefreshing(true);
     const generation = ++requestGeneration.current;
     activeController.current?.abort();
     const controller = new AbortController();
@@ -32,24 +35,33 @@ export function useProviderHealth(refreshMs = 30_000) {
       if (controller.signal.aborted || generation !== requestGeneration.current) return;
       setError(reason instanceof Error ? reason.message : "Provider health unavailable");
     } finally {
-      if (generation === requestGeneration.current) setLoading(false);
+      if (generation === requestGeneration.current) {
+        setLoading(false);
+        setRefreshing(false);
+      }
     }
   }, []);
 
   useEffect(() => {
-    void refresh();
+    const syncOnline = () => setOnline(navigator.onLine);
+    syncOnline();
+    if (navigator.onLine) void refresh(); else setLoading(false);
     const interval = setInterval(() => {
       if (document.visibilityState === "visible" && navigator.onLine) void refresh();
     }, Math.max(10_000, Math.min(refreshMs, 120_000)));
     const onVisible = () => { if (document.visibilityState === "visible" && navigator.onLine) void refresh(); };
-    const onOnline = () => void refresh();
+    const onOnline = () => { setOnline(true); void refresh(); };
+    const onOffline = () => setOnline(false);
     document.addEventListener("visibilitychange", onVisible);
     window.addEventListener("online", onOnline);
+    window.addEventListener("offline", onOffline);
     return () => {
+      requestGeneration.current += 1;
       activeController.current?.abort();
       clearInterval(interval);
       document.removeEventListener("visibilitychange", onVisible);
       window.removeEventListener("online", onOnline);
+      window.removeEventListener("offline", onOffline);
     };
   }, [refresh, refreshMs]);
 
@@ -59,11 +71,13 @@ export function useProviderHealth(refreshMs = 30_000) {
     data,
     error,
     loading,
+    refreshing,
     stale,
     payloadAgeMs,
     lastSuccessfulAt,
     degraded: data?.status === "degraded" || stale,
     unavailable: data?.status === "unavailable",
+    online,
     refresh,
   };
 }

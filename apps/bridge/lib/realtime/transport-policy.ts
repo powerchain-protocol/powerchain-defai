@@ -21,9 +21,7 @@ export function chooseRealtimeTransport(capabilities: TransportCapabilities): Re
   return decideRealtimeTransport(capabilities).transport;
 }
 
-export function publicRealtimeUrl() {
-  const value = process.env.NEXT_PUBLIC_POWERCHAIN_REALTIME_WS_URL?.trim();
-  if (!value) return undefined;
+function validRealtimeUrl(value: string) {
   try {
     const url = new URL(value);
     if (url.username || url.password) return undefined;
@@ -32,6 +30,24 @@ export function publicRealtimeUrl() {
   } catch {
     return undefined;
   }
+}
+
+export function publicRealtimeUrls() {
+  const values = [
+    process.env.NEXT_PUBLIC_POWERCHAIN_REALTIME_WS_URL,
+    process.env.NEXT_PUBLIC_POWERCHAIN_REALTIME_WS_FALLBACK_URL,
+    ...(process.env.NEXT_PUBLIC_POWERCHAIN_REALTIME_WS_FALLBACK_URLS ?? "").split(","),
+  ];
+  const result: string[] = [];
+  for (const raw of values) {
+    const normalized = raw?.trim() ? validRealtimeUrl(raw.trim()) : undefined;
+    if (normalized && !result.includes(normalized)) result.push(normalized);
+  }
+  return result;
+}
+
+export function publicRealtimeUrl() {
+  return publicRealtimeUrls()[0];
 }
 
 export function transferRealtimeUrl(base: string, transferId: string, cursor?: string | null) {

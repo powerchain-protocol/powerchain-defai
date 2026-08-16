@@ -8,9 +8,30 @@
       "idempotent": true
     },
     {
+      "name": "blockchains.get",
+      "method": "GET",
+      "path": "/api/v1/blockchains",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "bridge.config.get",
+      "method": "GET",
+      "path": "/api/v1/bridge/config",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
       "name": "bridge.history.get",
       "method": "GET",
       "path": "/api/v1/bridge/history",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "bridge.openapi.get",
+      "method": "GET",
+      "path": "/api/v1/bridge/openapi",
       "auth": "public",
       "idempotent": true
     },
@@ -20,6 +41,13 @@
       "path": "/api/v1/bridge/quote",
       "auth": "public",
       "idempotent": false
+    },
+    {
+      "name": "bridge.routes.get",
+      "method": "GET",
+      "path": "/api/v1/bridge/routes",
+      "auth": "public",
+      "idempotent": true
     },
     {
       "name": "bridge.runtime.get",
@@ -50,9 +78,30 @@
       "idempotent": true
     },
     {
+      "name": "bridge.transfers.id.events.stream.get",
+      "method": "GET",
+      "path": "/api/v1/bridge/transfers/:id/events/stream",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
       "name": "bridge.transfers.id.source.post",
       "method": "POST",
       "path": "/api/v1/bridge/transfers/:id/source",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "calculators.transaction.post",
+      "method": "POST",
+      "path": "/api/v1/calculators/transaction",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "chat.post",
+      "method": "POST",
+      "path": "/api/v1/chat",
       "auth": "public",
       "idempotent": false
     },
@@ -90,6 +139,20 @@
       "path": "/api/v1/claims/submit",
       "auth": "public",
       "idempotent": false
+    },
+    {
+      "name": "clusters.get",
+      "method": "GET",
+      "path": "/api/v1/clusters",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "currencies.get",
+      "method": "GET",
+      "path": "/api/v1/currencies",
+      "auth": "public",
+      "idempotent": true
     },
     {
       "name": "data.pwrc.get",
@@ -141,6 +204,13 @@
       "idempotent": true
     },
     {
+      "name": "fees.token-2022.get",
+      "method": "GET",
+      "path": "/api/v1/fees/token-2022",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
       "name": "health.get",
       "method": "GET",
       "path": "/api/v1/health",
@@ -155,9 +225,79 @@
       "idempotent": true
     },
     {
+      "name": "integrations.cetus.get",
+      "method": "GET",
+      "path": "/api/v1/integrations/cetus",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "integrations.market.get",
+      "method": "GET",
+      "path": "/api/v1/integrations/market",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "liquidity.positions.get",
+      "method": "GET",
+      "path": "/api/v1/liquidity/positions",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "liquidity.status.get",
+      "method": "GET",
+      "path": "/api/v1/liquidity/status",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
       "name": "market.prices.get",
       "method": "GET",
       "path": "/api/v1/market/prices",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "market.rates.get",
+      "method": "GET",
+      "path": "/api/v1/market/rates",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "market.token.get",
+      "method": "GET",
+      "path": "/api/v1/market/token",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "metadata.solana.get",
+      "method": "GET",
+      "path": "/api/v1/metadata/solana",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "metrics.bridge.get",
+      "method": "GET",
+      "path": "/api/v1/metrics/bridge",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "openapi.get",
+      "method": "GET",
+      "path": "/api/v1/openapi",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "operations.status.get",
+      "method": "GET",
+      "path": "/api/v1/operations/status",
       "auth": "public",
       "idempotent": true
     },
@@ -225,6 +365,34 @@
       "idempotent": false
     },
     {
+      "name": "payments.solana-pay.post",
+      "method": "POST",
+      "path": "/api/v1/payments/solana-pay",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "payments.status.get",
+      "method": "GET",
+      "path": "/api/v1/payments/status",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "pools.get",
+      "method": "GET",
+      "path": "/api/v1/pools",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "portfolio.get",
+      "method": "GET",
+      "path": "/api/v1/portfolio",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
       "name": "providers.diagnostics.get",
       "method": "GET",
       "path": "/api/v1/providers/diagnostics",
@@ -249,6 +417,97 @@
       "name": "ready.get",
       "method": "GET",
       "path": "/api/v1/ready",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "rpc.status.get",
+      "method": "GET",
+      "path": "/api/v1/rpc/status",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "security.policy.get",
+      "method": "GET",
+      "path": "/api/v1/security/policy",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "sessions.post",
+      "method": "POST",
+      "path": "/api/v1/sessions",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "staking.status.get",
+      "method": "GET",
+      "path": "/api/v1/staking/status",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "swap.balance.get",
+      "method": "GET",
+      "path": "/api/v1/swap/balance",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "swap.openapi.get",
+      "method": "GET",
+      "path": "/api/v1/swap/openapi",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "swap.quote.post",
+      "method": "POST",
+      "path": "/api/v1/swap/quote",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "swap.receipt.post",
+      "method": "POST",
+      "path": "/api/v1/swap/receipt",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "swap.solana.execute.post",
+      "method": "POST",
+      "path": "/api/v1/swap/solana/execute",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "swap.solana.order.post",
+      "method": "POST",
+      "path": "/api/v1/swap/solana/order",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "swap.transaction.post",
+      "method": "POST",
+      "path": "/api/v1/swap/transaction",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "token.information.get",
+      "method": "GET",
+      "path": "/api/v1/token/information",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "tokens.trusted.get",
+      "method": "GET",
+      "path": "/api/v1/tokens/trusted",
       "auth": "public",
       "idempotent": true
     },

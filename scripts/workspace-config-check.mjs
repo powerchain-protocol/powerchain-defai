@@ -59,10 +59,21 @@ for (const rel of ["apps", "packages"]) {
   }
 }
 
+for (const rel of ["shared/blockchain/package.json", "clusters/package.json", "api/package.json"]) {
+  const packagePath = path.join(root, rel);
+  const pkg = JSON.parse(fs.readFileSync(packagePath, "utf8"));
+  if (pkg.version !== "1.0.0") errors.push(`${rel} version must remain 1.0.0`);
+  for (const section of ["dependencies", "devDependencies", "optionalDependencies", "peerDependencies"]) {
+    for (const [name, spec] of Object.entries(pkg[section] ?? {})) {
+      if (name.startsWith("@powerchain/") && !String(spec).startsWith("workspace:")) errors.push(`${rel} ${section}.${name} must use workspace:`);
+    }
+  }
+}
+
 const rootPkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
 if (rootPkg.version !== "1.0.0") errors.push("root version must remain 1.0.0");
-if (rootPkg.packageManager !== "pnpm@11.21.0") errors.push("packageManager must be pnpm@11.21.0");
-if (rootPkg.engines?.pnpm !== "11.21.0") errors.push("engines.pnpm must be 11.21.0");
+if (rootPkg.packageManager !== "pnpm@11.22.0") errors.push("packageManager must be pnpm@11.22.0");
+if (rootPkg.engines?.pnpm !== ">=11.22.0 <12") errors.push("engines.pnpm must be >=11.22.0 <12");
 
 if (errors.length) {
   console.error("Workspace configuration check FAILED:\n- " + errors.join("\n- "));

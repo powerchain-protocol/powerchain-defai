@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "providers": [
+    {"id":"helius","purpose":"solana-rpc-das","serverOnlyKey":true},
+    {"id":"metaplex","purpose":"solana-token-metadata","onChain":true},
+    {"id":"birdeye","purpose":"market-data","authoritativeForBridgeAccounting":false},
+    {"id":"dexscreener","purpose":"market-data","authoritativeForBridgeAccounting":false},
+    {"id":"coinmarketcap","purpose":"market-data","authoritativeForBridgeAccounting":false}
+  ]
+}

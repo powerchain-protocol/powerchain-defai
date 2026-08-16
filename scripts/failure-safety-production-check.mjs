@@ -8,7 +8,7 @@ ok(db.includes("retrySerializableTransaction")&&db.includes('code === "P2034"')&
 const bridge=text("apps/bridge/server/services/bridge-operations.ts");
 ok(bridge.includes("retrySerializableTransaction")&&bridge.includes('isolationLevel: "Serializable"'),"bridge transfer creation is serializable/retry-safe");
 ok(bridge.includes("QUOTE_ALREADY_USED"),"one quote cannot create competing transfers");
-const claim=text("apps/bridge/server/services/claim-service.ts");
+const claim=text("apps/backend/src/claims/service.ts");
 ok(claim.includes("submitIdempotencyKey")&&claim.includes("CLAIM_SUBMIT_IDEMPOTENCY_KEY_REUSED"),"claim submit idempotency is persisted and enforced");
 ok(claim.includes("retrySerializableTransaction")&&claim.match(/isolationLevel: "Serializable"/g)?.length>=2,"claim reserve/submit use retry-safe serializable transactions");
 const schema=text("prisma/schema.prisma");

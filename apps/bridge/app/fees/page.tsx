@@ -11,12 +11,12 @@ export const metadata: Metadata = {
 
 export default function FeesPage() {
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
+    <main className="mx-auto w-full max-w-6xl py-2 sm:py-4">
       <PageHeader
         eyebrow="PowerChain Bridge"
         title="Transparent service fees"
         description="Preview the exact governed fee before signing. Your PWRC↔wPWRC bridge principal remains 1:1; the service fee and source-chain gas are separate."
-        actions={<Link href="/bridge" className="inline-flex min-h-10 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900">Back to bridge</Link>}
+        actions={<Link href="/bridge" className="inline-flex min-h-10 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900">Back to bridge</Link>}
       />
       <div className="mt-8 grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
         <ServiceFeeEstimator />

@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 type Tone = "info" | "success" | "warning" | "danger";
 
 const toneClasses: Record<Tone, string> = {
-  info: "border-blue-200 bg-blue-50 text-blue-950 dark:border-blue-900/70 dark:bg-blue-950/35 dark:text-blue-100",
-  success: "border-emerald-200 bg-emerald-50 text-emerald-950 dark:border-emerald-900/70 dark:bg-emerald-950/35 dark:text-emerald-100",
+  info: "border-[#d4ddd8] bg-[#f1f4f2] text-[#07100d] dark:border-[#29483c]/60 dark:bg-[#09110e]/55 dark:text-[#edf2ef]",
+  success: "border-[#d4ddd8] bg-[#f1f4f2] text-[#07100d] dark:border-[#29483c]/60 dark:bg-[#09110e]/55 dark:text-[#edf2ef]",
   warning: "border-amber-200 bg-amber-50 text-amber-950 dark:border-amber-900/70 dark:bg-amber-950/35 dark:text-amber-100",
   danger: "border-red-200 bg-red-50 text-red-950 dark:border-red-900/70 dark:bg-red-950/35 dark:text-red-100",
 };

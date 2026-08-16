@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "policy": "verified-only",
+  "website": "https://powerchain.app",
+  "applications": {
+    "swap": "https://swap.powerchain.app",
+    "bridge": "https://bridge.powerchain.app"
+  },
+  "socials": {
+    "x": null,
+    "discord": null,
+    "telegram": null,
+    "github": null
+  }
+}

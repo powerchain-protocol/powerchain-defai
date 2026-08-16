@@ -19,6 +19,9 @@ const packageFiles = [
   "packages/database/package.json",
   "packages/protocol/package.json",
   "packages/runtime/package.json",
+  "shared/blockchain/package.json",
+  "clusters/package.json",
+  "api/package.json",
 ];
 for (const rel of packageFiles) {
   const file = path.join(root, rel);
@@ -36,7 +39,7 @@ const walk = (dir) => {
     else if (entry.name === "tsconfig.json") tsconfigFiles.push(full);
   }
 };
-for (const dir of ["apps", "packages"]) walk(path.join(root, dir));
+for (const dir of ["apps", "packages", "shared/blockchain", "clusters", "api"]) walk(path.join(root, dir));
 for (const file of tsconfigFiles) {
   const data = readJson(file);
   if (typeof data.extends !== "string") continue;
@@ -81,7 +84,7 @@ const sourceWalk = (dir) => {
     else if (/\.(?:ts|tsx|mjs|js)$/.test(entry.name)) sourceFiles.push(full);
   }
 };
-for (const dir of ["apps", "packages"]) sourceWalk(path.join(root, dir));
+for (const dir of ["apps", "packages", "shared/blockchain", "clusters", "api"]) sourceWalk(path.join(root, dir));
 const unresolved = [];
 for (const file of sourceFiles) {
   const text = fs.readFileSync(file, "utf8");
@@ -104,9 +107,11 @@ check(runtime.includes("parseBoundedInteger"), "shared runtime provides bounded 
 check(runtime.includes("AbortController"), "worker supervisor has cooperative shutdown signal");
 check(runtime.includes("POWERCHAIN_WORKER_TICK_FAILED"), "worker supervisor emits structured failure logs");
 
+const workerConfig = fs.readFileSync(path.join(root, "apps/backend/src/workers/config.ts"), "utf8");
+check(workerConfig.includes("bounded(") && workerConfig.includes("workerRuntimeConfig"), "canonical backend worker config bounds environment values");
 for (const rel of ["apps/worker-bridge/src/main.ts", "apps/worker-fees/src/main.ts", "apps/worker-claims/src/main.ts"]) {
   const text = fs.readFileSync(path.join(root, rel), "utf8");
-  check(text.includes("parseBoundedInteger"), `${rel} uses bounded environment parsing`);
+  check(text.includes("workerRuntimeConfig"), `${rel} consumes canonical bounded worker configuration`);
 }
 
 if (failed) process.exit(1);

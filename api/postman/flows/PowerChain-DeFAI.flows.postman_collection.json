@@ -1,0 +1,764 @@
+{
+  "info": {
+    "name": "PowerChain DeFAI API Flows 1.0.0",
+    "description": "Executable Collection Runner companion for the PowerChain Postman Flow architecture. Request bodies and variable capture are production-shaped; wallet signing stays outside Postman and Bridge finality remains Wormhole NTT-bound.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://powerchain.app",
+      "type": "string"
+    },
+    {
+      "key": "swapUrl",
+      "value": "https://swap.powerchain.app",
+      "type": "string"
+    },
+    {
+      "key": "bridgeUrl",
+      "value": "https://bridge.powerchain.app",
+      "type": "string"
+    },
+    {
+      "key": "apiKey",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "suiWallet",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "suiInputAsset",
+      "value": "wpwrc",
+      "type": "string"
+    },
+    {
+      "key": "suiInputCoinType",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "suiOutputCoinType",
+      "value": "0x2::sui::SUI",
+      "type": "string"
+    },
+    {
+      "key": "solanaWallet",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "solanaInputMint",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "solanaOutputMint",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "swapAmountBaseUnits",
+      "value": "1000000000",
+      "type": "string"
+    },
+    {
+      "key": "slippageBps",
+      "value": "50",
+      "type": "string"
+    },
+    {
+      "key": "suiMinimumOutBaseUnits",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "suiQuoteId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "jupiterRequestId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "jupiterUnsignedTransaction",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "jupiterMinimumOutputBaseUnits",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "jupiterLastValidBlockHeight",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "signedTransaction",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bridgeDirection",
+      "value": "SUI_TO_SOLANA",
+      "type": "string"
+    },
+    {
+      "key": "bridgePrincipalBaseUnits",
+      "value": "1000000000",
+      "type": "string"
+    },
+    {
+      "key": "bridgeSourceAddress",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bridgeDestinationAddress",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bridgeQuoteId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bridgeIntentCommitment",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bridgeRuntimeSnapshotId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bridgeIdempotencyKey",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "id",
+      "value": "replace-me",
+      "type": "string"
+    },
+    {
+      "key": "transferId",
+      "value": "replace-me",
+      "type": "string"
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test(\"HTTP response received\", function () { pm.expect(pm.response.code).to.be.within(200, 599); });",
+          "pm.test(\"JSON content type for JSON responses\", function () { if (pm.response.text()) pm.expect(pm.response.headers.get(\"Content-Type\") || \"\").to.include(\"application/json\"); });"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Platform Preflight",
+      "description": "Validate public security, cluster, RPC and token-information readiness before transactional flows.",
+      "item": [
+        {
+          "name": "Security policy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP response received\", function () { pm.expect(pm.response.code).to.be.within(200, 599); });",
+                  "pm.test(\"JSON content type for JSON responses\", function () { if (pm.response.text()) pm.expect(pm.response.headers.get(\"Content-Type\") || \"\").to.include(\"application/json\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/security/policy",
+            "description": "Security policy. Wallet/signing/finality boundaries remain external unless the API contract explicitly reports otherwise."
+          },
+          "response": []
+        },
+        {
+          "name": "Clusters",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP response received\", function () { pm.expect(pm.response.code).to.be.within(200, 599); });",
+                  "pm.test(\"JSON content type for JSON responses\", function () { if (pm.response.text()) pm.expect(pm.response.headers.get(\"Content-Type\") || \"\").to.include(\"application/json\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/clusters",
+            "description": "Clusters. Wallet/signing/finality boundaries remain external unless the API contract explicitly reports otherwise."
+          },
+          "response": []
+        },
+        {
+          "name": "RPC status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP response received\", function () { pm.expect(pm.response.code).to.be.within(200, 599); });",
+                  "pm.test(\"JSON content type for JSON responses\", function () { if (pm.response.text()) pm.expect(pm.response.headers.get(\"Content-Type\") || \"\").to.include(\"application/json\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/rpc/status",
+            "description": "RPC status. Wallet/signing/finality boundaries remain external unless the API contract explicitly reports otherwise."
+          },
+          "response": []
+        },
+        {
+          "name": "Token information",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP response received\", function () { pm.expect(pm.response.code).to.be.within(200, 599); });",
+                  "pm.test(\"JSON content type for JSON responses\", function () { if (pm.response.text()) pm.expect(pm.response.headers.get(\"Content-Type\") || \"\").to.include(\"application/json\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/token/information",
+            "description": "Token information. Wallet/signing/finality boundaries remain external unless the API contract explicitly reports otherwise."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sui Swap Review",
+      "description": "Balance preflight, quote and unsigned transaction preparation. Wallet signing and submission happen outside Postman. SECURITY BOUNDARY: The returned Sui transaction is unsigned. The connected wallet signs and submits it outside Postman.",
+      "item": [
+        {
+          "name": "Balance",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP response received\", function () { pm.expect(pm.response.code).to.be.within(200, 599); });",
+                  "pm.test(\"JSON content type for JSON responses\", function () { if (pm.response.text()) pm.expect(pm.response.headers.get(\"Content-Type\") || \"\").to.include(\"application/json\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{swapUrl}}/api/v1/swap/balance?address={{suiWallet}}&asset={{suiInputAsset}}",
+            "description": "Balance. Wallet/signing/finality boundaries remain external unless the API contract explicitly reports otherwise."
+          },
+          "response": []
+        },
+        {
+          "name": "Quote",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP response received\", function () { pm.expect(pm.response.code).to.be.within(200, 599); });",
+                  "pm.test(\"JSON content type for JSON responses\", function () { if (pm.response.text()) pm.expect(pm.response.headers.get(\"Content-Type\") || \"\").to.include(\"application/json\"); });",
+                  "try { const body = pm.response.json(); const value = body?.[\"data\"]?.[\"minimumOutBaseUnits\"]; if (value !== undefined && value !== null) pm.collectionVariables.set(\"suiMinimumOutBaseUnits\", String(value)); } catch (_) {}",
+                  "try { const body = pm.response.json(); const value = body?.[\"data\"]?.[\"quoteId\"]; if (value !== undefined && value !== null) pm.collectionVariables.set(\"suiQuoteId\", String(value)); } catch (_) {}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payer\": \"{{suiWallet}}\",\n  \"fromCoinType\": \"{{suiInputCoinType}}\",\n  \"toCoinType\": \"{{suiOutputCoinType}}\",\n  \"amountBaseUnits\": \"{{swapAmountBaseUnits}}\",\n  \"slippageBps\": {{slippageBps}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{swapUrl}}/api/v1/swap/quote",
+            "description": "Quote. Wallet/signing/finality boundaries remain external unless the API contract explicitly reports otherwise."
+          },
+          "response": []
+        },
+        {
+          "name": "Prepare unsigned transaction",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP response received\", function () { pm.expect(pm.response.code).to.be.within(200, 599); });",
+                  "pm.test(\"JSON content type for JSON responses\", function () { if (pm.response.text()) pm.expect(pm.response.headers.get(\"Content-Type\") || \"\").to.include(\"application/json\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payer\": \"{{suiWallet}}\",\n  \"fromCoinType\": \"{{suiInputCoinType}}\",\n  \"toCoinType\": \"{{suiOutputCoinType}}\",\n  \"amountBaseUnits\": \"{{swapAmountBaseUnits}}\",\n  \"slippageBps\": {{slippageBps}},\n  \"minimumOutBaseUnits\": \"{{suiMinimumOutBaseUnits}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{swapUrl}}/api/v1/swap/transaction",
+            "description": "Prepare unsigned transaction. Wallet/signing/finality boundaries remain external unless the API contract explicitly reports otherwise."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Solana Swap Review",
+      "description": "Jupiter order preparation and signed-payload execution boundary. Postman never creates the wallet signature. SECURITY BOUNDARY: Copy the unsigned transaction to the connected wallet, sign outside Postman, then provide only the signed serialized payload to the execute request.",
+      "item": [
+        {
+          "name": "Create Jupiter order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP response received\", function () { pm.expect(pm.response.code).to.be.within(200, 599); });",
+                  "pm.test(\"JSON content type for JSON responses\", function () { if (pm.response.text()) pm.expect(pm.response.headers.get(\"Content-Type\") || \"\").to.include(\"application/json\"); });",
+                  "try { const body = pm.response.json(); const value = body?.[\"data\"]?.[\"requestId\"]; if (value !== undefined && value !== null) pm.collectionVariables.set(\"jupiterRequestId\", String(value)); } catch (_) {}",
+                  "try { const body = pm.response.json(); const value = body?.[\"data\"]?.[\"transaction\"]; if (value !== undefined && value !== null) pm.collectionVariables.set(\"jupiterUnsignedTransaction\", String(value)); } catch (_) {}",
+                  "try { const body = pm.response.json(); const value = body?.[\"data\"]?.[\"otherAmountThreshold\"]; if (value !== undefined && value !== null) pm.collectionVariables.set(\"jupiterMinimumOutputBaseUnits\", String(value)); } catch (_) {}",
+                  "try { const body = pm.response.json(); const value = body?.[\"data\"]?.[\"lastValidBlockHeight\"]; if (value !== undefined && value !== null) pm.collectionVariables.set(\"jupiterLastValidBlockHeight\", String(value)); } catch (_) {}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payer\": \"{{solanaWallet}}\",\n  \"inputMint\": \"{{solanaInputMint}}\",\n  \"outputMint\": \"{{solanaOutputMint}}\",\n  \"amountBaseUnits\": \"{{swapAmountBaseUnits}}\",\n  \"slippageBps\": {{slippageBps}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{swapUrl}}/api/v1/swap/solana/order",
+            "description": "Create Jupiter order. Wallet/signing/finality boundaries remain external unless the API contract explicitly reports otherwise."
+          },
+          "response": []
+        },
+        {
+          "name": "Execute wallet-signed payload",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP response received\", function () { pm.expect(pm.response.code).to.be.within(200, 599); });",
+                  "pm.test(\"JSON content type for JSON responses\", function () { if (pm.response.text()) pm.expect(pm.response.headers.get(\"Content-Type\") || \"\").to.include(\"application/json\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payer\": \"{{solanaWallet}}\",\n  \"signedTransaction\": \"{{signedTransaction}}\",\n  \"requestId\": \"{{jupiterRequestId}}\",\n  \"inputMint\": \"{{solanaInputMint}}\",\n  \"outputMint\": \"{{solanaOutputMint}}\",\n  \"amountBaseUnits\": \"{{swapAmountBaseUnits}}\",\n  \"slippageBps\": {{slippageBps}},\n  \"minimumOutputBaseUnits\": \"{{jupiterMinimumOutputBaseUnits}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{swapUrl}}/api/v1/swap/solana/execute",
+            "description": "Execute wallet-signed payload. Wallet/signing/finality boundaries remain external unless the API contract explicitly reports otherwise."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Bridge Create & Monitor",
+      "description": "Read Bridge readiness/routes, issue a bound quote, create persisted transfer state, then inspect authoritative persisted status/events. SECURITY BOUNDARY: Postman observes API state only. Source wallet signing, destination finality and Wormhole NTT reconciliation remain external trust boundaries.",
+      "item": [
+        {
+          "name": "Runtime",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP response received\", function () { pm.expect(pm.response.code).to.be.within(200, 599); });",
+                  "pm.test(\"JSON content type for JSON responses\", function () { if (pm.response.text()) pm.expect(pm.response.headers.get(\"Content-Type\") || \"\").to.include(\"application/json\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{bridgeUrl}}/api/v1/bridge/runtime",
+            "description": "Runtime. Wallet/signing/finality boundaries remain external unless the API contract explicitly reports otherwise."
+          },
+          "response": []
+        },
+        {
+          "name": "Routes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP response received\", function () { pm.expect(pm.response.code).to.be.within(200, 599); });",
+                  "pm.test(\"JSON content type for JSON responses\", function () { if (pm.response.text()) pm.expect(pm.response.headers.get(\"Content-Type\") || \"\").to.include(\"application/json\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{bridgeUrl}}/api/v1/bridge/routes",
+            "description": "Routes. Wallet/signing/finality boundaries remain external unless the API contract explicitly reports otherwise."
+          },
+          "response": []
+        },
+        {
+          "name": "Quote",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP response received\", function () { pm.expect(pm.response.code).to.be.within(200, 599); });",
+                  "pm.test(\"JSON content type for JSON responses\", function () { if (pm.response.text()) pm.expect(pm.response.headers.get(\"Content-Type\") || \"\").to.include(\"application/json\"); });",
+                  "try { const body = pm.response.json(); const value = body?.[\"data\"]?.[\"quoteId\"]; if (value !== undefined && value !== null) pm.collectionVariables.set(\"bridgeQuoteId\", String(value)); } catch (_) {}",
+                  "try { const body = pm.response.json(); const value = body?.[\"data\"]?.[\"intentCommitment\"]; if (value !== undefined && value !== null) pm.collectionVariables.set(\"bridgeIntentCommitment\", String(value)); } catch (_) {}",
+                  "try { const body = pm.response.json(); const value = body?.[\"data\"]?.[\"runtimeSnapshotId\"]; if (value !== undefined && value !== null) pm.collectionVariables.set(\"bridgeRuntimeSnapshotId\", String(value)); } catch (_) {}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"direction\": \"{{bridgeDirection}}\",\n  \"principalBaseUnits\": \"{{bridgePrincipalBaseUnits}}\",\n  \"sourceAddress\": \"{{bridgeSourceAddress}}\",\n  \"destinationAddress\": \"{{bridgeDestinationAddress}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bridgeUrl}}/api/v1/bridge/quote",
+            "description": "Quote. Wallet/signing/finality boundaries remain external unless the API contract explicitly reports otherwise."
+          },
+          "response": []
+        },
+        {
+          "name": "Create transfer",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get(\"bridgeIdempotencyKey\")) pm.collectionVariables.set(\"bridgeIdempotencyKey\", pm.variables.replaceIn(\"{{$guid}}\"));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP response received\", function () { pm.expect(pm.response.code).to.be.within(200, 599); });",
+                  "pm.test(\"JSON content type for JSON responses\", function () { if (pm.response.text()) pm.expect(pm.response.headers.get(\"Content-Type\") || \"\").to.include(\"application/json\"); });",
+                  "try { const body = pm.response.json(); const value = body?.[\"data\"]?.[\"id\"]; if (value !== undefined && value !== null) pm.collectionVariables.set(\"id\", String(value)); } catch (_) {}",
+                  "try { const body = pm.response.json(); const value = body?.[\"data\"]?.[\"id\"]; if (value !== undefined && value !== null) pm.collectionVariables.set(\"transferId\", String(value)); } catch (_) {}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{bridgeIdempotencyKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quoteId\": \"{{bridgeQuoteId}}\",\n  \"intentCommitment\": \"{{bridgeIntentCommitment}}\",\n  \"runtimeSnapshotId\": \"{{bridgeRuntimeSnapshotId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bridgeUrl}}/api/v1/bridge/transfers",
+            "description": "Create transfer. Wallet/signing/finality boundaries remain external unless the API contract explicitly reports otherwise."
+          },
+          "response": []
+        },
+        {
+          "name": "Transfer status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP response received\", function () { pm.expect(pm.response.code).to.be.within(200, 599); });",
+                  "pm.test(\"JSON content type for JSON responses\", function () { if (pm.response.text()) pm.expect(pm.response.headers.get(\"Content-Type\") || \"\").to.include(\"application/json\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{bridgeUrl}}/api/v1/bridge/transfers/{{id}}",
+            "description": "Transfer status. Wallet/signing/finality boundaries remain external unless the API contract explicitly reports otherwise."
+          },
+          "response": []
+        },
+        {
+          "name": "Transfer events",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP response received\", function () { pm.expect(pm.response.code).to.be.within(200, 599); });",
+                  "pm.test(\"JSON content type for JSON responses\", function () { if (pm.response.text()) pm.expect(pm.response.headers.get(\"Content-Type\") || \"\").to.include(\"application/json\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{bridgeUrl}}/api/v1/bridge/transfers/{{id}}/events",
+            "description": "Transfer events. Wallet/signing/finality boundaries remain external unless the API contract explicitly reports otherwise."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,9 +1,8 @@
 import "server-only";
 
 import { randomUUID } from "node:crypto";
-import { normalizeSuiAddress } from "@mysten/sui/utils";
-import { PublicKey } from "@solana/web3.js";
-import { retrySerializableTransaction } from "@powerchain/database";
+import { normalizeChainAddress, type BlockchainChain } from "@powerchain/blockchain";
+import { retrySerializableTransaction, writeBridgeAuditEvent } from "@powerchain/database";
 import { prisma } from "@powerchain/database/prisma";
 import type { PrismaTransactionClient } from "@powerchain/database/prisma";
 import { assessActiveServiceFee } from "@powerchain/backend";
@@ -18,9 +17,9 @@ function routeId(direction: BridgeDirection) {
     : process.env.POWERCHAIN_ROUTE_SUI_TO_SOLANA_ID?.trim() || "powerchain-sui-to-solana";
 }
 
-function cleanAddress(chain: "SOLANA" | "SUI", value: unknown) {
+function cleanAddress(chain: BlockchainChain, value: unknown) {
   if (typeof value !== "string" || !value.trim()) throw new Error("ADDRESS_REQUIRED");
-  return chain === "SOLANA" ? new PublicKey(value.trim()).toBase58() : normalizeSuiAddress(value.trim());
+  return normalizeChainAddress(chain, value);
 }
 
 export async function issueBridgeQuote(raw: unknown) {
@@ -114,7 +113,7 @@ export async function createBridgeTransfer(input: { raw: unknown; idempotencyKey
     if (quote.intentCommitment !== intentCommitment) throw new Error("INTENT_COMMITMENT_MISMATCH");
     if (quote.runtimeSnapshotId !== runtimeSnapshotId) throw new Error("RUNTIME_SNAPSHOT_MISMATCH");
 
-    return tx.bridgeTransfer.create({ data: {
+    const transfer = await tx.bridgeTransfer.create({ data: {
       id: randomUUID(),
       quoteId: quote.id,
       routeId: quote.routeId,
@@ -128,6 +127,13 @@ export async function createBridgeTransfer(input: { raw: unknown; idempotencyKey
       sourceTx,
       status: sourceTx ? "SOURCE_SUBMITTED" : "CREATED",
     }});
+    await writeBridgeAuditEvent(tx, {
+      event: sourceTx ? "bridge.source-submitted" : "bridge.created",
+      actor: "bridge-api",
+      target: transfer.id,
+      payload: { status: transfer.status, direction: transfer.direction, sourceTx },
+    });
+    return transfer;
   }, { isolationLevel: "Serializable" }));
 }
 
@@ -153,6 +159,13 @@ export async function attachBridgeSourceTransaction(input: { transferId: string;
     if (row.status !== "CREATED") throw new Error("TRANSFER_NOT_AWAITING_SOURCE_TRANSACTION");
     const reused = await tx.bridgeTransfer.findUnique({ where: { sourceTx } });
     if (reused && reused.id !== row.id) throw new Error("SOURCE_TRANSACTION_REUSED");
-    return tx.bridgeTransfer.update({ where: { id: row.id }, data: { sourceTx, status: "SOURCE_SUBMITTED", failureCode: null } });
+    const updated = await tx.bridgeTransfer.update({ where: { id: row.id }, data: { sourceTx, status: "SOURCE_SUBMITTED", failureCode: null } });
+    await writeBridgeAuditEvent(tx, {
+      event: "bridge.source-submitted",
+      actor: "bridge-api",
+      target: row.id,
+      payload: { status: "SOURCE_SUBMITTED", sourceTx },
+    });
+    return updated;
   }, { isolationLevel: "Serializable" }));
 }

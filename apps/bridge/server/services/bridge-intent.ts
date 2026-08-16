@@ -1,6 +1,7 @@
 import "server-only";
 
 import { createHash } from "node:crypto";
+import { canonicalBridgeAddresses } from "@powerchain/bridge-core";
 import { parseNonNegativeBaseUnits, parsePositiveBaseUnits } from "../../lib/bridge/base-units";
 import { canonicalBridgeRoute, parseBridgeDirection, type BridgeDirection } from "../../lib/bridge/route-contract";
 
@@ -33,6 +34,7 @@ function canonicalJson(value: Record<string, string>) {
 export function buildBridgeIntent(input: BridgeIntentInput) {
   const direction = parseBridgeDirection(input.direction);
   const route = canonicalBridgeRoute(direction);
+  const addresses = canonicalBridgeAddresses(direction, input.sourceAddress, input.destinationAddress);
   const principal = parsePositiveBaseUnits(input.principalBaseUnits, "principalBaseUnits");
   const fee = parseNonNegativeBaseUnits(input.serviceFeeBaseUnits, "serviceFeeBaseUnits");
   const expiresAt = new Date(input.quoteExpiresAt);
@@ -41,14 +43,14 @@ export function buildBridgeIntent(input: BridgeIntentInput) {
 
   const canonical = {
     direction,
-    destinationAddress: cleanIdentifier(input.destinationAddress, "destinationAddress"),
+    destinationAddress: addresses.destinationAddress,
     feeRecipient: cleanIdentifier(input.feeRecipient, "feeRecipient"),
     principalBaseUnits: principal.toString(),
     quoteExpiresAt: expiresAt.toISOString(),
     quoteId: cleanIdentifier(input.quoteId, "quoteId", 128),
     runtimeSnapshotId: cleanIdentifier(input.runtimeSnapshotId, "runtimeSnapshotId", 128),
     serviceFeeBaseUnits: fee.toString(),
-    sourceAddress: cleanIdentifier(input.sourceAddress, "sourceAddress"),
+    sourceAddress: addresses.sourceAddress,
   } as const;
   const commitment = createHash("sha256").update(canonicalJson(canonical)).digest("hex");
   return { ...canonical, route, commitment, totalSourceDebitBaseUnits: (principal + fee).toString() } as const;

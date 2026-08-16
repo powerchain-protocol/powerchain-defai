@@ -1,0 +1,2 @@
+export function formatBaseUnits(value:string,decimals:number,maxFraction=6){if(!/^\d+$/.test(value))return"0";const negative=false;void negative;const padded=value.padStart(decimals+1,"0");const head=decimals?padded.slice(0,-decimals):padded;const tail=decimals?padded.slice(-decimals).replace(/0+$/g,"").slice(0,maxFraction):"";return tail?`${head}.${tail}`:head}
+export function formatUsd(value:number|null|undefined){return value==null||!Number.isFinite(value)?"—":new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:2}).format(value)}

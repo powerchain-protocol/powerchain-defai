@@ -1,0 +1,1 @@
+import {stripeStatus,moonPayStatus,coinbasePayStatus} from "@powerchain/backend";import {ok,requestId} from "@/server/http";export async function GET(req:Request){return ok({providers:{stripe:stripeStatus(),moonpay:moonPayStatus(),coinbasePay:coinbasePayStatus()},secretsExposed:false},200,requestId(req),{"Cache-Control":"no-store"})}

@@ -14,7 +14,7 @@ const duplicates=keys.filter((k,i)=>keys.indexOf(k)!==i);
 if(duplicates.length) throw new Error(`Duplicate .env.example keys: ${[...new Set(duplicates)].join(", ")}`);
 for(const key of required) if(!keys.includes(key)) throw new Error(`Missing .env.example key: ${key}`);
 const canonical=new Set(keys);
-for(const file of [".env.example","apps/bridge/.env.example"]){
+for(const file of [".env.example",".env.local.example",".env.production.example","apps/bridge/.env.example"]){
   const full=path.join(root,file);
   if(!fs.existsSync(full)) throw new Error(`Missing ${file}`);
   const localKeys=fs.readFileSync(full,"utf8").split(/\r?\n/).map(l=>l.match(/^([A-Z][A-Z0-9_]*)=/)?.[1]).filter(Boolean);

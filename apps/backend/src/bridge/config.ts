@@ -1,5 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
-import { normalizeSuiAddress } from "@mysten/sui/utils";
+import { crossChainPair, normalizeSuiAddress } from "@powerchain/blockchain";
+import { DEFAULT_BRIDGE_DIRECTION, POWERCHAIN_SOLANA_BRIDGE_PROGRAM_ID } from "@powerchain/protocol";
 import type { BridgeChain, BridgeDirection } from "./types";
 
 function required(name: string) {
@@ -7,14 +8,67 @@ function required(name: string) {
   if (!value) throw new Error(`${name}_REQUIRED`);
   return value;
 }
-function solanaAddress(name: string) { return new PublicKey(required(name)).toBase58(); }
-function suiAddress(name: string) { return normalizeSuiAddress(required(name)); }
+
+function optional(name: string) {
+  return process.env[name]?.trim() || null;
+}
+
+function solanaAddress(name: string) {
+  return new PublicKey(required(name)).toBase58();
+}
+
+function optionalSolanaAddress(name: string) {
+  const value = optional(name);
+  return value ? new PublicKey(value).toBase58() : null;
+}
+
+function suiAddress(name: string) {
+  return normalizeSuiAddress(required(name));
+}
+
+function optionalSuiAddress(name: string) {
+  const value = optional(name);
+  return value ? normalizeSuiAddress(value) : null;
+}
+
+export function configuredBridgeDirection(): BridgeDirection {
+  const value = process.env.POWERCHAIN_DEFAULT_BRIDGE_DIRECTION?.trim().toUpperCase();
+  if (!value) return DEFAULT_BRIDGE_DIRECTION;
+  if (value === "SOLANA_TO_SUI" || value === "SUI_TO_SOLANA") return value;
+  throw new Error("POWERCHAIN_DEFAULT_BRIDGE_DIRECTION_INVALID");
+}
+
+export function auxiliaryBridgeConfig() {
+  const configuredProgram = process.env.POWERCHAIN_SOLANA_BRIDGE_PROGRAM_ID?.trim();
+  if (configuredProgram && new PublicKey(configuredProgram).toBase58() !== POWERCHAIN_SOLANA_BRIDGE_PROGRAM_ID) {
+    throw new Error("POWERCHAIN_SOLANA_BRIDGE_PROGRAM_ID_MISMATCH");
+  }
+
+  return {
+    solana: {
+      programId: POWERCHAIN_SOLANA_BRIDGE_PROGRAM_ID,
+      authority: optionalSolanaAddress("POWERCHAIN_SOLANA_BRIDGE_AUTHORITY"),
+    },
+    sui: {
+      packageId: optionalSuiAddress("POWERCHAIN_SUI_BRIDGE_PACKAGE_ID"),
+      authority: optionalSuiAddress("POWERCHAIN_SUI_BRIDGE_AUTHORITY"),
+    },
+  } as const;
+}
 
 export function nttBridgeConfig() {
-  const environment = process.env.POWERCHAIN_ENVIRONMENT?.trim().toLowerCase() === "production" ? "mainnet" : (process.env.POWERCHAIN_WORMHOLE_NETWORK?.trim().toLowerCase() === "mainnet" ? "mainnet" : "testnet");
+  const environment = process.env.POWERCHAIN_ENVIRONMENT?.trim().toLowerCase() === "production"
+    ? "mainnet"
+    : process.env.POWERCHAIN_WORMHOLE_NETWORK?.trim().toLowerCase() === "mainnet" ? "mainnet" : "testnet";
+
   return {
     environment,
-    wormholeScanBaseUrl: (process.env.POWERCHAIN_WORMHOLESCAN_API_URL?.trim() || (environment === "mainnet" ? "https://api.wormholescan.io/api/v1" : "https://api.testnet.wormholescan.io/api/v1")).replace(/\/$/, ""),
+    defaultDirection: configuredBridgeDirection(),
+    wormholeScanBaseUrl: (
+      process.env.POWERCHAIN_WORMHOLESCAN_API_URL?.trim()
+      || (environment === "mainnet" ? "https://api.wormholescan.io/api/v1" : "https://api.testnet.wormholescan.io/api/v1")
+    ).replace(/\/$/, ""),
+    auxiliary: auxiliaryBridgeConfig(),
     solana: {
       chainId: 1,
       manager: solanaAddress("POWERCHAIN_NTT_SOLANA_MANAGER"),
@@ -29,6 +83,8 @@ export function nttBridgeConfig() {
     },
   } as const;
 }
+
 export function directionChains(direction: BridgeDirection): { source: BridgeChain; destination: BridgeChain } {
-  return direction === "SOLANA_TO_SUI" ? { source: "SOLANA", destination: "SUI" } : { source: "SUI", destination: "SOLANA" };
+  const pair = crossChainPair(direction);
+  return { source: pair.source, destination: pair.destination };
 }

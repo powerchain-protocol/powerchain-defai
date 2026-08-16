@@ -1,0 +1,1 @@
+export function moonPayStatus(){return{provider:"moonpay" as const,configured:Boolean(process.env.MOONPAY_API_KEY?.trim()),serverSecretConfigured:Boolean(process.env.MOONPAY_SECRET_KEY?.trim()),enabled:process.env.POWERCHAIN_MOONPAY_ENABLED==="true"}}

@@ -29,7 +29,7 @@ export function HeaderWalletControls() {
   return (
     <div className="flex items-center gap-2" aria-label="Wallet connections">
       {!connected ? (
-        <button type="button" onClick={() => setOpen(true)} className="inline-flex min-h-10 min-w-10 items-center justify-center gap-2 rounded-xl bg-[#0B1730] px-3 text-sm font-semibold text-white transition hover:bg-[#122447] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-600 dark:hover:bg-blue-500" aria-label="Connect wallet">
+        <button type="button" onClick={() => setOpen(true)} className="inline-flex min-h-10 min-w-10 items-center justify-center gap-2 rounded-xl bg-[#0b1511] px-3 text-sm font-semibold text-white transition hover:bg-[#102019] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] focus-visible:ring-offset-2 dark:bg-[#dfe7e3] dark:hover:bg-white" aria-label="Connect wallet">
           <WalletGlyph />
           <span className="hidden sm:inline">Connect wallet</span>
         </button>

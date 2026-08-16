@@ -1,0 +1,4 @@
+-- PowerChain DeFAI 1.0.0 schema reference.
+-- Canonical migration: ../migrations/20260816000300_swap_execution_portfolio.sql
+-- Tables: swap_executions, wallet_balance_snapshots.
+-- Apply through the migration pipeline; do not execute this reference file independently.

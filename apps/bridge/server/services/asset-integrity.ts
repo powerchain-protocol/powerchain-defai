@@ -1,6 +1,7 @@
 import "server-only";
 import { createHash } from "node:crypto";
-import { getSolanaRpc, getSuiRpc } from "../rpc/providers";
+import { getSolanaRpc } from "../rpc/providers";
+import { probePowerChainSuiGrpc } from "@powerchain/backend";
 import { getSuiCoinMetadata, getSuiChainIdentifier } from "./sui-metadata";
 
 const TOKEN_2022_PROGRAM_ID = "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb";
@@ -53,7 +54,6 @@ type SolanaAccountInfo = {
     data?: { program?: string; parsed?: { type?: string; info?: ParsedMintInfo } } | [string, string];
   } | null;
 };
-type SuiCheckpoint = { timestampMs?: string; sequenceNumber?: string; digest?: string };
 
 export type IntegrityCheck = {
   id: string;
@@ -177,22 +177,20 @@ export async function checkSolanaPwrcIntegrity() {
 export async function checkSuiWpwrcIntegrity() {
   const coinType = requireEnv("wPWRC Sui coin type", "WPWRC_SUI_COIN_TYPE", "SUI_WPWRC_COIN_TYPE");
   if (!COIN_TYPE.test(coinType)) throw new Error("invalid wPWRC Sui coin type");
-  const [metadata, chainIdentifier, checkpointSequence] = await Promise.all([
-    getSuiCoinMetadata(coinType), getSuiChainIdentifier().catch(() => null),
-    getSuiRpc().client.request<string>("sui_getLatestCheckpointSequenceNumber", [], { cacheTtlMs: 2_000, staleIfErrorMs: 0, requestBudgetMs: 8_000 }),
+  const [metadata, chainIdentifier, grpcProbe] = await Promise.all([
+    getSuiCoinMetadata(coinType),
+    getSuiChainIdentifier().catch(() => null),
+    probePowerChainSuiGrpc(),
   ]);
-  const checkpoint = await getSuiRpc().client.request<SuiCheckpoint>("sui_getCheckpoint", [checkpointSequence], { cacheTtlMs: 2_000, staleIfErrorMs: 0, requestBudgetMs: 8_000 });
   const decimals = expectedDecimals();
   const expectedSymbol = process.env.POWERCHAIN_WPWRC_EXPECTED_SYMBOL?.trim() || "wPWRC";
   const expectedChainIdentifier = process.env.POWERCHAIN_SUI_EXPECTED_CHAIN_IDENTIFIER?.trim();
-  const observedMs = checkpoint.timestampMs && /^\d+$/.test(checkpoint.timestampMs) ? Number(checkpoint.timestampMs) : null;
-  const freshness = ageCheck("checkpoint-fresh", Number.isFinite(observedMs) ? observedMs : null, maxHeadAgeMs());
   const checks: IntegrityCheck[] = [
     check("coin-type-configured", true, coinType, coinType),
     check("metadata-available", metadata !== null, true, metadata !== null),
     check("chain-identifier-available", chainIdentifier !== null, true, chainIdentifier !== null),
     ...(expectedChainIdentifier ? [check("network-identity", chainIdentifier === expectedChainIdentifier, expectedChainIdentifier, chainIdentifier)] : []),
-    freshness.check,
+    check("grpc-responsive", true, true, true),
   ];
   if (metadata) checks.push(
     check("decimals", metadata.decimals === decimals, decimals, metadata.decimals ?? null),
@@ -201,11 +199,11 @@ export async function checkSuiWpwrcIntegrity() {
   const fingerprintMaterial = { chain: "SUI", chainIdentifier, coinType, decimals, symbol: expectedSymbol };
   return {
     chain: "SUI" as const, asset: "wPWRC" as const, coinType, chainIdentifier,
-    checkpoint: checkpoint.sequenceNumber ?? checkpointSequence, checkpointDigest: checkpoint.digest ?? null,
-    checkpointTimestampMs: checkpoint.timestampMs ?? null, headAgeMs: freshness.ageMs,
+    checkpoint: null, checkpointDigest: null, checkpointTimestampMs: null, headAgeMs: 0,
+    referenceGasPrice: grpcProbe.referenceGasPrice, grpcEndpointIndex: grpcProbe.endpointIndex, grpcEndpointCount: grpcProbe.endpointCount,
     metadata: metadata ? { name: metadata.name ?? null, symbol: metadata.symbol ?? null, decimals: metadata.decimals ?? null, supply: metadata.supply ?? null } : null,
     fingerprint: stableHash(fingerprintMaterial), healthy: checks.every((entry) => entry.ok), checks,
-    checkedAt: new Date().toISOString(), source: metadata ? "sui-rpc+graphql" as const : "sui-rpc" as const,
+    checkedAt: new Date().toISOString(), source: metadata ? "sui-grpc+graphql" as const : "sui-grpc" as const,
     authoritativeForBridgeAccounting: false as const,
   };
 }

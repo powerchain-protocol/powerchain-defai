@@ -1,0 +1,1 @@
+export const DEFAULT_SWAP_CHAIN="SOLANA" as const;export const DEFAULT_SLIPPAGE_BPS=50 as const;export const SWAP_FEE_BPS=250 as const;export const TRUSTED_SWAP_PROVIDERS=Object.freeze(["jupiter","cetus"] as const);export const OBSERVATION_PROVIDERS=Object.freeze(["raydium","meteora","orca","birdeye","dexscreener","coinmarketcap"] as const);

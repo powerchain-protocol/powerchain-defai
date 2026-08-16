@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack --port 3000",
-    "build": "next build",
-    "start": "next start --port 3000",
+    "dev": "node ../../scripts/next-cli.mjs dev --turbopack --port 3000",
+    "build": "node ../../scripts/next-cli.mjs build",
+    "start": "node ../../scripts/next-cli.mjs start --port 3000",
     "typecheck": "tsc --noEmit",
     "predev": "pnpm -w prisma:generate",
     "prebuild": "pnpm -w prisma:generate",
@@ -27,7 +27,13 @@
     "@solana/wallet-adapter-react-ui": "0.9.39",
     "@mysten/dapp-kit-react": "2.1.14",
     "@wormhole-foundation/wormhole-connect": "6.0.0",
-    "@powerchain/protocol": "workspace:*"
+    "@powerchain/protocol": "workspace:*",
+    "@web3icons/react": "4.1.20",
+    "@powerchain/chat": "workspace:*",
+    "@powerchain/staking": "workspace:*",
+    "@powerchain/blockchain": "workspace:*",
+    "@powerchain/clusters": "workspace:*",
+    "@powerchain/swap-core": "workspace:*"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.1.14",

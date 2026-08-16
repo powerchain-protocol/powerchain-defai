@@ -1,0 +1,13 @@
+import fs from "node:fs";
+const read=(p)=>fs.readFileSync(p,"utf8");const must=(p,...xs)=>{const s=read(p);for(const x of xs)if(!s.includes(x))throw new Error(`${p} missing ${x}`)};
+must(".env.example","TOKEN_PROGRAM_ID=TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","TOKEN_2022_PROGRAM_ID=TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb","ASSOCIATED_TOKEN_PROGRAM_ID=ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL","COINGECKO_API_URL=https://pro-api.coingecko.com/api/v3","CACHE_TTL_QUOTES=5","ENABLE_BRIDGE=true","WORMHOLE_ENABLED=true","SWAGGER_API_KEY=");
+must("apps/backend/src/config/solana-programs.ts","OFFICIAL_SOLANA_PROGRAMS","SOLANA_PROGRAM_","MISMATCH");
+must("apps/backend/src/config/provider-urls.ts","jupiterV2","jupiterLegacyQuote","coingeckoPro","pythHermes");
+must("apps/backend/src/config/cross-chain.ts","principalMovementForPwrc:true","operatorKeyAcceptedAsWalletSigner:false");
+must("apps/backend/src/config/runtime-features.ts","limitOrdersRequested","limitOrdersAvailable: false","FEATURE_LIMIT_ORDERS_NOT_IMPLEMENTED");
+must("apps/backend/src/services/defai.ts","OPENAI_API_KEY","ANTHROPIC_API_KEY","GOOGLE_API_KEY","DEEPSEEK_API_KEY","OPENROUTER_API_KEY","requiresWalletSignatureForActions: true");
+must("apps/backend/src/mail.ts","RESEND_API_KEY","MAIL_PROVIDER_NOT_CONFIGURED");
+must("apps/bridge/app/api/v1/market/token/route.ts","fetchCoinGeckoSimplePrice","cachePolicy()","clientIpSecurityContext");
+must("apps/bridge/server/routing/api-router.ts","WORMHOLE_DISABLED","FEATURE_SWAP_DISABLED","FEATURE_CROSS_CHAIN_DISABLED");
+const swaggerLine=read(".env.example").split(/\r?\n/).find((line)=>line.startsWith("SWAGGER_API_KEY="));if(swaggerLine!=="SWAGGER_API_KEY=")throw new Error("SWAGGER_API_KEY template must remain empty");
+console.log("env/provider/features production check PASS");

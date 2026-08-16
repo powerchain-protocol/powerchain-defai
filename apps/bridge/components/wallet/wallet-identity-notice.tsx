@@ -14,9 +14,9 @@ export function WalletIdentityNotice({ solanaAddress, suiAddress, onRefresh }: {
 
   if (!changed) return null;
   return (
-    <div role="status" className="mt-4 flex flex-col gap-3 rounded-xl border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900 dark:border-blue-900/50 dark:bg-blue-950/20 dark:text-blue-100 sm:flex-row sm:items-center sm:justify-between">
+    <div role="status" className="mt-4 flex flex-col gap-3 rounded-xl border border-[#d4ddd8] bg-[#f1f4f2] p-3 text-sm text-[#18352a] dark:border-[#29483c]/50 dark:bg-[#09110e]/40 dark:text-[#edf2ef] sm:flex-row sm:items-center sm:justify-between">
       <div><strong>Wallet changed.</strong> Refreshing chain data before a new bridge or claim prevents using balances from the previous wallet.</div>
-      <button type="button" onClick={() => { setChanged(false); onRefresh?.(); }} className="min-h-9 shrink-0 rounded-lg border border-blue-300 px-3 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:border-blue-800">Refresh now</button>
+      <button type="button" onClick={() => { setChanged(false); onRefresh?.(); }} className="min-h-9 shrink-0 rounded-lg border border-[#aebdb5] px-3 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] dark:border-[#35584a]">Refresh now</button>
     </div>
   );
 }

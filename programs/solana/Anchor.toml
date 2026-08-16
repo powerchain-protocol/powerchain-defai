@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-powerchain_bridge = "Fg6PaFpoGXkYsidMpWxTWqkZxxV2qTnAXg2YS4JpT5jA"
+powerchain_bridge = "BGEekuKBEsKzEdUdEKvWn4BGRgvAURQMD9f4yLLRteWS"
 
 [provider]
 cluster = "Localnet"

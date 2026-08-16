@@ -12,7 +12,7 @@ export function ActionReadinessSummary({online,walletReady,dataFresh,runtimeRead
   ];
   const ready=checks.every(x=>x.ready);
   return <section className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
-    <div className="flex items-center justify-between gap-3"><h2 className="text-sm font-semibold">Action readiness</h2><span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${ready?"bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300":"bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300"}`}>{ready?"Ready":"Attention"}</span></div>
+    <div className="flex items-center justify-between gap-3"><h2 className="text-sm font-semibold">Action readiness</h2><span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${ready?"bg-[#f1f4f2] text-[#294a3b] dark:bg-[#09110e] dark:text-[#d0dcd6]":"bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300"}`}>{ready?"Ready":"Attention"}</span></div>
     <ul className="mt-3 grid gap-2 sm:grid-cols-2">
       {checks.map(check=><li key={check.label} className="rounded-xl border border-slate-200 p-3 text-sm dark:border-slate-800"><div className="flex items-center gap-2"><span aria-hidden="true">{check.ready?"✓":"!"}</span><span className="font-medium">{check.label}</span></div>{check.detail?<p className="mt-1 text-xs text-slate-500">{check.detail}</p>:null}</li>)}
     </ul>

@@ -19,11 +19,11 @@ export function BridgeProgress({ steps }: { steps: readonly BridgeProgressStep[]
               aria-hidden="true"
               className={`relative z-10 mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-bold ${
                 error
-                  ? "border-red-500 bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-300"
+                  ? "border-rose-500 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300"
                   : complete
-                    ? "border-emerald-500 bg-emerald-500 text-white"
+                    ? "border-[#557568] bg-[#1c4334] text-white"
                     : current
-                      ? "border-blue-600 bg-blue-600 text-white"
+                      ? "border-[#567668] bg-[#173b2d] text-white"
                       : "border-slate-300 bg-white text-slate-500 dark:border-slate-700 dark:bg-slate-950"
               }`}
             >

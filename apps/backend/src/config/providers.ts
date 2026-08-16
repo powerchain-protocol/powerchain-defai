@@ -1,0 +1,3 @@
+export const PROVIDER_CAPABILITIES = Object.freeze({
+  jupiter:{chain:"SOLANA",swap:true,pools:false,execution:true},raydium:{chain:"SOLANA",swap:false,pools:true,execution:false},meteora:{chain:"SOLANA",swap:false,pools:true,execution:false},orca:{chain:"SOLANA",swap:false,pools:true,execution:false},cetus:{chain:"SUI",swap:true,pools:true,execution:true},birdeye:{chain:"MULTICHAIN",marketData:true},dexscreener:{chain:"MULTICHAIN",marketData:true},coinmarketcap:{chain:"OFFCHAIN",marketData:true},coingecko:{chain:"OFFCHAIN",marketData:true},helius:{chain:"SOLANA",rpc:true,das:true},metaplex:{chain:"SOLANA",metadata:true},tensor:{chain:"SOLANA",nftMarketplace:true}
+});

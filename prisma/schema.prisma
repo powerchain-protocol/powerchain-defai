@@ -122,6 +122,8 @@ model BridgeTransfer {
   quote                BridgeQuote          @relation(fields: [quoteId], references: [id], onDelete: Restrict)
 
   @@index([status, updatedAt])
+  @@index([createdAt])
+  @@index([direction, createdAt])
   @@index([sourceAddress, createdAt])
   @@index([destinationAddress, createdAt])
   @@index([sourceTx])
@@ -314,4 +316,131 @@ model ProtocolDeployment {
   @@unique([chain, network, name])
   @@index([chain, network, enabled])
   @@map("protocol_deployments")
+}
+
+enum DexChain {
+  SOLANA
+  SUI
+}
+
+enum DexProvider {
+  JUPITER
+  RAYDIUM
+  METEORA
+  ORCA
+  CETUS
+}
+
+model DexPoolSnapshot {
+  id            String      @id @db.Text
+  chain         DexChain
+  provider      DexProvider
+  poolAddress   String      @map("pool_address") @db.Text
+  tokenA        String      @map("token_a") @db.Text
+  tokenB        String      @map("token_b") @db.Text
+  tvlUsd        Decimal?    @map("tvl_usd") @db.Decimal(30, 8)
+  volume24hUsd  Decimal?    @map("volume_24h_usd") @db.Decimal(30, 8)
+  feeRatePct    Decimal?    @map("fee_rate_pct") @db.Decimal(18, 8)
+  source        String      @db.Text
+  observedAt    DateTime    @map("observed_at") @db.Timestamptz(6)
+  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@unique([provider, chain, poolAddress, observedAt])
+  @@index([chain, provider, observedAt])
+  @@index([tokenA, tokenB, observedAt])
+  @@map("dex_pool_snapshots")
+}
+
+model SwapRouteSnapshot {
+  id                    String      @id @db.Text
+  chain                 DexChain
+  provider              DexProvider
+  payer                 String      @db.Text
+  inputAsset            String      @map("input_asset") @db.Text
+  outputAsset           String      @map("output_asset") @db.Text
+  inputBaseUnits        Decimal     @map("input_base_units") @db.Decimal(40, 0)
+  outputBaseUnits       Decimal     @map("output_base_units") @db.Decimal(40, 0)
+  minimumOutputBaseUnits Decimal?   @map("minimum_output_base_units") @db.Decimal(40, 0)
+  slippageBps           Int         @map("slippage_bps")
+  route                  Json?
+  expiresAt              DateTime?   @map("expires_at") @db.Timestamptz(6)
+  createdAt              DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([chain, provider, createdAt])
+  @@index([payer, createdAt])
+  @@index([inputAsset, outputAsset, createdAt])
+  @@map("swap_route_snapshots")
+}
+
+model LiquidityPosition {
+  id              String      @id @db.Text
+  wallet          String      @db.Text
+  chain           DexChain
+  provider        DexProvider
+  poolAddress     String      @map("pool_address") @db.Text
+  positionAddress String      @map("position_address") @db.Text
+  tokenA          String      @map("token_a") @db.Text
+  tokenB          String      @map("token_b") @db.Text
+  liquidity       Decimal?    @db.Decimal(50, 0)
+  metadata        Json?
+  lastObservedAt  DateTime    @map("last_observed_at") @db.Timestamptz(6)
+  createdAt       DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime    @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([chain, provider, positionAddress])
+  @@index([wallet, chain, provider])
+  @@index([poolAddress, lastObservedAt])
+  @@map("liquidity_positions")
+}
+
+
+enum SwapExecutionStatus {
+  QUOTED
+  AWAITING_SIGNATURE
+  SUBMITTED
+  CONFIRMED
+  FAILED
+}
+
+model SwapExecution {
+  id                     String              @id @db.Text
+  chain                  DexChain
+  provider               DexProvider
+  payer                  String              @db.Text
+  inputAsset             String              @map("input_asset") @db.Text
+  outputAsset            String              @map("output_asset") @db.Text
+  inputBaseUnits         Decimal             @map("input_base_units") @db.Decimal(40, 0)
+  quotedOutputBaseUnits  Decimal?            @map("quoted_output_base_units") @db.Decimal(40, 0)
+  minimumOutputBaseUnits Decimal?            @map("minimum_output_base_units") @db.Decimal(40, 0)
+  feeBaseUnits           Decimal?            @map("fee_base_units") @db.Decimal(40, 0)
+  slippageBps            Int                 @map("slippage_bps")
+  status                 SwapExecutionStatus @default(QUOTED)
+  transactionDigest      String?             @unique @map("transaction_digest") @db.Text
+  failureCode            String?             @map("failure_code") @db.Text
+  quoteExpiresAt         DateTime?            @map("quote_expires_at") @db.Timestamptz(6)
+  submittedAt            DateTime?            @map("submitted_at") @db.Timestamptz(6)
+  confirmedAt            DateTime?            @map("confirmed_at") @db.Timestamptz(6)
+  createdAt              DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt              DateTime             @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([payer, createdAt])
+  @@index([chain, provider, status, createdAt])
+  @@index([transactionDigest])
+  @@map("swap_executions")
+}
+
+model WalletBalanceSnapshot {
+  id              String   @id @db.Text
+  wallet          String   @db.Text
+  chain           DexChain
+  asset           String   @db.Text
+  amountBaseUnits Decimal  @map("amount_base_units") @db.Decimal(40, 0)
+  decimals        Int
+  source          String   @db.Text
+  observedAt      DateTime @map("observed_at") @db.Timestamptz(6)
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([wallet, chain, observedAt])
+  @@index([asset, observedAt])
+  @@map("wallet_balance_snapshots")
 }

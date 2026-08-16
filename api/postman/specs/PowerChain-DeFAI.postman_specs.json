@@ -1,0 +1,698 @@
+{
+  "schema": "powerchain-postman-specs/v1",
+  "version": "1.0.0",
+  "title": "PowerChain | DeFAI API Specs",
+  "generatedFrom": "shared/actions.json",
+  "security": {
+    "type": "apiKey",
+    "header": "X-Api-Key",
+    "variable": "apiKey"
+  },
+  "domains": {
+    "shared": {
+      "baseVariable": "baseUrl",
+      "baseUrl": "https://powerchain.app"
+    },
+    "bridge": {
+      "baseVariable": "bridgeUrl",
+      "baseUrl": "https://bridge.powerchain.app"
+    },
+    "swap": {
+      "baseVariable": "swapUrl",
+      "baseUrl": "https://swap.powerchain.app"
+    }
+  },
+  "invariants": [
+    "Wallet private keys and seed phrases never enter Postman variables.",
+    "Mock responses are non-authoritative and never prove signing, execution, finality, or settlement.",
+    "Bridge principal movement remains Wormhole NTT-only.",
+    "Swap execution remains connected-wallet signed.",
+    "Market, portfolio, worker, RPC, explorer, and mock data are not authoritative for Bridge accounting."
+  ],
+  "actions": [
+    {
+      "name": "assets.bridge.get",
+      "method": "GET",
+      "path": "/api/v1/assets/bridge",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "blockchains.get",
+      "method": "GET",
+      "path": "/api/v1/blockchains",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "bridge.config.get",
+      "method": "GET",
+      "path": "/api/v1/bridge/config",
+      "domain": "bridge",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "bridge.history.get",
+      "method": "GET",
+      "path": "/api/v1/bridge/history",
+      "domain": "bridge",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "bridge.openapi.get",
+      "method": "GET",
+      "path": "/api/v1/bridge/openapi",
+      "domain": "bridge",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "bridge.quote.post",
+      "method": "POST",
+      "path": "/api/v1/bridge/quote",
+      "domain": "bridge",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "bridge.routes.get",
+      "method": "GET",
+      "path": "/api/v1/bridge/routes",
+      "domain": "bridge",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "bridge.runtime.get",
+      "method": "GET",
+      "path": "/api/v1/bridge/runtime",
+      "domain": "bridge",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "bridge.transfers.post",
+      "method": "POST",
+      "path": "/api/v1/bridge/transfers",
+      "domain": "bridge",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "bridge.transfers.id.get",
+      "method": "GET",
+      "path": "/api/v1/bridge/transfers/:id",
+      "domain": "bridge",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "bridge.transfers.id.events.get",
+      "method": "GET",
+      "path": "/api/v1/bridge/transfers/:id/events",
+      "domain": "bridge",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "bridge.transfers.id.events.stream.get",
+      "method": "GET",
+      "path": "/api/v1/bridge/transfers/:id/events/stream",
+      "domain": "bridge",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "bridge.transfers.id.source.post",
+      "method": "POST",
+      "path": "/api/v1/bridge/transfers/:id/source",
+      "domain": "bridge",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "calculators.transaction.post",
+      "method": "POST",
+      "path": "/api/v1/calculators/transaction",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "chat.post",
+      "method": "POST",
+      "path": "/api/v1/chat",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "claims.challenge.post",
+      "method": "POST",
+      "path": "/api/v1/claims/challenge",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "claims.eligibility.get",
+      "method": "GET",
+      "path": "/api/v1/claims/eligibility",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "claims.reserve.post",
+      "method": "POST",
+      "path": "/api/v1/claims/reserve",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "claims.status.id.get",
+      "method": "GET",
+      "path": "/api/v1/claims/status/:id",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "claims.submit.post",
+      "method": "POST",
+      "path": "/api/v1/claims/submit",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "clusters.get",
+      "method": "GET",
+      "path": "/api/v1/clusters",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "currencies.get",
+      "method": "GET",
+      "path": "/api/v1/currencies",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "data.pwrc.get",
+      "method": "GET",
+      "path": "/api/v1/data/pwrc",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "data.pwrc.integrity.get",
+      "method": "GET",
+      "path": "/api/v1/data/pwrc/integrity",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "data.pwrc.snapshot.get",
+      "method": "GET",
+      "path": "/api/v1/data/pwrc/snapshot",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "data.solana.get",
+      "method": "GET",
+      "path": "/api/v1/data/solana",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "data.sui.get",
+      "method": "GET",
+      "path": "/api/v1/data/sui",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "fees.collection-plan.get",
+      "method": "GET",
+      "path": "/api/v1/fees/collection-plan",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "fees.policy.get",
+      "method": "GET",
+      "path": "/api/v1/fees/policy",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "fees.token-2022.get",
+      "method": "GET",
+      "path": "/api/v1/fees/token-2022",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "health.get",
+      "method": "GET",
+      "path": "/api/v1/health",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "integrations.get",
+      "method": "GET",
+      "path": "/api/v1/integrations",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "integrations.cetus.get",
+      "method": "GET",
+      "path": "/api/v1/integrations/cetus",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "integrations.market.get",
+      "method": "GET",
+      "path": "/api/v1/integrations/market",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "liquidity.positions.get",
+      "method": "GET",
+      "path": "/api/v1/liquidity/positions",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "liquidity.status.get",
+      "method": "GET",
+      "path": "/api/v1/liquidity/status",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "market.prices.get",
+      "method": "GET",
+      "path": "/api/v1/market/prices",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "market.rates.get",
+      "method": "GET",
+      "path": "/api/v1/market/rates",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "market.token.get",
+      "method": "GET",
+      "path": "/api/v1/market/token",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "metadata.solana.get",
+      "method": "GET",
+      "path": "/api/v1/metadata/solana",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "metrics.bridge.get",
+      "method": "GET",
+      "path": "/api/v1/metrics/bridge",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "openapi.get",
+      "method": "GET",
+      "path": "/api/v1/openapi",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "operations.status.get",
+      "method": "GET",
+      "path": "/api/v1/operations/status",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "operator.fees.get",
+      "method": "GET",
+      "path": "/api/v1/operator/fees",
+      "domain": "shared",
+      "auth": "operator",
+      "idempotent": true
+    },
+    {
+      "name": "operator.fees.post",
+      "method": "POST",
+      "path": "/api/v1/operator/fees",
+      "domain": "shared",
+      "auth": "operator",
+      "idempotent": false
+    },
+    {
+      "name": "operator.fees.export.get",
+      "method": "GET",
+      "path": "/api/v1/operator/fees/export",
+      "domain": "shared",
+      "auth": "operator",
+      "idempotent": true
+    },
+    {
+      "name": "operator.fees.ledger.get",
+      "method": "GET",
+      "path": "/api/v1/operator/fees/ledger",
+      "domain": "shared",
+      "auth": "operator",
+      "idempotent": true
+    },
+    {
+      "name": "operator.fees.policies.get",
+      "method": "GET",
+      "path": "/api/v1/operator/fees/policies",
+      "domain": "shared",
+      "auth": "operator",
+      "idempotent": true
+    },
+    {
+      "name": "operator.fees.proposals.id.post",
+      "method": "POST",
+      "path": "/api/v1/operator/fees/proposals/:id",
+      "domain": "shared",
+      "auth": "operator",
+      "idempotent": false
+    },
+    {
+      "name": "operator.fees.reconciliation.get",
+      "method": "GET",
+      "path": "/api/v1/operator/fees/reconciliation",
+      "domain": "shared",
+      "auth": "operator",
+      "idempotent": true
+    },
+    {
+      "name": "operator.fees.revenue.get",
+      "method": "GET",
+      "path": "/api/v1/operator/fees/revenue",
+      "domain": "shared",
+      "auth": "operator",
+      "idempotent": true
+    },
+    {
+      "name": "operator.fees.settlements.id.reverify.post",
+      "method": "POST",
+      "path": "/api/v1/operator/fees/settlements/:id/reverify",
+      "domain": "shared",
+      "auth": "operator",
+      "idempotent": false
+    },
+    {
+      "name": "payments.solana-pay.post",
+      "method": "POST",
+      "path": "/api/v1/payments/solana-pay",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "payments.status.get",
+      "method": "GET",
+      "path": "/api/v1/payments/status",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "pools.get",
+      "method": "GET",
+      "path": "/api/v1/pools",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "portfolio.get",
+      "method": "GET",
+      "path": "/api/v1/portfolio",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "providers.diagnostics.get",
+      "method": "GET",
+      "path": "/api/v1/providers/diagnostics",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "providers.health.get",
+      "method": "GET",
+      "path": "/api/v1/providers/health",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "providers.readiness.get",
+      "method": "GET",
+      "path": "/api/v1/providers/readiness",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "ready.get",
+      "method": "GET",
+      "path": "/api/v1/ready",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "rpc.status.get",
+      "method": "GET",
+      "path": "/api/v1/rpc/status",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "security.policy.get",
+      "method": "GET",
+      "path": "/api/v1/security/policy",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "sessions.post",
+      "method": "POST",
+      "path": "/api/v1/sessions",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "staking.status.get",
+      "method": "GET",
+      "path": "/api/v1/staking/status",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "swap.balance.get",
+      "method": "GET",
+      "path": "/api/v1/swap/balance",
+      "domain": "swap",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "swap.openapi.get",
+      "method": "GET",
+      "path": "/api/v1/swap/openapi",
+      "domain": "swap",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "swap.quote.post",
+      "method": "POST",
+      "path": "/api/v1/swap/quote",
+      "domain": "swap",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "swap.receipt.post",
+      "method": "POST",
+      "path": "/api/v1/swap/receipt",
+      "domain": "swap",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "swap.solana.execute.post",
+      "method": "POST",
+      "path": "/api/v1/swap/solana/execute",
+      "domain": "swap",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "swap.solana.order.post",
+      "method": "POST",
+      "path": "/api/v1/swap/solana/order",
+      "domain": "swap",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "swap.transaction.post",
+      "method": "POST",
+      "path": "/api/v1/swap/transaction",
+      "domain": "swap",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "token.information.get",
+      "method": "GET",
+      "path": "/api/v1/token/information",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "tokens.trusted.get",
+      "method": "GET",
+      "path": "/api/v1/tokens/trusted",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "transactions.solana.signature.get",
+      "method": "GET",
+      "path": "/api/v1/transactions/solana/:signature",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "transactions.sui.digest.get",
+      "method": "GET",
+      "path": "/api/v1/transactions/sui/:digest",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "version.get",
+      "method": "GET",
+      "path": "/api/v1/version",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "wallet.activity.get",
+      "method": "GET",
+      "path": "/api/v1/wallet/activity",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "wallet.overview.get",
+      "method": "GET",
+      "path": "/api/v1/wallet/overview",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "wallet.portfolio.get",
+      "method": "GET",
+      "path": "/api/v1/wallet/portfolio",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "wallet.solana.get",
+      "method": "GET",
+      "path": "/api/v1/wallet/solana",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "wallet.solana.pwrc-transfers.get",
+      "method": "GET",
+      "path": "/api/v1/wallet/solana/pwrc-transfers",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "wallet.sui.get",
+      "method": "GET",
+      "path": "/api/v1/wallet/sui",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "workers.readiness.get",
+      "method": "GET",
+      "path": "/api/v1/workers/readiness",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    }
+  ]
+}

@@ -19,12 +19,18 @@ const required = [
   "apps/bridge/hooks/use-provider-health.ts",
   "apps/bridge/hooks/use-provider-readiness.ts",
   "apps/bridge/lib/data/runtime-validation.ts",
+  "apps/bridge/lib/data/data.ts",
+  "apps/bridge/server/services/metrics.ts",
+  "apps/bridge/app/api/v1/metrics/bridge/route.ts",
+  "apps/bridge/components/bridge/bridge-metrics-card.tsx",
   "apps/bridge/components/bridge/provider-status-strip.tsx",
   "apps/bridge/hooks/use-transfer-status.ts",
   "apps/bridge/lib/data/decimal.ts",
   "apps/bridge/server/services/chain-data.ts",
   "apps/bridge/server/services/sui-metadata.ts",
   "apps/bridge/server/services/market-prices.ts",
+  "apps/backend/src/services/prices.ts",
+  "apps/backend/src/services/rates.ts",
   "apps/bridge/app/api/v1/data/solana/route.ts",
   "apps/bridge/app/api/v1/data/sui/route.ts",
   "apps/bridge/app/api/v1/data/pwrc/route.ts",
@@ -103,20 +109,22 @@ if (!transportPolicy.includes("url.username || url.password")) fail("realtime UR
 
 const chainData = read("apps/bridge/server/services/chain-data.ts");
 const suiMetadata = read("apps/bridge/server/services/sui-metadata.ts");
-const marketPrices = read("apps/bridge/server/services/market-prices.ts");
+const marketPrices = read("apps/backend/src/services/prices.ts");
+const marketPriceCompat = read("apps/bridge/server/services/market-prices.ts");
 const pwrcDataRoute = read("apps/bridge/app/api/v1/data/pwrc/route.ts");
 const pricesRoute = read("apps/bridge/app/api/v1/market/prices/route.ts");
 const liveDataHook = read("apps/bridge/hooks/use-pwrc-live-data.ts");
 const liveDataCard = read("apps/bridge/components/bridge/live-chain-data-card.tsx");
 if (!chainData.includes('getTokenSupply') || !chainData.includes('getTokenAccountsByOwner') || !chainData.includes('commitment: "finalized"')) fail("finalized Solana PWRC reads missing");
-if (!chainData.includes('suix_getBalance') || !chainData.includes('sui_getLatestCheckpointSequenceNumber')) fail("Sui wPWRC balance/checkpoint reads missing");
+if (!chainData.includes('getPowerChainSuiBalance') || !chainData.includes('probePowerChainSuiGrpc')) fail("Sui gRPC wPWRC balance/readiness reads missing");
 if (!chainData.includes('BigInt(tokenAmount.amount)') || !chainData.includes('authoritativeForBridgeAccounting: false')) fail("exact chain amount/accounting-boundary semantics missing");
 if (!suiMetadata.includes('coinMetadata(coinType: $coinType)') || !suiMetadata.includes('POWERCHAIN_SUI_GRAPHQL_URL')) fail("Sui GraphQL metadata path missing");
 if (!marketPrices.includes('/v2/updates/price/latest') || !marketPrices.includes('PYTH_API_KEY') || !marketPrices.includes('publish_time')) fail("Pyth Hermes real price integration missing");
-if (!marketPrices.includes('public-api.birdeye.so/defi/price') || !marketPrices.includes('BIRDEYE_API_KEY') || !marketPrices.includes('asset !== "PWRC"')) fail("Birdeye PWRC fallback boundary missing");
+if (!marketPrices.includes('/defi/price') || !marketPrices.includes('BIRDEYE_API_KEY') || !marketPrices.includes('asset !== "PWRC"')) fail("Birdeye PWRC fallback boundary missing");
+if (!marketPriceCompat.includes('@powerchain/backend/services/prices') || marketPriceCompat.includes('pyth.dourolabs.app')) fail("bridge-local market price provider duplication forbidden");
 if (!marketPrices.includes('POWERCHAIN_PRICE_MAX_AGE_MS') || !marketPrices.includes('authoritativeForBridgeAccounting: false')) fail("market freshness/non-authoritative semantics missing");
 if (!pwrcDataRoute.includes('Promise.allSettled') || !pwrcDataRoute.includes('cache-control')) fail("partial-failure PWRC aggregate endpoint missing");
-if (!pricesRoute.includes('s-maxage=5') || !pricesRoute.includes('slice(0, 3)')) fail("bounded market-price endpoint caching/input missing");
+if (!pricesRoute.includes('s-maxage=5') || !pricesRoute.includes('slice(0, 5)')) fail("bounded market-price endpoint caching/input missing");
 if (!liveDataHook.includes('generation') || !liveDataHook.includes('AbortController')) fail("live chain-data stale-request isolation missing");
 if (!liveDataCard.includes('Market price is informational only') || !liveDataCard.includes('independently verified evidence')) fail("UI chain/market authority disclosure missing");
 
@@ -137,13 +145,32 @@ if (!integrityCard.includes('operational validation, not bridge accounting evide
 if (!integrityService.includes('REQUIRED_MINT_EXTENSIONS = new Set(["metadatapointer", "tokenmetadata"])')) fail("required Token-2022 metadata extension policy missing");
 if (!integrityService.includes("transferfeeconfig") || !integrityService.includes("permanentdelegate") || !integrityService.includes("scaleduiamountconfig") || !integrityService.includes("pausable")) fail("forbidden Token-2022 extension policy missing");
 if (!integrityService.includes("metadata-pointer-self")) fail("metadata pointer self-reference integrity check missing");
-if (!integrityService.includes("POWERCHAIN_CHAIN_HEAD_MAX_AGE_MS") || !integrityService.includes("finalized-head-fresh") || !integrityService.includes("checkpoint-fresh")) fail("chain-head freshness integrity checks missing");
+if (!integrityService.includes("POWERCHAIN_CHAIN_HEAD_MAX_AGE_MS") || !integrityService.includes("finalized-head-fresh") || !integrityService.includes("grpc-responsive")) fail("chain liveness/freshness integrity checks missing");
 if (!integrityService.includes("POWERCHAIN_PWRC_EXPECTED_ASSET_FINGERPRINT") || !integrityService.includes("assetFingerprint")) fail("stable asset fingerprint/pinning missing");
 const snapshotRoute = read("apps/bridge/app/api/v1/data/pwrc/snapshot/route.ts");
 if (!snapshotRoute.includes("snapshotId") || !snapshotRoute.includes("authoritativeForBridgeAccounting: false") || !snapshotRoute.includes('"cache-control": "no-store')) fail("non-authoritative no-store PWRC snapshot endpoint missing");
 
 if (!http.includes("AbortController") || !errors.includes("retry-after")) fail("HTTP timeout/retry handling missing");
 if (read("apps/bridge/lib/realtime/transport-policy.ts").includes("OPERATOR_API_TOKEN")) fail("operator secret leaked to realtime client");
+
+const canonicalData = read("apps/bridge/lib/data/data.ts");
+const bridgeMetrics = read("apps/bridge/server/services/metrics.ts");
+const bridgeMetricsRoute = read("apps/bridge/app/api/v1/metrics/bridge/route.ts");
+const bridgeMetricsCard = read("apps/bridge/components/bridge/bridge-metrics-card.tsx");
+if (!canonicalData.includes("BRIDGE_DIRECTIONS") || !canonicalData.includes("BRIDGE_TRANSFER_STATUSES") || !canonicalData.includes("isBridgeMetricsPayload")) fail("canonical bridge data/status/metrics validation missing");
+if (!bridgeMetrics.includes('import "server-only"') || !bridgeMetrics.includes("persisted-bridge-database") || !bridgeMetrics.includes("terminalCompletionRateBps")) fail("persisted server-only bridge metrics service missing");
+if (!bridgeMetrics.includes("prisma.bridgeTransfer.count") || !bridgeMetrics.includes("prisma.bridgeTransfer.aggregate")) fail("bridge metrics must derive from persisted transfer data");
+if (!bridgeMetricsRoute.includes('cache-control": "no-store') || !bridgeMetricsRoute.includes("BRIDGE_METRICS_UNAVAILABLE")) fail("bridge metrics endpoint no-store/fail-closed semantics missing");
+if (!bridgeMetricsCard.includes("No synthetic TVL, TPS, or volume estimates") || !bridgeMetricsCard.includes("isBridgeMetricsPayload")) fail("bridge metrics UI evidence/validation boundary missing");
+if (!bridgeMetrics.includes("sourceFinality") || !bridgeMetrics.includes("messageObservation") || !bridgeMetrics.includes("destinationFinality") || !bridgeMetrics.includes("completedInWindowBaseUnits")) fail("persisted bridge lifecycle/direction metrics missing");
+if (!bridgeMetricsCard.includes('label: "24h"') || !bridgeMetricsCard.includes('label: "7d"') || !bridgeMetricsCard.includes('label: "30d"') || !bridgeMetricsCard.includes("Lifecycle timing · selected window")) fail("bridge metrics window/lifecycle UX missing");
+if (!bridgeMetricsCard.includes("navigator.onLine") || !bridgeMetricsCard.includes("AbortController") || !bridgeMetricsCard.includes("8_000")) fail("bridge metrics offline/timeout/cancellation hardening missing");
+if (!bridgeMetricsRoute.includes("BRIDGE_METRICS_WINDOW_INVALID") || !bridgeMetricsRoute.includes('export const runtime = "nodejs"')) fail("bridge metrics strict query/runtime boundary missing");
+const metricsMigration = read("prisma/migrations/20260816000100_bridge_metrics_indexes/migration.sql");
+const metricsSupabaseMigration = read("supabase/migrations/20260816000100_bridge_metrics_indexes.sql");
+if (!metricsMigration.includes('bridge_transfers_created_at_idx') || !metricsMigration.includes('bridge_transfers_direction_created_at_idx')) fail("bridge metrics database indexes missing");
+if (metricsMigration !== metricsSupabaseMigration) fail("bridge metrics Prisma/Supabase migration mirror drift");
+
 console.log("POWERCHAIN_DATA_BASE_CHECK_PASS version=1.0.0");
 
 // Fully-wired runtime gate: fresh provider readiness + asset identity are composed server-side.

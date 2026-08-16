@@ -8,8 +8,8 @@ export default function BridgeError({ reset }: { error: Error & { digest?: strin
         <h1 className="mt-2 text-xl font-semibold text-slate-950 dark:text-white">The bridge interface could not load</h1>
         <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">No transfer was submitted by this page error. Retry the interface, and check an existing transfer from History before signing anything again.</p>
         <div className="mt-5 flex flex-wrap gap-2">
-          <button type="button" onClick={reset} className="min-h-11 rounded-xl bg-[#0B1730] px-4 text-sm font-semibold text-white transition hover:bg-[#122447] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:bg-blue-600 dark:hover:bg-blue-500">Try again</button>
-          <a href="/history" className="inline-flex min-h-11 items-center rounded-xl border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-900">View history</a>
+          <button type="button" onClick={reset} className="min-h-11 rounded-xl bg-[#0b1511] px-4 text-sm font-semibold text-white transition hover:bg-[#102019] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] dark:bg-[#dfe7e3] dark:hover:bg-white">Try again</button>
+          <a href="/history" className="inline-flex min-h-11 items-center rounded-xl border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-900">View history</a>
         </div>
       </section>
     </main>

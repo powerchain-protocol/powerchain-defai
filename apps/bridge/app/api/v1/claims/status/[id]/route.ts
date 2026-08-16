@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getClaim } from "@/server/services/claim-service";
+import { getClaim } from "@powerchain/backend";
 import { serveCanonicalOperationStatus } from "@/server/services/operation-status-service";
 import { loadClaimOperationStatus } from "@/server/services/operation-loaders";
 export const dynamic = "force-dynamic";

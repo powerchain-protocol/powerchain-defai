@@ -1,4 +1,9 @@
 export type ProviderStatus = "healthy" | "degraded" | "unavailable";
+export type ProviderEndpointHealth = {
+  id?: string;
+  circuit?: "closed" | "half-open" | "open";
+  healthy?: boolean;
+};
 export type ProviderHealthItem = {
   provider: "solana" | "sui";
   ok: boolean;
@@ -6,7 +11,9 @@ export type ProviderHealthItem = {
   latencyMs?: number;
   head?: string;
   stale?: boolean;
+  source?: "network" | "cache" | "stale-cache" | "grpc";
   error?: string;
+  endpoints?: ProviderEndpointHealth[];
 };
 export type ProviderHealthPayload = {
   ok: boolean;
@@ -30,7 +37,23 @@ export function isProviderHealthPayload(value: unknown): value is ProviderHealth
   return item.providers.every((provider) => {
     if (!provider || typeof provider !== "object") return false;
     const p = provider as Record<string, unknown>;
-    return (p.provider === "solana" || p.provider === "sui") && typeof p.ok === "boolean" && statuses.has(p.status as ProviderStatus);
+    if (!((p.provider === "solana" || p.provider === "sui") && typeof p.ok === "boolean" && statuses.has(p.status as ProviderStatus))) return false;
+    if (p.latencyMs !== undefined && typeof p.latencyMs !== "number") return false;
+    if (p.head !== undefined && typeof p.head !== "string") return false;
+    if (p.source !== undefined && !["network", "cache", "stale-cache", "grpc"].includes(String(p.source))) return false;
+    if (p.endpoints !== undefined) {
+      if (!Array.isArray(p.endpoints)) return false;
+      const endpointsValid = p.endpoints.every((endpoint) => {
+        if (!endpoint || typeof endpoint !== "object" || Array.isArray(endpoint)) return false;
+        const e = endpoint as Record<string, unknown>;
+        if (e.id !== undefined && typeof e.id !== "string") return false;
+        if (e.healthy !== undefined && typeof e.healthy !== "boolean") return false;
+        if (e.circuit !== undefined && e.circuit !== "closed" && e.circuit !== "half-open" && e.circuit !== "open") return false;
+        return true;
+      });
+      if (!endpointsValid) return false;
+    }
+    return true;
   });
 }
 

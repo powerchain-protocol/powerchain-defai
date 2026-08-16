@@ -7,7 +7,13 @@ import { ensureServiceFeeSettlementForTransfer } from "./settlement";
 import { nextServiceFeeRetryAt } from "./retry";
 
 function urls(...values: Array<string | undefined>): string[] {
-  return [...new Set(values.map((v) => v?.trim()).filter((v): v is string => Boolean(v)))];
+  const endpoints: string[] = [];
+  for (const value of values) {
+    for (const endpoint of (value ?? "").split(",").map((item) => item.trim()).filter(Boolean)) {
+      if (!endpoints.includes(endpoint)) endpoints.push(endpoint);
+    }
+  }
+  return endpoints;
 }
 
 function evidenceCollectedBaseUnits(evidence: Record<string, unknown>, fallback: string): string | null {
@@ -57,7 +63,7 @@ export async function verifyServiceFeeForTransfer(transferId: string, env: NodeJ
 
   const result = settlement.sourceChain === "SOLANA"
     ? await verifySolanaToken2022ServiceFee({
-        rpcUrls: urls(env.POWERCHAIN_SOLANA_RPC_URL, env.HELIUS_RPC_URL, env.POWERCHAIN_SOLANA_RPC_FALLBACK_URL, env.HELIUS_RPC_FALLBACK_URL),
+        rpcUrls: urls(env.POWERCHAIN_SOLANA_RPC_URL, env.HELIUS_RPC_URL, env.POWERCHAIN_SOLANA_RPC_FALLBACK_URL, env.POWERCHAIN_SOLANA_RPC_FALLBACK_URLS, env.HELIUS_RPC_FALLBACK_URL),
         signature: transfer.sourceTx,
         mint: env.POWERCHAIN_PWRC_SOLANA_MINT?.trim() ?? "",
         recipientWallet: settlement.recipient,
@@ -65,7 +71,7 @@ export async function verifyServiceFeeForTransfer(transferId: string, env: NodeJ
         ...(env.SOLANA_RPC_TIMEOUT_MS ? { timeoutMs: Number(env.SOLANA_RPC_TIMEOUT_MS) } : {}),
       })
     : await verifySuiServiceFee({
-        rpcUrls: urls(env.POWERCHAIN_SUI_GRPC_URL, env.POWERCHAIN_SUI_RPC_URL, env.POWERCHAIN_SUI_RPC_FALLBACK_URL),
+        rpcUrls: urls(env.POWERCHAIN_SUI_GRPC_URL, env.POWERCHAIN_SUI_GRPC_FALLBACK_URL, env.POWERCHAIN_SUI_GRPC_FALLBACK_URLS, env.POWERCHAIN_SUI_RPC_URL, env.POWERCHAIN_SUI_RPC_FALLBACK_URL),
         digest: transfer.sourceTx,
         coinType: env.WPWRC_SUI_COIN_TYPE?.trim() ?? env.SUI_WPWRC_COIN_TYPE?.trim() ?? "",
         recipient: settlement.recipient,

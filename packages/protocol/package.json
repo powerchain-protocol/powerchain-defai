@@ -11,7 +11,10 @@
     "./integrations": "./src/integrations.ts",
     "./signatures": "./src/signatures.ts",
     "./transactions": "./src/transactions.ts",
-    "./validate": "./src/validate.ts"
+    "./validate": "./src/validate.ts",
+    "./token-information": "./src/token-information.ts",
+    "./assets": "./src/assets.ts",
+    "./ecosystem": "./src/ecosystem.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -20,7 +23,9 @@
   "dependencies": {
     "@solana/web3.js": "1.98.4",
     "bs58": "6.0.0",
-    "tweetnacl": "1.0.3"
+    "tweetnacl": "1.0.3",
+    "@powerchain/blockchain": "workspace:*",
+    "@powerchain/clusters": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "26.1.2",

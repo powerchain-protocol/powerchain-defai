@@ -57,7 +57,7 @@ export function AmountInputCard({
           Balance: <span className="font-semibold tabular-nums text-slate-700 dark:text-slate-200">{balanceBaseUnits == null ? "—" : `${formatCompactBaseUnits(balanceBaseUnits)} ${symbol}`}</span>
         </p>
       </div>
-      <div className={`mt-3 flex min-h-16 items-center gap-3 rounded-2xl border px-4 transition ${validation ? "border-red-300 bg-red-50/30 dark:border-red-900 dark:bg-red-950/10" : "border-slate-300 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/15 dark:border-slate-700"}`}>
+      <div className={`mt-3 flex min-h-16 items-center gap-3 rounded-2xl border px-4 transition ${validation ? "border-red-300 bg-red-50/30 dark:border-red-900 dark:bg-red-950/10" : "border-slate-300 focus-within:border-[#557568] focus-within:ring-2 focus-within:ring-[#35584a]/15 dark:border-slate-700"}`}>
         <input
           id="bridge-amount"
           inputMode="decimal"
@@ -75,11 +75,11 @@ export function AmountInputCard({
           className="min-w-0 flex-1 bg-transparent text-2xl font-semibold tracking-tight tabular-nums text-slate-950 outline-none placeholder:text-slate-300 disabled:cursor-not-allowed disabled:opacity-60 dark:text-white dark:placeholder:text-slate-700"
         />
         <span className="shrink-0 rounded-lg bg-slate-100 px-2.5 py-1.5 text-sm font-semibold text-slate-800 dark:bg-slate-900 dark:text-slate-100">{symbol}</span>
-        <button type="button" onClick={setMax} disabled={disabled || balanceBaseUnits == null || balanceBaseUnits <= 0n} className="shrink-0 rounded-lg px-2 py-1.5 text-xs font-bold text-blue-600 transition hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-40 dark:text-blue-400 dark:hover:bg-blue-950/40">MAX</button>
+        <button type="button" onClick={setMax} disabled={disabled || balanceBaseUnits == null || balanceBaseUnits <= 0n} className="shrink-0 rounded-lg px-2 py-1.5 text-xs font-bold text-[#294a3b] transition hover:bg-[#f1f4f2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] disabled:opacity-40 dark:text-[#adc0b6] dark:hover:bg-[#09110e]/60">MAX</button>
       </div>
       <div className="mt-2 flex items-start justify-between gap-3">
         {validation ? <p id="bridge-amount-error" role="alert" className="text-xs font-medium text-red-600 dark:text-red-400">{validation}</p> : <p id="bridge-amount-help" className="text-xs text-slate-500 dark:text-slate-400">The destination principal remains 1:1. Service fee and network gas are shown separately before signing.</p>}
-        <div className="flex shrink-0 gap-1" aria-label="Amount shortcuts">{[[1n,4n,"25%"],[1n,2n,"50%"]] .map(([n,d,label]) => <button key={String(label)} type="button" onClick={() => setFraction(n as bigint,d as bigint)} disabled={disabled || available == null || available <= 0n} className="min-h-8 rounded-lg px-2 text-[11px] font-bold text-blue-600 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-40 dark:text-blue-400 dark:hover:bg-blue-950/40">{String(label)}</button>)}</div>
+        <div className="flex shrink-0 gap-1" aria-label="Amount shortcuts">{[[1n,4n,"25%"],[1n,2n,"50%"]] .map(([n,d,label]) => <button key={String(label)} type="button" onClick={() => setFraction(n as bigint,d as bigint)} disabled={disabled || available == null || available <= 0n} className="min-h-8 rounded-lg px-2 text-[11px] font-bold text-[#294a3b] hover:bg-[#f1f4f2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] disabled:opacity-40 dark:text-[#adc0b6] dark:hover:bg-[#09110e]/60">{String(label)}</button>)}</div>
       </div>
     </section>
   );

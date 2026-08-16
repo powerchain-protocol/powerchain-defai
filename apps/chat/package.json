@@ -1,0 +1,22 @@
+{
+  "name": "@powerchain/chat",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./charts": "./src/charts.ts",
+    "./prompts": "./src/prompts.ts",
+    "./suggestions": "./src/suggestions.tsx",
+    "./hooks/use-saved-prompts": "./src/hooks/use-saved-prompts.ts",
+    "./types/chat": "./src/types/chat.ts",
+    "./types/messages": "./src/types/messages.ts",
+    "./types/prompts": "./src/types/prompts.ts"
+  },
+  "scripts": { "typecheck": "tsc --noEmit" },
+  "dependencies": { "react": "19.2.0" },
+  "devDependencies": {
+    "@types/react": "19.2.2",
+    "typescript": "5.9.3"
+  }
+}

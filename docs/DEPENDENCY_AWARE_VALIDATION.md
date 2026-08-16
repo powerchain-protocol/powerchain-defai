@@ -1,7 +1,7 @@
 # Dependency-aware production validation
 
 The source-level production checks do not replace dependency-aware framework validation.
-Run the following from the repository root with Node 22.16+ and pnpm 11.21.0:
+Run the following from the repository root with Node 22.16+ and pnpm 11.22.0:
 
 ```bash
 pnpm install

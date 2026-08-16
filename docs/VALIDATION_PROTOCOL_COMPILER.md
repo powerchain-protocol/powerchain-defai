@@ -22,7 +22,7 @@ A complete environment with the pinned package manager should run:
 
 ```bash
 corepack enable
-corepack prepare pnpm@11.21.0 --activate
+corepack prepare pnpm@11.22.0 --activate
 pnpm clean:package-manager
 pnpm install
 pnpm doctor

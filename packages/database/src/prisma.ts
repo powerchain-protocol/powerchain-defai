@@ -24,3 +24,4 @@ if (process.env.NODE_ENV !== "production") globalForPrisma.__powerchainPrisma = 
 
 export type PrismaTransactionClient = Prisma.TransactionClient;
 export type PrismaJsonValue = Prisma.InputJsonValue;
+export type PrismaBridgeTransferUpdateInput = Prisma.BridgeTransferUpdateInput;

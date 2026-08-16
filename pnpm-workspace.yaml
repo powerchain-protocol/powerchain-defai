@@ -1,6 +1,10 @@
 packages:
   - "apps/*"
   - "packages/*"
+  - "shared/blockchain"
+  - "clusters"
+  - "api"
+  - "api/*"
 
 # Canonical monorepo linking. First-party packages must resolve locally.
 linkWorkspacePackages: true
@@ -34,6 +38,13 @@ dedupeInjectedDeps: true
 # Dependency lifecycle scripts are allowlisted only.
 strictDepBuilds: true
 allowBuilds:
+  # Source-controlled equivalent of interactive `pnpm approve-builds`.
+  # Add packages only after reviewing why their install lifecycle script is required.
   bigint-buffer: true
   bufferutil: true
   utf-8-validate: true
+  # Prisma and common native/JS bundler dependencies required by production installs.
+  "@prisma/engines": true
+  prisma: true
+  esbuild: true
+  sharp: true

@@ -15,7 +15,7 @@ export type BridgeDraft = {
   savedAt: number;
 };
 
-const EMPTY: BridgeDraft = { amount: "", sourceChain: "SOLANA", destinationChain: "SUI", recipient: "", savedAt: 0 };
+const EMPTY: BridgeDraft = { amount: "", sourceChain: "SUI", destinationChain: "SOLANA", recipient: "", savedAt: 0 };
 
 function safeDraft(value: unknown): BridgeDraft | null {
   if (!value || typeof value !== "object") return null;

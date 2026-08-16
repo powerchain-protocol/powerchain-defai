@@ -1,0 +1,11 @@
+import fs from "node:fs";
+import path from "node:path";
+const root=process.cwd(); const read=(p)=>fs.readFileSync(path.join(root,p),"utf8"); const required=["apps/backend/src/services/currencies.ts","apps/backend/src/services/rpc.ts","apps/backend/src/services/prices.ts","apps/backend/src/data/trusted-token-list.ts","apps/bridge/app/api/v1/currencies/route.ts","apps/bridge/app/api/v1/rpc/status/route.ts","docs/STABLECOINS_PYTH_RPC.md"];
+for(const file of required) if(!fs.existsSync(path.join(root,file))) throw new Error(`STABLECOIN_RPC_MISSING:${file}`);
+const currencies=read("apps/backend/src/services/currencies.ts"); for(const token of ["USDC","EURC","Crypto.USDC/USD","Crypto.EURC/USD","POWERCHAIN_PYTH_USDC_USD_FEED_ID","POWERCHAIN_PYTH_EURC_USD_FEED_ID"]) if(!currencies.includes(token)) throw new Error(`CURRENCY_REGISTRY_MISSING:${token}`);
+const tokens=read("apps/backend/src/data/trusted-token-list.ts"); for(const token of ["EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v","HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr","0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC"]) if(!tokens.includes(token)) throw new Error(`CIRCLE_ASSET_MISSING:${token}`);
+if(tokens.includes('id: "sui:eurc"')) throw new Error("EURC_SUI_MUST_NOT_BE_ENABLED_WITHOUT_CIRCLE_SUPPORT");
+const prices=read("apps/backend/src/services/prices.ts"); if(!prices.includes("DEFAULT_USDC_PYTH_FEED_ID")||!prices.includes('asset === "USDC"')||!prices.includes('asset !== "PWRC"')) throw new Error("PYTH_STABLECOIN_PRICE_POLICY_MISSING");
+const rpc=read("apps/backend/src/services/rpc.ts"); for(const token of ["solanaRpcRequest","rpcRuntimeStatus","solanaRpcPool","suiGrpcPool","authoritativeForBridgeAccounting: false"]) if(!rpc.includes(token)) throw new Error(`RPC_POLICY_MISSING:${token}`);
+const bridgeRpc=read("apps/backend/src/bridge/rpc.ts"); if(!bridgeRpc.includes("solanaRpcRequest")||bridgeRpc.includes("POWERCHAIN_SOLANA_RPC_FALLBACK_URLS")) throw new Error("BRIDGE_RPC_DUPLICATION_DETECTED");
+console.log("stablecoin/Pyth/RPC production: PASS — Circle USDC/EURC, Pyth currencies and canonical RPC failover wired");

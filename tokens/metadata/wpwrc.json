@@ -1,0 +1,35 @@
+{
+  "name": "Wrapped PowerChain",
+  "symbol": "wPWRC",
+  "description": "Sui representation of canonical Solana PWRC through Wormhole NTT. The deployed Sui coin type is runtime configuration and is never fabricated in metadata.",
+  "image": "/tokens/wpwrc.png",
+  "properties": {
+    "category": "token",
+    "chain": "sui",
+    "standard": "Sui Coin",
+    "decimals": 9,
+    "canonicalAssetId": "powerchain-pwrc",
+    "representationOf": "pwrc-solana",
+    "powerchain": {
+      "informationCommitment": "f6bfd1627686fbff066ee68045a0808be4c1fc69350f3ff35fb501fa28ce51b5",
+      "informationCommitmentAlgorithm": "sha256",
+      "informationCanonicalization": "powerchain-stable-json-v1",
+      "coinTypeSource": "runtime-config",
+      "bridgeProtocol": "Wormhole NTT",
+      "principalRule": "1:1",
+      "links": {
+        "website": "https://powerchain.app",
+        "swap": "https://swap.powerchain.app",
+        "bridge": "https://bridge.powerchain.app",
+        "socials": {
+          "x": null,
+          "discord": null,
+          "telegram": null,
+          "github": null
+        },
+        "socialPolicy": "verified-only"
+      }
+    }
+  },
+  "external_url": "https://powerchain.app"
+}

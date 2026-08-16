@@ -35,7 +35,7 @@ export function WalletActivityCard({ solanaAddress, suiAddress }: { solanaAddres
           <h2 id="wallet-activity-title" className="text-base font-semibold">Cross-chain wallet activity</h2>
           <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">Finalized balances and recent Solana/Sui activity. Indexer and explorer data is informational; bridge accounting remains reconciliation-owned.</p>
         </div>
-        <button type="button" className="min-h-10 rounded-lg border border-slate-200 px-3 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:border-slate-700" onClick={() => void Promise.all([overview.refresh(), eligibility.refresh()])} disabled={overview.loading}>
+        <button type="button" className="min-h-10 rounded-lg border border-slate-200 px-3 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] dark:border-slate-700" onClick={() => void Promise.all([overview.refresh(), eligibility.refresh()])} disabled={overview.loading}>
           {overview.loading ? "Refreshing…" : "Refresh"}
         </button>
       </div>
@@ -58,7 +58,7 @@ export function WalletActivityCard({ solanaAddress, suiAddress }: { solanaAddres
         {activity.length ? (
           <div className="divide-y divide-slate-100 dark:divide-slate-900">
             {activity.slice(0, 20).map((row: WalletActivityItem) => (
-              <a key={`${row.chain}:${row.id}`} href={row.explorerUrl || undefined} target={row.explorerUrl ? "_blank" : undefined} rel={row.explorerUrl ? "noreferrer" : undefined} className="grid min-h-14 grid-cols-[auto_1fr] gap-3 px-4 py-3 text-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 sm:grid-cols-[72px_1fr_auto] dark:hover:bg-slate-900/60">
+              <a key={`${row.chain}:${row.id}`} href={row.explorerUrl || undefined} target={row.explorerUrl ? "_blank" : undefined} rel={row.explorerUrl ? "noreferrer" : undefined} className="grid min-h-14 grid-cols-[auto_1fr] gap-3 px-4 py-3 text-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#35584a] sm:grid-cols-[72px_1fr_auto] dark:hover:bg-slate-900/60">
                 <div className="text-xs font-semibold text-slate-500">{row.chain}</div>
                 <div className="min-w-0"><div className="truncate font-medium">{row.label}</div><div className="mt-1 truncate font-mono text-xs text-slate-500">{short(row.id)}</div></div>
                 <div className="col-start-2 text-xs text-slate-500 sm:col-start-auto sm:text-right"><div>{row.status || "—"}</div><div className="mt-1 tabular-nums">{utc(row.timestamp)}</div></div>

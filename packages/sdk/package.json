@@ -1,0 +1,23 @@
+{
+  "name": "@powerchain/sdk",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts",
+    "./types": "./src/types.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  },
+  "dependencies": {
+    "@powerchain/protocol": "workspace:*",
+    "@powerchain/blockchain": "workspace:*",
+    "@powerchain/clusters": "workspace:*",
+    "@powerchain/swap-core": "workspace:*"
+  }
+}

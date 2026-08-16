@@ -1,0 +1,4 @@
+-- PowerChain 1.0.0 DEX/liquidity schema reference.
+-- Canonical migration: ../migrations/20260816000200_dex_liquidity.sql
+-- Tables: dex_pool_snapshots, swap_route_snapshots, liquidity_positions.
+-- Apply through the migration pipeline; do not execute this reference file independently.

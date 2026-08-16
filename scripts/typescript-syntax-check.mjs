@@ -7,7 +7,7 @@ const ts = require("typescript");
 
 const root = process.cwd();
 const files = [];
-for (const start of ["apps", "packages"]) {
+for (const start of ["apps", "packages", "shared/blockchain", "clusters"]) {
   const base = path.join(root, start);
   if (!fs.existsSync(base)) continue;
   const walk = (dir) => {

@@ -1,0 +1,4 @@
+"use client";
+import {useCallback,useEffect,useRef,useState} from "react";
+import {fetchPools,type PoolsResponse,type PoolProvider} from "@/lib/data/pools";
+export function usePools(input:{chain?:"SOLANA"|"SUI";provider?:PoolProvider}={}){const[data,setData]=useState<PoolsResponse|null>(null);const[loading,setLoading]=useState(false);const[error,setError]=useState<string|null>(null);const ref=useRef<AbortController|null>(null);const refresh=useCallback(async()=>{ref.current?.abort();const abort=new AbortController();ref.current=abort;setLoading(true);try{setData(await fetchPools({...input,signal:abort.signal}));setError(null)}catch(error){if(!abort.signal.aborted)setError(error instanceof Error?error.message:"POOLS_UNAVAILABLE")}finally{if(!abort.signal.aborted)setLoading(false)}},[input.chain,input.provider]);useEffect(()=>{void refresh();return()=>ref.current?.abort()},[refresh]);return{data,loading,error,refresh};}

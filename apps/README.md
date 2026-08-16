@@ -1,10 +1,19 @@
 # Applications
 
-- `bridge/` — Next.js 16 production web/API application; build output is `apps/bridge/.next`.
-- `backend/` — server-only PowerChain business/domain services consumed as `@powerchain/backend`.
-- `worker-claims/` — claim payout/recovery worker.
-- `worker-fees/` — service-fee verification worker.
+PowerChain DeFAI application workspaces live under `apps/`. Shared protocol/runtime code belongs in `packages/`, `clusters/`, or `shared/blockchain/`; application orchestration stays with its owning workspace.
 
-The canonical workspace is managed from the repository root with pnpm 11.21.0.
+| Workspace | Responsibility |
+| --- | --- |
+| `bridge/` | Compatibility Next.js DeFAI shell, UI routes, and `/api/v1` adapters |
+| `backend/` | Canonical server-only business/domain services exposed as `@powerchain/backend` |
+| `chat/` | DeFAI assistant prompts, messages, charts, suggestions, and saved prompts |
+| `staking/` | Fail-closed staking feature/configuration boundary |
+| `worker-bridge/` | Wormhole NTT finality, correlation, and reconciliation supervisor |
+| `worker-claims/` | Claim payout/finality/recovery supervisor |
+| `worker-fees/` | Service-fee verification supervisor |
 
-- `worker-bridge/` — verifies real Wormhole NTT source finality, VAA/operation correlation, destination finality and completion reconciliation.
+`apps/bridge` retains its historical name for compatibility, but it is the full PowerChain DeFAI web shell rather than a bridge-only application.
+
+Workers should remain thin process entrypoints over canonical services in `apps/backend`. Do not duplicate claims, fees, transaction, RPC, DEX, or Bridge business logic into worker apps.
+
+Use root commands for installation, validation, and production builds. See [`../README.md`](../README.md), [`backend/README.md`](backend/README.md), and [`../docs/README.md`](../docs/README.md).

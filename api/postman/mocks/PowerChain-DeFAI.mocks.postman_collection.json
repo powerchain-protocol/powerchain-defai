@@ -1,0 +1,604 @@
+{
+  "info": {
+    "name": "PowerChain DeFAI API Mocks 1.0.0",
+    "description": "Saved response examples for Postman mock servers. Every example is explicitly mock/non-authoritative and cannot prove signing, execution, finality, settlement, balances, or market truth.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "mockUrl",
+      "value": "https://example.mock.pstmn.io",
+      "type": "string"
+    },
+    {
+      "key": "apiKey",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "id",
+      "value": "mock-transfer-id",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health — mock",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Api-Key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": "{{mockUrl}}/api/v1/health",
+        "description": "health.get · public · idempotent"
+      },
+      "response": [
+        {
+          "name": "Health — mock",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{mockUrl}}/api/v1/health",
+            "description": "health.get · public · idempotent"
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"mock\": true,\n  \"authoritativeForBridgeAccounting\": false,\n  \"service\": \"powerchain-defai\",\n  \"version\": \"1.0.0\",\n  \"status\": \"mock-ready\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Security policy — mock",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Api-Key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": "{{mockUrl}}/api/v1/security/policy",
+        "description": "security.policy.get · public · idempotent"
+      },
+      "response": [
+        {
+          "name": "Security policy — mock",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{mockUrl}}/api/v1/security/policy",
+            "description": "security.policy.get · public · idempotent"
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"mock\": true,\n  \"authoritativeForBridgeAccounting\": false,\n  \"apiKey\": {\n    \"headerName\": \"X-Api-Key\",\n    \"mode\": \"optional\",\n    \"configured\": true\n  },\n  \"walletIdentityAuthority\": false\n}"
+        }
+      ]
+    },
+    {
+      "name": "Clusters — mock",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Api-Key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": "{{mockUrl}}/api/v1/clusters",
+        "description": "clusters.get · public · idempotent"
+      },
+      "response": [
+        {
+          "name": "Clusters — mock",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{mockUrl}}/api/v1/clusters",
+            "description": "clusters.get · public · idempotent"
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"mock\": true,\n  \"authoritativeForBridgeAccounting\": false,\n  \"active\": {\n    \"solana\": \"solana:mainnet\",\n    \"sui\": \"sui:mainnet\"\n  },\n  \"principalMovementProtocol\": \"wormhole-ntt\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "RPC status — mock",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Api-Key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": "{{mockUrl}}/api/v1/rpc/status",
+        "description": "rpc.status.get · public · idempotent"
+      },
+      "response": [
+        {
+          "name": "RPC status — mock",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{mockUrl}}/api/v1/rpc/status",
+            "description": "rpc.status.get · public · idempotent"
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"mock\": true,\n  \"authoritativeForBridgeAccounting\": false,\n  \"status\": \"mock\",\n  \"activeClusters\": {\n    \"solana\": \"solana:mainnet\",\n    \"sui\": \"sui:mainnet\"\n  },\n  \"endpoints\": []\n}"
+        }
+      ]
+    },
+    {
+      "name": "Bridge runtime — mock",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Api-Key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": "{{mockUrl}}/api/v1/bridge/runtime",
+        "description": "bridge.runtime.get · public · idempotent"
+      },
+      "response": [
+        {
+          "name": "Bridge runtime — mock",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{mockUrl}}/api/v1/bridge/runtime",
+            "description": "bridge.runtime.get · public · idempotent"
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"mock\": true,\n  \"authoritativeForBridgeAccounting\": false,\n  \"status\": \"mock\",\n  \"defaultDirection\": \"SUI_TO_SOLANA\",\n  \"principalMovementProtocol\": \"wormhole-ntt\",\n  \"finalityVerified\": false\n}"
+        }
+      ]
+    },
+    {
+      "name": "Bridge routes — mock",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Api-Key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": "{{mockUrl}}/api/v1/bridge/routes",
+        "description": "bridge.routes.get · public · idempotent"
+      },
+      "response": [
+        {
+          "name": "Bridge routes — mock",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{mockUrl}}/api/v1/bridge/routes",
+            "description": "bridge.routes.get · public · idempotent"
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"mock\": true,\n  \"authoritativeForBridgeAccounting\": false,\n  \"routes\": [\n    {\n      \"direction\": \"SUI_TO_SOLANA\",\n      \"source\": \"wPWRC\",\n      \"destination\": \"PWRC\",\n      \"principalRatio\": \"1:1\",\n      \"mock\": true\n    }\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "Bridge quote — mock",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Api-Key",
+            "value": "{{apiKey}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{mockUrl}}/api/v1/bridge/quote",
+        "description": "bridge.quote.post · public · mutation"
+      },
+      "response": [
+        {
+          "name": "Bridge quote — mock",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{mockUrl}}/api/v1/bridge/quote",
+            "description": "bridge.quote.post · public · mutation"
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"mock\": true,\n  \"authoritativeForBridgeAccounting\": false,\n  \"quoteId\": \"mock-bridge-quote\",\n  \"direction\": \"SUI_TO_SOLANA\",\n  \"principalBaseUnits\": \"1000000000\",\n  \"expiresAt\": \"2099-01-01T00:00:00.000Z\",\n  \"signed\": false,\n  \"finalized\": false\n}"
+        }
+      ]
+    },
+    {
+      "name": "Swap balance — mock",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Api-Key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": "{{mockUrl}}/api/v1/swap/balance",
+        "description": "swap.balance.get · public · idempotent"
+      },
+      "response": [
+        {
+          "name": "Swap balance — mock",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{mockUrl}}/api/v1/swap/balance",
+            "description": "swap.balance.get · public · idempotent"
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"mock\": true,\n  \"authoritativeForBridgeAccounting\": false,\n  \"chain\": \"SUI\",\n  \"asset\": \"wPWRC\",\n  \"balanceBaseUnits\": \"10000000000\",\n  \"verified\": false\n}"
+        }
+      ]
+    },
+    {
+      "name": "Swap quote — mock",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Api-Key",
+            "value": "{{apiKey}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{mockUrl}}/api/v1/swap/quote",
+        "description": "swap.quote.post · public · mutation"
+      },
+      "response": [
+        {
+          "name": "Swap quote — mock",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{mockUrl}}/api/v1/swap/quote",
+            "description": "swap.quote.post · public · mutation"
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"mock\": true,\n  \"authoritativeForBridgeAccounting\": false,\n  \"provider\": \"cetus\",\n  \"inputBaseUnits\": \"1000000000\",\n  \"outputBaseUnits\": \"975000000\",\n  \"minimumOutBaseUnits\": \"970125000\",\n  \"feeBps\": 250,\n  \"expiresAt\": \"2099-01-01T00:00:00.000Z\",\n  \"signed\": false\n}"
+        }
+      ]
+    },
+    {
+      "name": "Solana order — mock",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Api-Key",
+            "value": "{{apiKey}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{mockUrl}}/api/v1/swap/solana/order",
+        "description": "swap.solana.order.post · public · mutation"
+      },
+      "response": [
+        {
+          "name": "Solana order — mock",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{mockUrl}}/api/v1/swap/solana/order",
+            "description": "swap.solana.order.post · public · mutation"
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"mock\": true,\n  \"authoritativeForBridgeAccounting\": false,\n  \"provider\": \"jupiter\",\n  \"orderId\": \"mock-order\",\n  \"transaction\": \"mock-unsigned-transaction\",\n  \"walletSignatureRequired\": true,\n  \"executed\": false\n}"
+        }
+      ]
+    }
+  ]
+}

@@ -16,7 +16,7 @@ export function BridgeTransactionSummary(props: BridgeTransactionSummaryProps) {
     <section className="rounded-[20px] border border-slate-200 bg-white p-4 shadow-sm sm:p-5 dark:border-slate-800 dark:bg-slate-950" aria-labelledby="bridge-summary-title">
       <div className="flex items-center justify-between gap-3">
         <h2 id="bridge-summary-title" className="text-base font-semibold text-slate-950 dark:text-white">Review transfer</h2>
-        <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300">1:1 principal</span>
+        <span className="rounded-full border border-[#d4ddd8] bg-[#f1f4f2] px-2.5 py-1 text-[11px] font-semibold text-[#294a3b] dark:border-[#29483c] dark:bg-[#09110e]/60 dark:text-[#d0dcd6]">1:1 principal</span>
       </div>
       <dl className="mt-4 divide-y divide-slate-100 text-sm dark:divide-slate-800">
         <Row label="Route" value={`${props.sourceLabel} → ${props.destinationLabel}`} />

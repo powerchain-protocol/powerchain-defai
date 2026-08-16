@@ -27,7 +27,7 @@ export function WalletNetworkState({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className={`h-2 w-2 rounded-full ${connected && !wrongNetwork ? "bg-emerald-500" : wrongNetwork ? "bg-amber-500" : "bg-slate-300 dark:bg-slate-600"}`} aria-hidden="true" />
+            <span className={`h-2 w-2 rounded-full ${connected && !wrongNetwork ? "bg-[#1c4334]" : wrongNetwork ? "bg-amber-500" : "bg-slate-300 dark:bg-slate-600"}`} aria-hidden="true" />
             <p className="text-sm font-semibold text-slate-950 dark:text-white">
               {!connected ? "Wallet not connected" : wrongNetwork ? "Wrong network" : "Wallet ready"}
             </p>
@@ -37,7 +37,7 @@ export function WalletNetworkState({
           </p>
         </div>
         {!connected ? (
-          <button type="button" onClick={onConnect} disabled={connecting} className="min-h-10 rounded-xl bg-[#0B1730] px-4 text-sm font-semibold text-white transition hover:bg-[#122447] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 dark:bg-blue-600 dark:hover:bg-blue-500">
+          <button type="button" onClick={onConnect} disabled={connecting} className="min-h-10 rounded-xl bg-[#0b1511] px-4 text-sm font-semibold text-white transition hover:bg-[#102019] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] disabled:opacity-50 dark:bg-[#dfe7e3] dark:hover:bg-white">
             {connecting ? "Connecting…" : "Connect wallet"}
           </button>
         ) : wrongNetwork ? (

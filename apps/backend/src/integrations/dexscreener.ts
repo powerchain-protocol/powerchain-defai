@@ -1,0 +1,4 @@
+import { fetchIntegrationJson } from "./http";import { integrationEndpoints } from "../config/endpoints";
+export async function fetchDexScreenerTokenPairs(chainId:string,tokenAddresses:readonly string[]){if(!chainId||tokenAddresses.length<1)throw new Error("DEXSCREENER_INPUT_INVALID");const joined=tokenAddresses.slice(0,30).join(",");return fetchIntegrationJson<unknown>(`${integrationEndpoints().dexscreener}/latest/dex/tokens/${encodeURIComponent(joined)}`)}
+export async function fetchDexScreenerPair(chainId:string,pairId:string){return fetchIntegrationJson<unknown>(`${integrationEndpoints().dexscreener}/latest/dex/pairs/${encodeURIComponent(chainId)}/${encodeURIComponent(pairId)}`)}
+export function dexScreenerStatus(){return{provider:"dexscreener" as const,configured:true,publicApi:true}}

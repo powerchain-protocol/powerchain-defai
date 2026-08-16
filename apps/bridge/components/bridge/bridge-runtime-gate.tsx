@@ -14,7 +14,7 @@ export function BridgeRuntimeGate() {
   const blocked = !online || stale || data?.status === "blocked" || (!data && Boolean(error));
   const degraded = !blocked && data?.status === "degraded";
   const tone = blocked
-    ? "border-red-200 bg-red-50 dark:border-red-900/70 dark:bg-red-950/30"
+    ? "border-rose-200 bg-rose-50 dark:border-rose-900/70 dark:bg-rose-950/30"
     : degraded
       ? "border-amber-200 bg-amber-50 dark:border-amber-900/70 dark:bg-amber-950/30"
       : "border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950";
@@ -29,7 +29,7 @@ export function BridgeRuntimeGate() {
             {loading && !data ? "Checking fresh chain heads, provider readiness and PWRC asset identity…" : stale && data ? "Runtime safety data is too old for a new quote or signature. Refresh before continuing." : blocked ? "New quotes, wallet signatures and transfer submissions remain blocked until required checks recover." : "Fresh chain data and asset identity checks are available for the bridge flow."}
           </p>
         </div>
-        <button type="button" onClick={() => void refresh()} disabled={loading || !online} className="min-h-9 shrink-0 rounded-lg border border-slate-300 bg-white px-3 text-xs font-semibold text-slate-700 outline-none hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900">
+        <button type="button" onClick={() => void refresh()} disabled={loading || !online} className="min-h-9 shrink-0 rounded-lg border border-slate-300 bg-white px-3 text-xs font-semibold text-slate-700 outline-none hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-[#35584a] disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900">
           {loading ? "Checking…" : "Refresh"}
         </button>
       </div>
@@ -39,7 +39,7 @@ export function BridgeRuntimeGate() {
           {data.checks.map((check) => (
             <li key={check.id} className="rounded-xl border border-black/5 bg-white/70 px-3 py-2 text-xs dark:border-white/10 dark:bg-slate-950/50">
               <div className="flex items-center gap-2">
-                <span aria-hidden="true" className={`h-2 w-2 rounded-full ${check.ok ? "bg-emerald-500" : check.blocking ? "bg-red-500" : "bg-amber-500"}`} />
+                <span aria-hidden="true" className={`h-2 w-2 rounded-full ${check.ok ? "bg-[#1c4334]" : check.blocking ? "bg-rose-500" : "bg-amber-500"}`} />
                 <span className="font-medium text-slate-800 dark:text-slate-100">{LABELS[check.id] ?? check.id}</span>
               </div>
               {check.detail ? <p className="mt-1 truncate text-slate-500 dark:text-slate-400" title={check.detail}>{check.detail}</p> : null}
@@ -50,9 +50,9 @@ export function BridgeRuntimeGate() {
 
       {data ? (
         <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
-          <span className={`rounded-full px-2 py-1 ${canRequestQuote ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300" : "bg-slate-100 text-slate-500 dark:bg-slate-900"}`}>Quotes {canRequestQuote ? "enabled" : "blocked"}</span>
-          <span className={`rounded-full px-2 py-1 ${canOpenWalletSignature ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300" : "bg-slate-100 text-slate-500 dark:bg-slate-900"}`}>Signing {canOpenWalletSignature ? "enabled" : "blocked"}</span>
-          <span className={`rounded-full px-2 py-1 ${canSubmitTransfer ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300" : "bg-slate-100 text-slate-500 dark:bg-slate-900"}`}>Submit {canSubmitTransfer ? "enabled" : "blocked"}</span>
+          <span className={`rounded-full px-2 py-1 ${canRequestQuote ? "bg-[#e1e8e4] text-[#294a3b] dark:bg-[#09110e] dark:text-[#d0dcd6]" : "bg-slate-100 text-slate-500 dark:bg-slate-900"}`}>Quotes {canRequestQuote ? "enabled" : "blocked"}</span>
+          <span className={`rounded-full px-2 py-1 ${canOpenWalletSignature ? "bg-[#e1e8e4] text-[#294a3b] dark:bg-[#09110e] dark:text-[#d0dcd6]" : "bg-slate-100 text-slate-500 dark:bg-slate-900"}`}>Signing {canOpenWalletSignature ? "enabled" : "blocked"}</span>
+          <span className={`rounded-full px-2 py-1 ${canSubmitTransfer ? "bg-[#e1e8e4] text-[#294a3b] dark:bg-[#09110e] dark:text-[#d0dcd6]" : "bg-slate-100 text-slate-500 dark:bg-slate-900"}`}>Submit {canSubmitTransfer ? "enabled" : "blocked"}</span>
         </div>
       ) : null}
       {data ? <p className="mt-3 text-[11px] text-slate-500 dark:text-slate-400">Runtime checks are operational safety signals only; persisted reconciliation evidence remains authoritative for bridge accounting.</p> : null}

@@ -1,0 +1,82 @@
+openapi: 3.1.0
+info:
+  title: PowerChain Bridge API
+  version: 1.0.0
+  description: Bridge-only contract; Wormhole NTT remains the sole cross-chain principal-movement protocol.
+servers:
+  - url: /
+security:
+  - ApiKey: []
+paths:
+  /api/v1/bridge/config:
+    get:
+      summary: Bridge Config Get
+      responses:
+        "200":
+          description: Bridge API response
+  /api/v1/bridge/history:
+    get:
+      summary: Bridge History Get
+      responses:
+        "200":
+          description: Bridge API response
+  /api/v1/bridge/openapi:
+    get:
+      summary: Bridge Openapi Get
+      responses:
+        "200":
+          description: Bridge API response
+  /api/v1/bridge/quote:
+    post:
+      summary: Bridge Quote Post
+      responses:
+        "200":
+          description: Bridge API response
+  /api/v1/bridge/routes:
+    get:
+      summary: Bridge Routes Get
+      responses:
+        "200":
+          description: Bridge API response
+  /api/v1/bridge/runtime:
+    get:
+      summary: Bridge Runtime Get
+      responses:
+        "200":
+          description: Bridge API response
+  /api/v1/bridge/transfers:
+    post:
+      summary: Bridge Transfers Post
+      responses:
+        "200":
+          description: Bridge API response
+  /api/v1/bridge/transfers/{id}:
+    get:
+      summary: Bridge Transfers Id Get
+      responses:
+        "200":
+          description: Bridge API response
+  /api/v1/bridge/transfers/{id}/events:
+    get:
+      summary: Bridge Transfers Id Events Get
+      responses:
+        "200":
+          description: Bridge API response
+  /api/v1/bridge/transfers/{id}/events/stream:
+    get:
+      summary: Bridge Transfers Id Events Stream Get
+      responses:
+        "200":
+          description: Bridge API response
+  /api/v1/bridge/transfers/{id}/source:
+    post:
+      summary: Bridge Transfers Id Source Post
+      responses:
+        "200":
+          description: Bridge API response
+components:
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-Api-Key

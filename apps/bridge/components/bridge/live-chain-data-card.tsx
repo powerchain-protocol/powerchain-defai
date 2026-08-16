@@ -36,7 +36,7 @@ export function LiveChainDataCard({ solanaOwner, suiOwner }: Props) {
           <h2 id="live-chain-data-title" className="text-sm font-semibold text-slate-950 dark:text-white">Live network data</h2>
           <p className="mt-1 text-xs text-slate-500">Finalized chain reads. Market price is informational only.</p>
         </div>
-        <button type="button" onClick={() => void refresh()} disabled={loading} className="min-h-9 rounded-lg border border-slate-200 px-3 text-xs font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700">
+        <button type="button" onClick={() => void refresh()} disabled={loading} className="min-h-9 rounded-lg border border-slate-200 px-3 text-xs font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700">
           {loading ? "Refreshing…" : "Refresh"}
         </button>
       </div>

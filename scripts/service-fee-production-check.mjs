@@ -57,7 +57,8 @@ requireText("apps/backend/src/fees/policy.ts", "SERVICE_FEE_QUOTE_POLICY_MISMATC
 requireText("apps/backend/src/fees/policy.ts", "SERVICE_FEE_QUOTE_RECIPIENT_MISMATCH");
 requireText("apps/backend/src/fees/math.ts", "totalSourceDebitBaseUnits");
 requireText("apps/backend/src/fees/solana.ts", "TOKEN_2022_PROGRAM_ID");
-requireText("apps/backend/src/fees/sui.ts", "showBalanceChanges");
+requireText("apps/backend/src/fees/sui.ts", "balanceChanges: true");
+requireText("apps/backend/src/fees/sui.ts", "waitForTransaction");
 requireText("apps/bridge/server/service-fees.ts", "GOVERNANCE_DUAL_CONTROL_REQUIRED");
 requireText("apps/bridge/server/service-fees.ts", 'isolationLevel: "Serializable"');
 requireText("apps/bridge/server/service-fee-auth.ts", "timingSafeEqual");

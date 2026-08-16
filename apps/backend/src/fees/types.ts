@@ -1,4 +1,5 @@
-export type ServiceFeeChain = "SOLANA" | "SUI";
+import type { BlockchainChain } from "@powerchain/blockchain";
+export type ServiceFeeChain = BlockchainChain;
 export type ServiceFeeSettlementStatus =
   | "ASSESSED"
   | "SUBMITTED"

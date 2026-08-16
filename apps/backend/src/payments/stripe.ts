@@ -1,0 +1,1 @@
+export function stripeStatus(){return{provider:"stripe" as const,configured:Boolean(process.env.STRIPE_SECRET_KEY?.trim()),serverOnly:true,onramp:Boolean(process.env.POWERCHAIN_STRIPE_ONRAMP_ENABLED==="true")}}
