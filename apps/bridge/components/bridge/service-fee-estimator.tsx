@@ -27,7 +27,7 @@ type CollectionPlan = {
 function parsePwrc(value: string): bigint | null {
   const text = value.trim();
   if (!/^\d+(?:\.\d{0,9})?$/.test(text)) return null;
-  const [whole, fraction = ""] = text.split(".");
+  const [whole = "0", fraction = ""] = text.split(".");
   return BigInt(whole) * SCALE + BigInt((fraction + "000000000").slice(0, 9));
 }
 

@@ -12,6 +12,8 @@ const files = [
   "scripts/require-node.mjs",
   "scripts/require-pnpm.mjs",
   "scripts/react-type-resolution-production-check.mjs",
+  "scripts/exact-optional-types-production-check.mjs",
+  "scripts/postinstall.mjs",
   "scripts/setup-local.sh",
   "scripts/bootstrap-env.mjs",
   ".gitignore",
@@ -160,7 +162,16 @@ const files = [
   "apps/backend/src/types/portfolio.ts",
   "apps/backend/src/types/balances.ts",
   "apps/backend/src/types/assets.ts",
-  "apps/backend/src/types/wallets.ts"
+  "apps/backend/src/types/wallets.ts",
+  "apps/bridge/hooks/use-provider-health.ts",
+  "apps/bridge/hooks/use-provider-readiness.ts",
+  "apps/bridge/hooks/use-operation-journal.ts",
+  "apps/bridge/lib/bridge/operation-journal.ts",
+  "apps/bridge/constants/provider-runtime.ts",
+  "apps/bridge/lib/realtime/transport-policy.ts",
+  "apps/bridge/hooks/use-transfer-status.ts",
+  "scripts/hooks-runtime-production-check.mjs",
+  "docs/HOOKS_RUNTIME_RESILIENCE.md"
 ];
 const sha256 = (buffer) => createHash("sha256").update(buffer).digest("hex");
 const artifacts = files.map((file) => ({ path: file, sha256: sha256(fs.readFileSync(path.join(root, file))) }));

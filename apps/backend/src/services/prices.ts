@@ -35,11 +35,12 @@ async function fetchPyth(asset: PriceAsset): Promise<PricePoint> {
   const feed = normalizeFeedId(feedRaw); const base = providerUrls().pythHermes;
   const url = new URL(`${base}/v2/updates/price/latest`); url.searchParams.append("ids[]", `0x${feed}`);
   const apiKey = process.env.PYTH_API_KEY?.trim() || process.env.POWERCHAIN_PYTH_API_KEY?.trim();
-  const response = await fetchIntegrationJson<PythResponse>(url.toString(), { headers: apiKey ? { authorization: `Bearer ${apiKey}` } : undefined }, 6_000);
+  const response = await fetchIntegrationJson<PythResponse>(url.toString(), apiKey ? { headers: { authorization: `Bearer ${apiKey}` } } : {}, 6_000);
   const parsed = response.parsed?.find((entry) => entry.id?.replace(/^0x/, "").toLowerCase() === feed) ?? response.parsed?.[0]; const price = parsed?.price;
   if (!price || !/^-?\d+$/.test(price.price ?? "") || !Number.isInteger(price.expo) || !Number.isInteger(price.publish_time)) throw new Error("PYTH_PRICE_RESPONSE_INVALID");
   const publishMs = price.publish_time! * 1000; const ageMs = Math.max(0, Date.now() - publishMs); if (ageMs > maxAgeMs()) throw new Error(`PYTH_${asset}_PRICE_STALE`);
-  return { asset, quote: "USD", price: scaledIntegerToDecimal(price.price!, price.expo!), confidence: /^\d+$/.test(price.conf ?? "") ? scaledIntegerToDecimal(price.conf!, price.expo!) : undefined, source: "pyth", publishTime: new Date(publishMs).toISOString(), ageMs, stale: false, authoritativeForBridgeAccounting: false };
+  const confidence = /^\d+$/.test(price.conf ?? "") ? scaledIntegerToDecimal(price.conf!, price.expo!) : null;
+  return { asset, quote: "USD", price: scaledIntegerToDecimal(price.price!, price.expo!), ...(confidence === null ? {} : { confidence }), source: "pyth", publishTime: new Date(publishMs).toISOString(), ageMs, stale: false, authoritativeForBridgeAccounting: false };
 }
 
 async function fetchBirdeyePwrc(): Promise<PricePoint> {

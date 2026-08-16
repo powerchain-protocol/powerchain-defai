@@ -39,7 +39,7 @@
     "operation-canonical-journal:production:check": "node scripts/operation-canonical-journal-production-check.mjs",
     "operation-consistency:production:check": "node scripts/operation-consistency-production-check.mjs",
     "operation-canonical-recovery:production:check": "node scripts/operation-canonical-recovery-production-check.mjs",
-    "verify:production": "pnpm node:check && pnpm node-nvm:production:check && pnpm types:react:check && pnpm syntax:check && pnpm type-hygiene:production:check && pnpm workspace:production:check && pnpm monorepo-programs:production:check && pnpm swap-core:production:check && pnpm transaction-data:production:check && pnpm root-layout:production:check && pnpm api:split:check && pnpm bridge-swap-api:production:check && pnpm runtime-packages:production:check && pnpm sui-bridge:production:check && pnpm backend:architecture:check && pnpm routing-security:production:check && pnpm api-key-security:production:check && pnpm env-provider-features:production:check && pnpm postman-lifecycle:production:check && pnpm stablecoin-rpc:production:check && pnpm cross-chain:production:check && pnpm product-safety:production:check && pnpm fees:production:check && pnpm swap:production:check && pnpm dex-liquidity:production:check && pnpm integrations:production:check && pnpm defai:production:check && pnpm data:production:check && pnpm runtime:production:check && pnpm bridge:production:check && pnpm claim-assets:production:check && pnpm wallet:production:check && pnpm wallet:portfolio:production:check && pnpm uiux:production:check && pnpm theme-infrastructure:production:check && pnpm operation-canonical-recovery:production:check && pnpm platform:production:check && pnpm operations:production:check && pnpm failure-safety:production:check && pnpm real-bridge:production:check && pnpm protocol:check && pnpm information:check && pnpm build-manifest:check && pnpm markdown:check && pnpm release-tooling:production:check && pnpm full:production:check",
+    "verify:production": "pnpm node:check && pnpm node-nvm:production:check && pnpm types:react:check && pnpm syntax:check && pnpm type-hygiene:production:check && pnpm exact-types:production:check && pnpm hooks-runtime:production:check && pnpm workspace:production:check && pnpm monorepo-programs:production:check && pnpm swap-core:production:check && pnpm transaction-data:production:check && pnpm root-layout:production:check && pnpm api:split:check && pnpm bridge-swap-api:production:check && pnpm runtime-packages:production:check && pnpm sui-bridge:production:check && pnpm backend:architecture:check && pnpm routing-security:production:check && pnpm api-key-security:production:check && pnpm env-provider-features:production:check && pnpm postman-lifecycle:production:check && pnpm stablecoin-rpc:production:check && pnpm cross-chain:production:check && pnpm product-safety:production:check && pnpm fees:production:check && pnpm swap:production:check && pnpm dex-liquidity:production:check && pnpm integrations:production:check && pnpm defai:production:check && pnpm data:production:check && pnpm runtime:production:check && pnpm bridge:production:check && pnpm claim-assets:production:check && pnpm wallet:production:check && pnpm wallet:portfolio:production:check && pnpm uiux:production:check && pnpm theme-infrastructure:production:check && pnpm operation-canonical-recovery:production:check && pnpm platform:production:check && pnpm operations:production:check && pnpm failure-safety:production:check && pnpm real-bridge:production:check && pnpm protocol:check && pnpm information:check && pnpm build-manifest:check && pnpm markdown:check && pnpm release-tooling:production:check && pnpm full:production:check",
     "worker:claims": "pnpm --filter @powerchain/worker-claims start",
     "api:generate": "pnpm api:contracts:generate",
     "full:production:check": "node scripts/full-production-check.mjs",
@@ -75,7 +75,7 @@
     "type-hygiene:production:check": "node scripts/type-hygiene-production-check.mjs",
     "worker:bridge": "pnpm --filter @powerchain/worker-bridge start",
     "real-bridge:production:check": "node scripts/real-bridge-production-check.mjs",
-    "postinstall": "prisma generate",
+    "postinstall": "node scripts/postinstall.mjs",
     "protocol:check": "node scripts/protocol-production-check.mjs",
     "markdown:check": "node scripts/markdown-structure-check.mjs",
     "clean:package-manager": "node scripts/clean-package-manager.mjs",
@@ -128,7 +128,9 @@
     "types:react:check": "node scripts/react-type-resolution-production-check.mjs",
     "monorepo-programs:production:check": "node scripts/monorepo-programs-production-check.mjs",
     "swap-core:production:check": "node scripts/swap-core-production-check.mjs",
-    "transaction-data:production:check": "node scripts/transaction-data-production-check.mjs"
+    "transaction-data:production:check": "node scripts/transaction-data-production-check.mjs",
+    "exact-types:production:check": "node scripts/exact-optional-types-production-check.mjs",
+    "hooks-runtime:production:check": "node scripts/hooks-runtime-production-check.mjs"
   },
   "devDependencies": {
     "@types/node": "26.1.2",

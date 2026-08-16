@@ -10,6 +10,18 @@ function urls(env: NodeJS.ProcessEnv, name: string) {
   return (value(env, name) ?? "").split(",").map((entry) => entry.trim()).filter(Boolean);
 }
 
+function uniqueUrls(values: readonly (string | undefined)[], primary?: string) {
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const candidate of values) {
+    const url = candidate?.trim();
+    if (!url || url === primary || seen.has(url)) continue;
+    seen.add(url);
+    result.push(url);
+  }
+  return result;
+}
+
 function endpoint(
   id: string,
   provider: string,
@@ -58,22 +70,28 @@ function endpointPool(
 
 export function solanaRpcPool(env: NodeJS.ProcessEnv = process.env): EndpointPool {
   const primary = heliusRpcUrl(env);
-  const fallbacks = [value(env, "POWERCHAIN_SOLANA_RPC_FALLBACK_URL"), ...urls(env, "POWERCHAIN_SOLANA_RPC_FALLBACK_URLS")]
-    .filter((entry): entry is string => Boolean(entry));
+  const fallbacks = uniqueUrls(
+    [value(env, "POWERCHAIN_SOLANA_RPC_FALLBACK_URL"), ...urls(env, "POWERCHAIN_SOLANA_RPC_FALLBACK_URLS")],
+    primary,
+  );
   return endpointPool("rpc", primary, fallbacks, value(env, "HELIUS_API_KEY") && !value(env, "POWERCHAIN_SOLANA_RPC_URL") ? "helius" : "custom");
 }
 
 export function solanaWsPool(env: NodeJS.ProcessEnv = process.env): EndpointPool {
   const primary = heliusWsUrl(env);
-  const fallbacks = [value(env, "POWERCHAIN_SOLANA_WS_FALLBACK_URL"), ...urls(env, "POWERCHAIN_SOLANA_WS_FALLBACK_URLS")]
-    .filter((entry): entry is string => Boolean(entry));
+  const fallbacks = uniqueUrls(
+    [value(env, "POWERCHAIN_SOLANA_WS_FALLBACK_URL"), ...urls(env, "POWERCHAIN_SOLANA_WS_FALLBACK_URLS")],
+    primary,
+  );
   return endpointPool("websocket", primary, fallbacks, value(env, "HELIUS_API_KEY") && !value(env, "POWERCHAIN_SOLANA_WS_URL") ? "helius" : "custom");
 }
 
 export function suiGrpcPool(env: NodeJS.ProcessEnv = process.env): EndpointPool {
   const primary = value(env, "POWERCHAIN_SUI_GRPC_URL");
-  const fallbacks = [value(env, "POWERCHAIN_SUI_GRPC_FALLBACK_URL"), ...urls(env, "POWERCHAIN_SUI_GRPC_FALLBACK_URLS")]
-    .filter((entry): entry is string => Boolean(entry));
+  const fallbacks = uniqueUrls(
+    [value(env, "POWERCHAIN_SUI_GRPC_FALLBACK_URL"), ...urls(env, "POWERCHAIN_SUI_GRPC_FALLBACK_URLS")],
+    primary,
+  );
   return {
     primary: primary ? endpoint("sui-grpc-primary", "sui", "grpc", "primary", primary, true) : undefined,
     fallbacks: fallbacks.map((url, index) => endpoint(`sui-grpc-fallback-${index + 1}`, "sui", "grpc", "fallback", url, true)),

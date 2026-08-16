@@ -27,6 +27,12 @@ function readInitialRecord(){
 
 export type ExternalOperationConflict={record:OperationRecord;detectedAt:string};
 
+function clearMessage(record:OperationRecord|null):OperationJournalMessage{
+  return record
+    ? {type:"clear",id:record.id,revision:record.revision}
+    : {type:"clear"};
+}
+
 export function useOperationJournal(){
   const [record,setRecord]=useState<OperationRecord|null>(null);
   const [externalConflict,setExternalConflict]=useState<ExternalOperationConflict|null>(null);
@@ -66,7 +72,7 @@ export function useOperationJournal(){
     const timer=setTimeout(()=>{
       const current=recordRef.current;
       if(!current||current.id!==record.id||!isOperationTerminal(current.status))return;
-      clearStorage();setRecord(null);channelRef.current?.postMessage({type:"clear",id:current.id,revision:current.revision} satisfies OperationJournalMessage);
+      clearStorage();setRecord(null);channelRef.current?.postMessage(clearMessage(current));
     },delay);
     return()=>clearTimeout(timer);
   },[record?.id,record?.status,record?.terminalAt,record?.updatedAt]);
@@ -85,7 +91,7 @@ export function useOperationJournal(){
   const reconcile=useCallback((observation:ServerOperationObservation)=>{
     setRecord(current=>{if(!current)return null;const next=applyServerOperationObservation(current,observation);if(next===current)return current;writeRecord(next);broadcast({type:"record",record:next});return next;});
   },[broadcast]);
-  const clear=useCallback(()=>{const current=recordRef.current;clearStorage();setRecord(null);setExternalConflict(null);broadcast({type:"clear",id:current?.id,revision:current?.revision});},[broadcast]);
+  const clear=useCallback(()=>{const current=recordRef.current;clearStorage();setRecord(null);setExternalConflict(null);broadcast(clearMessage(current));},[broadcast]);
   const dismissExternalConflict=useCallback(()=>{
     const conflict=conflictRef.current;
     if(conflict&&!isOperationTerminal(conflict.record.status))return false;

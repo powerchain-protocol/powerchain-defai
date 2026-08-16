@@ -36,11 +36,11 @@ function tone(state: Status["state"]) {
 }
 
 export function OperationalReadinessCard() {
-  const [status, setStatus] = useState<Status>();
+  const [status, setStatus] = useState<Status | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(false);
-  const controller = useRef<AbortController>();
+  const controller = useRef<AbortController | null>(null);
 
   const load = useCallback(async (background = false) => {
     controller.current?.abort();

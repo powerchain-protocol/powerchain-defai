@@ -47,9 +47,9 @@ export function RecentTransfersCard() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(false);
-  const [updatedAt, setUpdatedAt] = useState<number>();
+  const [updatedAt, setUpdatedAt] = useState<number | undefined>(undefined);
   const [now, setNow] = useState(() => Date.now());
-  const activeController = useRef<AbortController>();
+  const activeController = useRef<AbortController | null>(null);
 
   const load = useCallback(async (background = false) => {
     if (background) setRefreshing(true); else setLoading(true);

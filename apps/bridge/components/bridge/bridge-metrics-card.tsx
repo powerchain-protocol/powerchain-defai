@@ -41,13 +41,13 @@ function windowLabel(hours: number): string {
 }
 
 export function BridgeMetricsCard() {
-  const [data, setData] = useState<BridgeMetricsPayload>();
+  const [data, setData] = useState<BridgeMetricsPayload | undefined>(undefined);
   const [windowHours, setWindowHours] = useState<MetricsWindowHours>(24);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [online, setOnline] = useState(true);
   const [clock, setClock] = useState(0);
-  const controller = useRef<AbortController>();
+  const controller = useRef<AbortController | null>(null);
 
   const load = useCallback(async (hours: MetricsWindowHours = windowHours) => {
     if (typeof navigator !== "undefined" && !navigator.onLine) {

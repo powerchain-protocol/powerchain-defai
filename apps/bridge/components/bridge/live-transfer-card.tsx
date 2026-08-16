@@ -15,7 +15,7 @@ export function LiveTransferCard({ transferId }: { transferId: string }) {
   const status = snapshot?.status ?? "CREATED";
   const steps = progress(status, snapshot?.events?.map((event) => String(event.status ?? "")) ?? []);
   return <section className="rounded-[20px] border border-slate-200 bg-white p-4 shadow-sm sm:p-5 dark:border-slate-800 dark:bg-slate-950" aria-labelledby="live-transfer-title">
-    <ScreenReaderStatus message={`Transfer status ${transferStatusLabel(status)}. ${connection === "offline" ? "Tracking paused while offline." : stale ? "Status update delayed." : ""}`} />
+    <ScreenReaderStatus>{`Transfer status ${transferStatusLabel(status)}. ${connection === "offline" ? "Tracking paused while offline." : stale ? "Status update delayed." : ""}`}</ScreenReaderStatus>
     <div className="flex items-start justify-between gap-3"><div className="min-w-0"><p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Transfer status</p><h2 id="live-transfer-title" className="mt-1 truncate text-base font-semibold text-slate-950 dark:text-white">{transferId}</h2></div><div className="flex flex-col items-end gap-2"><ConnectionBadge connection={connection} terminal={isTerminalTransferStatus(status)} /><TransferStatusChip status={status} /></div></div>
     {!online ? <div className="mt-4"><InlineAlert title="You are offline" tone="warning">Transfer tracking is paused on this device until connectivity returns. Do not resubmit the transfer.</InlineAlert></div> : null}
     {error ? <div className="mt-4"><InlineAlert title="Live updates interrupted" tone="warning">{error}</InlineAlert></div> : null}
@@ -32,5 +32,13 @@ function relativeAge(timestamp: number) { const seconds=Math.max(0,Math.floor((D
 function progress(status: string, eventStatuses: string[]): BridgeProgressStep[] {
   const labels=["Quote accepted","Source submitted","Source finalized","Bridge message observed","Destination submitted","Destination finalized","Completed"];
   const known=[...eventStatuses,status].map((value)=>TRANSFER_PROGRESS_ORDER.indexOf(value as (typeof TRANSFER_PROGRESS_ORDER)[number])).filter((value)=>value>=0); const index=known.length?Math.max(...known):0; const terminalFailure=status==="FAILED"||status==="RECONCILIATION_REQUIRED";
-  return labels.map((label,i)=>({id:TRANSFER_PROGRESS_ORDER[i] ?? String(i),label,description:i===0?"Transfer intent persisted.":i===6?"Finality and reconciliation completed.":undefined,state:terminalFailure&&i===index?"error":i<index?"complete":!terminalFailure&&i===index?"current":"upcoming"}));
+  return labels.map((label, i) => {
+    const description = i === 0 ? "Transfer intent persisted." : i === 6 ? "Finality and reconciliation completed." : null;
+    return {
+      id: TRANSFER_PROGRESS_ORDER[i] ?? String(i),
+      label,
+      ...(description === null ? {} : { description }),
+      state: terminalFailure && i === index ? "error" : i < index ? "complete" : !terminalFailure && i === index ? "current" : "upcoming",
+    };
+  });
 }

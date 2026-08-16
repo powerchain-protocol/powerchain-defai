@@ -1,6 +1,6 @@
-# PowerChain DeFAI™
+# PowerChain | DeFAI™
 
-PowerChain DeFAI is a version **1.0.0** monorepo for AI-assisted DeFi on **Solana and Sui**. It combines Swap, PWRC ↔ wPWRC Bridge, Staking, Portfolio, Liquidity, Assets, Fees, Wallets, operational tooling, and a read-only DeFi assistant.
+PowerChain | DeFAI is a version **1.0.0** monorepo for AI-assisted DeFi on **Solana and Sui**. It combines Swap, PWRC ↔ wPWRC Bridge, Staking, Portfolio, Liquidity, Assets, Fees, Wallets, operational tooling, and a read-only DeFi assistant.
 
 The historical `apps/bridge` name remains the compatibility Next.js application shell. It does not mean the product is bridge-only. **Wormhole NTT remains the sole cross-chain principal-movement protocol for PWRC/wPWRC.**
 

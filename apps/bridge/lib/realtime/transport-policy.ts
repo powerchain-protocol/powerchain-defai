@@ -58,3 +58,20 @@ export function transferRealtimeUrl(base: string, transferId: string, cursor?: s
   if (cursor) url.searchParams.set("cursor", cursor);
   return url.toString();
 }
+
+function boundedNumber(value: string | undefined, fallback: number, minimum: number, maximum: number) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? Math.max(minimum, Math.min(Math.floor(parsed), maximum)) : fallback;
+}
+
+export function publicRealtimeSocketOptions() {
+  const reconnectMs = boundedNumber(process.env.NEXT_PUBLIC_POWERCHAIN_WS_RECONNECT_INTERVAL, 5_000, 250, 30_000);
+  const heartbeatMs = boundedNumber(process.env.NEXT_PUBLIC_POWERCHAIN_WS_HEARTBEAT_INTERVAL, 30_000, 5_000, 120_000);
+  return {
+    minDelayMs: Math.max(250, Math.min(reconnectMs, 5_000)),
+    maxDelayMs: Math.max(reconnectMs, 8_000),
+    heartbeatMs,
+    heartbeatTimeoutMs: Math.max(5_000, Math.min(heartbeatMs * 2, 120_000)),
+    maxReconnectAttempts: 3,
+  } as const;
+}

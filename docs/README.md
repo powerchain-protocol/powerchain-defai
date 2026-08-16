@@ -33,6 +33,7 @@ This directory is the technical documentation index for **PowerChain DeFAI 1.0.0
 - [`FAILURE_SAFETY.md`](FAILURE_SAFETY.md) — idempotency, recovery, database contention, and failure handling.
 - [`PLATFORM_HARDENING.md`](PLATFORM_HARDENING.md) — platform/runtime production boundaries.
 - [`RUNTIME_PACKAGE_BOUNDARIES.md`](RUNTIME_PACKAGE_BOUNDARIES.md) — Next workspace transpilation and shared runtime ownership.
+- [`HOOKS_RUNTIME_RESILIENCE.md`](HOOKS_RUNTIME_RESILIENCE.md) — React 19 hooks, exact optional types, provider refresh, realtime fallbacks, and operation-journal safety.
 
 ## UI/UX, safety, and legal
 

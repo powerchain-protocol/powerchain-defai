@@ -1,18 +1,24 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  PROVIDER_HEALTH_REFRESH_MAX_MS,
+  PROVIDER_HEALTH_REFRESH_MIN_MS,
+  PROVIDER_REQUEST_TIMEOUT_MS,
+  clampRefreshMs,
+} from "@/constants/provider-runtime";
 import { fetchJson } from "@/lib/data/http-client";
 import { ageMs, isProviderHealthPayload, type ProviderHealthPayload } from "@/lib/data/runtime-validation";
 
 export function useProviderHealth(refreshMs = 30_000) {
-  const [data, setData] = useState<ProviderHealthPayload>();
-  const [error, setError] = useState<string>();
+  const [data, setData] = useState<ProviderHealthPayload | undefined>(undefined);
+  const [error, setError] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [lastSuccessfulAt, setLastSuccessfulAt] = useState<number>();
+  const [lastSuccessfulAt, setLastSuccessfulAt] = useState<number | undefined>(undefined);
   const [online, setOnline] = useState(true);
   const requestGeneration = useRef(0);
-  const activeController = useRef<AbortController>();
+  const activeController = useRef<AbortController | null>(null);
 
   const refresh = useCallback(async () => {
     setRefreshing(true);
@@ -22,7 +28,7 @@ export function useProviderHealth(refreshMs = 30_000) {
     activeController.current = controller;
     try {
       const result = await fetchJson<unknown>("/api/v1/providers/health", {
-        timeoutMs: 6_000,
+        timeoutMs: PROVIDER_REQUEST_TIMEOUT_MS,
         maxAttempts: 1,
         signal: controller.signal,
       });
@@ -42,13 +48,15 @@ export function useProviderHealth(refreshMs = 30_000) {
     }
   }, []);
 
+  const intervalMs = clampRefreshMs(refreshMs, PROVIDER_HEALTH_REFRESH_MIN_MS, PROVIDER_HEALTH_REFRESH_MAX_MS);
+
   useEffect(() => {
     const syncOnline = () => setOnline(navigator.onLine);
     syncOnline();
     if (navigator.onLine) void refresh(); else setLoading(false);
     const interval = setInterval(() => {
       if (document.visibilityState === "visible" && navigator.onLine) void refresh();
-    }, Math.max(10_000, Math.min(refreshMs, 120_000)));
+    }, intervalMs);
     const onVisible = () => { if (document.visibilityState === "visible" && navigator.onLine) void refresh(); };
     const onOnline = () => { setOnline(true); void refresh(); };
     const onOffline = () => setOnline(false);
@@ -63,10 +71,10 @@ export function useProviderHealth(refreshMs = 30_000) {
       window.removeEventListener("online", onOnline);
       window.removeEventListener("offline", onOffline);
     };
-  }, [refresh, refreshMs]);
+  }, [intervalMs, refresh]);
 
   const payloadAgeMs = ageMs(data?.checkedAt);
-  const stale = payloadAgeMs > Math.max(60_000, refreshMs * 2);
+  const stale = payloadAgeMs > Math.max(60_000, intervalMs * 2);
   return {
     data,
     error,

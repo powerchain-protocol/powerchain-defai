@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { isTerminalTransferStatus, normalizeTransferStatus } from "../lib/bridge/transfer-status";
 import { useNetworkOnline } from "./use-network-online";
 import { ReconnectingWebSocket } from "../lib/realtime/reconnecting-websocket";
-import { publicRealtimeUrls, transferRealtimeUrl } from "../lib/realtime/transport-policy";
+import { publicRealtimeSocketOptions, publicRealtimeUrls, transferRealtimeUrl } from "../lib/realtime/transport-policy";
 
 export type TransferEvent = { id: string; status?: string; createdAt?: string; [key: string]: unknown };
 export type TransferStatusSnapshot = { transferId: string; status: string; version?: number; events?: TransferEvent[] };
@@ -186,7 +186,7 @@ export function useTransferStatus(transferId: string | null | undefined) {
         websocket?.close(1000, "replace");
         websocket = new ReconnectingWebSocket(
           () => bases.map((base) => transferRealtimeUrl(base, transferId, cursor.current)),
-          { minDelayMs: 750, maxDelayMs: 8_000, maxReconnectAttempts: 3 },
+          publicRealtimeSocketOptions(),
         );
         websocket.addEventListener("message", (event) => {
           const message = event as MessageEvent<unknown>;

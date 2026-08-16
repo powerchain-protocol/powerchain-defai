@@ -18,6 +18,21 @@ All notable changes to PowerChain DeFAI are documented here. The project remains
 
 ## 1.0.0
 
+### Hooks, exact optional types, and realtime resilience
+
+- Fixed React 19 `Expected 1 arguments, but got 0` diagnostics by explicitly initializing optional provider/component state.
+- Fixed operation-journal `exactOptionalPropertyTypes` violations by omitting absent `id`, `revision`, server metadata, and terminal fields instead of sending explicit `undefined`.
+- Upgraded provider readiness to be abort-safe, offline-aware, stale-aware, and generation-safe like provider health.
+- Centralized provider polling constants, bounded browser WebSocket reconnect/heartbeat timing, and deduplicated backend RPC/WebSocket/gRPC fallbacks.
+- Kept `@powerchain/staking` fail-closed with no fabricated APR or deployment state.
+
+### Strict TypeScript and install reliability
+
+- Fixed `exactOptionalPropertyTypes` violations across Bridge and Swap by omitting undefined optional fields instead of passing them explicitly.
+- Updated screen-reader status usage to the canonical children API, initialized React 19 `useRef` values, and hardened base-unit parsing under `noUncheckedIndexedAccess`.
+- Root `postinstall` no longer requires `DATABASE_URL` during `pnpm install`; Prisma generation runs when configured and remains explicit after `pnpm env:bootstrap`.
+- Added a server-only `POSTMAN_API_KEY` placeholder; personal Postman keys are never committed to release artifacts.
+
 ### Postman Flow architecture
 
 - Added `docs/POSTMAN_FLOWS_ARCHITECTURE.md` with the PowerChain master flow plus Platform Preflight, Sui Swap, Solana/Jupiter Swap, and Bridge Create & Monitor visual architectures.

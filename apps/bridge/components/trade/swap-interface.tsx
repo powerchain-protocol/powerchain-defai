@@ -17,7 +17,7 @@ import { SwapSettings } from "./swap-settings";
 function toBaseUnits(value: string, decimals: number): string | null {
   const normalized = value.trim();
   if (!/^\d+(?:\.\d+)?$/.test(normalized)) return null;
-  const [whole, fraction = ""] = normalized.split(".");
+  const [whole = "0", fraction = ""] = normalized.split(".");
   if (fraction.length > decimals) return null;
   const raw = `${whole}${fraction.padEnd(decimals, "0")}`.replace(/^0+(?=\d)/, "");
   return BigInt(raw || "0").toString();

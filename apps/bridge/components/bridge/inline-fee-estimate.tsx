@@ -19,7 +19,13 @@ export function InlineFeeEstimate({ routeId, sourceChain, principalBaseUnits, sy
   symbol?: string;
   className?: string;
 }) {
-  const { plan, status, error, refresh } = useServiceFeePlan({ routeId, sourceChain, principalBaseUnits, enabled: Boolean(principalBaseUnits && principalBaseUnits > 0n) });
+  const feePlanInput = {
+    ...(routeId === undefined ? {} : { routeId }),
+    ...(sourceChain === undefined ? {} : { sourceChain }),
+    ...(principalBaseUnits === undefined ? {} : { principalBaseUnits }),
+    enabled: Boolean(principalBaseUnits && principalBaseUnits > 0n),
+  };
+  const { plan, status, error, refresh } = useServiceFeePlan(feePlanInput);
   return <section className={`rounded-2xl border border-slate-200 bg-slate-50/80 p-3.5 dark:border-slate-800 dark:bg-slate-900/55 ${className}`} aria-label="Service fee estimate" aria-busy={status === "loading"}>
     <div className="flex items-center justify-between gap-3">
       <div><p className="text-xs font-semibold text-slate-700 dark:text-slate-200">Service fee</p><p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">Separate from the 1:1 bridge principal.</p></div>

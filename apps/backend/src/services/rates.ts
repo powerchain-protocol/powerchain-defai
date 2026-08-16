@@ -12,7 +12,7 @@ export type RateQuote = {
 };
 
 const SCALE = 10n ** 18n;
-function toScaled(value: string): bigint { if (!/^\d+(?:\.\d+)?$/.test(value)) throw new Error("RATE_DECIMAL_INVALID"); const [whole, fraction = ""] = value.split("."); return BigInt(whole) * SCALE + BigInt((fraction + "0".repeat(18)).slice(0, 18)); }
+function toScaled(value: string): bigint { if (!/^\d+(?:\.\d+)?$/.test(value)) throw new Error("RATE_DECIMAL_INVALID"); const [whole = "0", fraction = ""] = value.split("."); return BigInt(whole) * SCALE + BigInt((fraction + "0".repeat(18)).slice(0, 18)); }
 function fromScaled(value: bigint): string { const whole = value / SCALE; const fraction = (value % SCALE).toString().padStart(18, "0").replace(/0+$/, ""); return `${whole}${fraction ? `.${fraction}` : ""}`; }
 
 export async function getRate(base: RateAsset, quote: RateAsset): Promise<RateQuote> {

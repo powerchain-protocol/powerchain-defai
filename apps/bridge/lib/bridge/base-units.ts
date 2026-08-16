@@ -12,7 +12,7 @@ export function decimalToBaseUnits(value: string, decimals = PWRC_DECIMALS): big
   const input = value.trim();
   if (!Number.isInteger(decimals) || decimals < 0 || decimals > 18) throw new AmountValidationError("Unsupported decimals");
   if (!/^(?:0|[1-9]\d*)(?:\.\d+)?$/.test(input)) throw new AmountValidationError("Amount must be a positive decimal string");
-  const [whole, fraction = ""] = input.split(".");
+  const [whole = "0", fraction = ""] = input.split(".");
   if (fraction.length > decimals) throw new AmountValidationError(`Amount supports at most ${decimals} decimal places`);
   const units = BigInt(whole) * 10n ** BigInt(decimals) + BigInt((fraction + "0".repeat(decimals)).slice(0, decimals) || "0");
   if (units <= 0n) throw new AmountValidationError("Amount must be greater than zero");

@@ -183,14 +183,14 @@ export function parseOperationRecord(value: unknown, now = Date.now()): Operatio
     status: record.status,
     createdAt,
     updatedAt,
-    walletIdentity: typeof record.walletIdentity === "string" ? record.walletIdentity : undefined,
     statusHref: record.statusHref as string,
-    statusApiHref: typeof record.statusApiHref === "string" ? record.statusApiHref : undefined,
     revision,
-    serverRevision,
-    serverObservedAt,
-    serverSnapshotId: typeof record.serverSnapshotId === "string" ? record.serverSnapshotId : undefined,
-    terminalAt,
+    ...(typeof record.walletIdentity === "string" ? { walletIdentity: record.walletIdentity } : {}),
+    ...(typeof record.statusApiHref === "string" ? { statusApiHref: record.statusApiHref } : {}),
+    ...(serverRevision === undefined ? {} : { serverRevision }),
+    ...(serverObservedAt === undefined ? {} : { serverObservedAt }),
+    ...(typeof record.serverSnapshotId === "string" ? { serverSnapshotId: record.serverSnapshotId } : {}),
+    ...(terminalAt === undefined ? {} : { terminalAt }),
   };
 }
 
@@ -210,13 +210,10 @@ export function mayAdvanceOperation(kind: OperationKind, current: OperationStatu
 export function advanceLocalOperation(record: OperationRecord, status: OperationStatus, now = new Date().toISOString()): OperationRecord {
   if (!mayAdvanceOperation(record.kind, record.status, status)) throw new Error(`OPERATION_STATUS_REGRESSION:${record.status}->${status}`);
   if (record.status === status) return record;
-  return {
-    ...record,
-    status,
-    updatedAt: now,
-    terminalAt: isOperationTerminal(status) ? now : undefined,
-    revision: record.revision + 1,
-  };
+  const base = { ...record, status, updatedAt: now, revision: record.revision + 1 };
+  if (isOperationTerminal(status)) return { ...base, terminalAt: now };
+  const { terminalAt: _terminalAt, ...withoutTerminal } = base;
+  return withoutTerminal;
 }
 
 export function applyServerOperationObservation(record: OperationRecord, observation: ServerOperationObservation): OperationRecord {
@@ -232,16 +229,20 @@ export function applyServerOperationObservation(record: OperationRecord, observa
   if (!mayAdvanceOperation(record.kind, record.status, observation.status)) return record;
   const observed = observation.observedAt ? Date.parse(observation.observedAt) : Date.now();
   const updated = Number.isFinite(observed) ? new Date(Math.min(observed, Date.now() + FUTURE_SKEW_MS)).toISOString() : new Date().toISOString();
-  return {
+  const serverRevision = observation.revision ?? record.serverRevision;
+  const serverSnapshotId = observation.snapshotId ?? record.serverSnapshotId;
+  const next = {
     ...record,
     status: observation.status,
     updatedAt: updated,
     revision: record.revision + 1,
-    serverRevision: observation.revision ?? record.serverRevision,
     serverObservedAt: updated,
-    serverSnapshotId: observation.snapshotId ?? record.serverSnapshotId,
-    terminalAt: isOperationTerminal(observation.status) ? updated : undefined,
+    ...(serverRevision === undefined ? {} : { serverRevision }),
+    ...(serverSnapshotId === undefined ? {} : { serverSnapshotId }),
   };
+  if (isOperationTerminal(observation.status)) return { ...next, terminalAt: updated };
+  const { terminalAt: _terminalAt, ...withoutTerminal } = next;
+  return withoutTerminal;
 }
 
 export function normalizeServerOperationObservation(value: unknown): ServerOperationObservation | null {
@@ -266,7 +267,14 @@ export function normalizeServerOperationObservation(value: unknown): ServerOpera
     const revision = safeRevision(item.revision ?? item.sequence ?? root.revision ?? root.sequence);
     const snapshotId = typeof item.snapshotId === "string" ? item.snapshotId : typeof root.snapshotId === "string" ? root.snapshotId : undefined;
     if (snapshotId !== undefined && !safeSnapshotId(snapshotId)) return null;
-    return { id, kind, status: mapped, observedAt, revision, snapshotId };
+    return {
+      status: mapped,
+      ...(id === undefined ? {} : { id }),
+      ...(kind === undefined ? {} : { kind }),
+      ...(observedAt === undefined ? {} : { observedAt }),
+      ...(revision === undefined ? {} : { revision }),
+      ...(snapshotId === undefined ? {} : { snapshotId }),
+    };
   }
   return null;
 }

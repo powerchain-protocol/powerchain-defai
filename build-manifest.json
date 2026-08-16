@@ -6,7 +6,7 @@
   "artifacts": [
     {
       "path": "package.json",
-      "sha256": "488bf0cd0150b37debf78ff3d91bfa1943384c70c4a73c0fe41a1c6f491109c6"
+      "sha256": "f8492f8e6f4b3c8680bca96b86061c3d19476ed9c8499f0dc0c34705a1588af0"
     },
     {
       "path": "pnpm-workspace.yaml",
@@ -33,6 +33,14 @@
       "sha256": "fdeb28eec26f1b1383af03516392ce6c32a0e60cc6886654e302b00e027c1159"
     },
     {
+      "path": "scripts/exact-optional-types-production-check.mjs",
+      "sha256": "9097b25c09ddb9a6043b2625fcd18c2c349adcc10dd4e05ca1ddc0fcaf615639"
+    },
+    {
+      "path": "scripts/postinstall.mjs",
+      "sha256": "22c5232afc17120fa1b3388cc9c918239c94496a34c68198a698f13743ec5cc6"
+    },
+    {
       "path": "scripts/setup-local.sh",
       "sha256": "8ce4441c1cb8e78ad0d1367bb6dd70fc0599724a854df55f25ee2236c67b27d5"
     },
@@ -54,15 +62,15 @@
     },
     {
       "path": ".env.example",
-      "sha256": "954096e713ce91db07b57868138b8941fa34309184bebe002dc8128c3f7b553b"
+      "sha256": "6708bd1e82bd02adee3e5e35ca85ca404b684e5a018e5f9547e5fc13751bef79"
     },
     {
       "path": ".env.local.example",
-      "sha256": "693ec2af143a4fd12786df0e36655213fa61586f88c53f1e6c658f81b92984c1"
+      "sha256": "a981e1d75b6c2391c3d6a45aa50e3da42cba10f0ddae3742bdd2cc93062bca77"
     },
     {
       "path": ".env.production.example",
-      "sha256": "f2444af4394ede0ad47facac1dcf79f1206bacb4b44eb5c0568325caff507c1d"
+      "sha256": "2deb8af78eba172fc34ff087688c44b045cb0077b896f788f8b7a1e420996cf4"
     },
     {
       "path": "apps/bridge/proxy.ts",
@@ -106,7 +114,7 @@
     },
     {
       "path": "apps/backend/src/config/endpoints.ts",
-      "sha256": "18fc2e651e7874ebeb21da7c4bddd2255ac37fa126c25f609d1c7c00c1b009ab"
+      "sha256": "8dace1df046435cf783e6e4193b1aa267f221aa75b5c26a5f023eb6de412caef"
     },
     {
       "path": "docs/RUNTIME_PACKAGE_BOUNDARIES.md",
@@ -290,11 +298,11 @@
     },
     {
       "path": "apps/backend/src/services/prices.ts",
-      "sha256": "07daa8f48dd0b35b99cd79d08576e29e05d5e87c07dfc9afbc727e8c673b9917"
+      "sha256": "fbe3cb50fdac543785c11192e8c0ad47a7c6c3bc4fc124faac25aeb1e70f7293"
     },
     {
       "path": "apps/backend/src/services/rates.ts",
-      "sha256": "89f33b57812ac42c887ee5ab6c230c11766681132e3690edb18c3a99a8ebb7a0"
+      "sha256": "7f41dd3ec80cf87eb3a2210cc2c952d14e9b2bca9d5998909bc53315834ed05c"
     },
     {
       "path": "apps/backend/src/services/currencies.ts",
@@ -458,7 +466,7 @@
     },
     {
       "path": "apps/backend/src/integrations/coingecko.ts",
-      "sha256": "32ebbe868beef8689592be47fe6ab94a25f26b55f943eedafd15e1ad8863a418"
+      "sha256": "e47cb6664470202e9d585d37206bb3f6fe79b1fe3ae96056c5b837e7b5dee895"
     },
     {
       "path": "apps/backend/src/services/ai-providers.ts",
@@ -627,6 +635,42 @@
     {
       "path": "apps/backend/src/types/wallets.ts",
       "sha256": "d9225042992bc9547dac9849bfdf5f1e7588fe8e369d733fb2f7abff6cb1ecff"
+    },
+    {
+      "path": "apps/bridge/hooks/use-provider-health.ts",
+      "sha256": "52d25c67acc4e123d9a877891a12c6982e5bc2cb010c1f22beef66aa79567d3c"
+    },
+    {
+      "path": "apps/bridge/hooks/use-provider-readiness.ts",
+      "sha256": "8afe04ba5891f3597d060e5c6ff57d72bbb56d0adee7c28a3e5ba09dea1c5ea1"
+    },
+    {
+      "path": "apps/bridge/hooks/use-operation-journal.ts",
+      "sha256": "946885a4a800c8f9e98f7eff53ce13e312ec9cb6c3da6a34f3e9f91d1314a20f"
+    },
+    {
+      "path": "apps/bridge/lib/bridge/operation-journal.ts",
+      "sha256": "d73ea0e42bbf87a2585dfc89e1b53e445a3f8a051e9c26f390a73d8056f2fcf9"
+    },
+    {
+      "path": "apps/bridge/constants/provider-runtime.ts",
+      "sha256": "25fc3a5b37df97ca86a6af307246909715950091c43f714043107d46c042f93b"
+    },
+    {
+      "path": "apps/bridge/lib/realtime/transport-policy.ts",
+      "sha256": "bbce0f1933b824186ee2c4f70ff26ad6021066acdf3d8f4971331a858931e613"
+    },
+    {
+      "path": "apps/bridge/hooks/use-transfer-status.ts",
+      "sha256": "e8b62f0efdc03343afba47afca27ebf77abfca142aa7f26a3ede3e0d84315774"
+    },
+    {
+      "path": "scripts/hooks-runtime-production-check.mjs",
+      "sha256": "1f6456142640c0fccf3f8915c84b3a2b2d5497bae5d1eb3a47cff800fe3dbf85"
+    },
+    {
+      "path": "docs/HOOKS_RUNTIME_RESILIENCE.md",
+      "sha256": "83fd2cf250afe7794b3140c7667ee24f8a758024b07f088111c3c65dab604c16"
     }
   ]
 }
