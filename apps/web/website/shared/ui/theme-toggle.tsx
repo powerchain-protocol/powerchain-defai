@@ -10,7 +10,7 @@ export function ThemeToggle() {
 
   useEffect(() => {
     const saved = window.localStorage.getItem("powerchain-web-theme") as Theme | null;
-    const resolved = saved ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    const resolved: Theme = saved === "dark" ? "dark" : "light";
     setTheme(resolved);
     document.documentElement.classList.toggle("dark", resolved === "dark");
   }, []);
@@ -22,9 +22,5 @@ export function ThemeToggle() {
     document.documentElement.classList.toggle("dark", next === "dark");
   }
 
-  return (
-    <button type="button" onClick={toggleTheme} className="web-icon-button" aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}>
-      {theme === "dark" ? <SunIcon /> : <MoonIcon />}
-    </button>
-  );
+  return <button type="button" onClick={toggleTheme} className="web-icon-button" aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}>{theme === "dark" ? <SunIcon /> : <MoonIcon />}</button>;
 }

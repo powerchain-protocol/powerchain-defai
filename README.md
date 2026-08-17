@@ -52,6 +52,8 @@ The dashboard shell persists across the operational workspace, including:
 /settings
 ```
 
+The marketing site now includes dedicated static About content, reusable mini-hero public pages, local legal routes (`/legal/privacy`, `/legal/terms`, `/legal/cookies`, `/legal/disclaimer`), essential-storage notice UI, class-driven Tailwind v4 brand tokens, and a centered wallet chooser that treats rejected wallet prompts as cancellation rather than application errors.
+
 Dynamic bridge and claim status routes remain inside the same workspace shell. Legal routes use their own presentation surface.
 
 The Swap workspace statically includes both Solana and Sui client runtimes to avoid stale Turbopack async-chunk failures during development. Bridge `predev` also clears only `.next/dev` and `.next/cache` before launching; production build output is not touched. The AI chat composer is capped at 2,000 characters and keeps link/image URL actions, the live character counter, and send action inside one accessible composer surface.

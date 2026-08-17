@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeftIcon, CheckCircledIcon } from "@radix-ui/react-icons";
+import { CheckCircledIcon } from "@radix-ui/react-icons";
+import { MiniHero } from "@/website/ui/mini-hero";
 
 const content = {
-  about: {
-    eyebrow: "About",
-    title: "Financial infrastructure with human control at the center.",
-    intro: "PowerChain DeFAI combines wallet-controlled execution, cross-chain operations and advisory AI in one observable operating environment.",
-    points: ["Wallet approval remains mandatory for executable actions.", "Provider readiness and finality are verified at runtime.", "AI assists with context and preparation without receiving custody."],
-  },
   security: {
     eyebrow: "Security",
     title: "Trust boundaries are part of the product surface.",
@@ -46,20 +40,22 @@ export default async function PublicContentPage({ params }: { params: Promise<{ 
   if (!isPageSlug(slug)) notFound();
   const page = content[slug];
   return (
-    <section className="web-section py-24 sm:py-28">
-      <div className="web-container">
-        <div className="mx-auto max-w-4xl">
-          <Link href="/pages" className="inline-flex items-center gap-2 text-sm font-semibold text-[#294a3b] dark:text-[#bfd1c7]"><ArrowLeftIcon /> All pages</Link>
-          <div className="mt-10 text-center">
-            <p className="web-eyebrow">{page.eyebrow}</p>
-            <h1 className="web-section-title mx-auto mt-4 max-w-3xl">{page.title}</h1>
-            <p className="web-section-copy mx-auto mt-6 max-w-2xl">{page.intro}</p>
-          </div>
-          <div className="mx-auto mt-12 max-w-3xl rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_18px_60px_rgba(11,27,20,.055)] dark:border-white/10 dark:bg-[#101714] sm:p-8">
-            <div className="space-y-4">{page.points.map((point) => <div key={point} className="flex items-start gap-3"><CheckCircledIcon className="mt-1 shrink-0 text-[#294a3b] dark:text-[#b7c8c0]"/><p className="text-sm leading-7 text-slate-700 dark:text-slate-300">{point}</p></div>)}</div>
+    <>
+      <MiniHero eyebrow={page.eyebrow} title={page.title} description={page.intro} backHref="/pages" backLabel="All pages" />
+      <section className="web-section py-14 sm:py-18">
+        <div className="web-container">
+          <div className="web-card mx-auto max-w-3xl rounded-[26px] p-6 sm:p-8">
+            <div className="space-y-4">
+              {page.points.map((point) => (
+                <div key={point} className="flex items-start gap-3">
+                  <CheckCircledIcon className="mt-1 shrink-0 text-brand-700 dark:text-brand-200" />
+                  <p className="text-sm leading-7 text-slate-700 dark:text-slate-300">{point}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

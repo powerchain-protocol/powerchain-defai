@@ -37,7 +37,7 @@ export function Products() {
                 <ProductIcon name={icon} />
                 {badge ? <span className="rounded-full border border-[#d8e0dc] bg-white px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[.12em] text-[#294a3b] dark:border-white/10 dark:bg-white/[.04] dark:text-[#b7c8c0]">{badge}</span> : null}
               </div>
-              <h3 className="mt-5 text-xl font-semibold tracking-[-.02em] text-[#102b21] dark:text-white">{title}</h3>
+              <h3 className="web-display mt-5 text-xl font-semibold tracking-[-.02em] text-brand-950 dark:text-brand-100">{title}</h3>
               <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-400">{body}</p>
               <div className="mt-auto pt-6">
                 <Link href={href} className="inline-flex min-h-10 items-center gap-2 rounded-[14px] border border-[#d4ddd8] bg-white px-3.5 text-xs font-bold text-[#173b2d] shadow-[0_6px_18px_rgba(23,59,45,.06)] transition hover:-translate-y-0.5 hover:border-[#b9c9c1] hover:shadow-[0_10px_24px_rgba(23,59,45,.1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#557568] dark:border-white/10 dark:bg-white/[.045] dark:text-[#dce8e2] dark:hover:bg-white/[.075]">

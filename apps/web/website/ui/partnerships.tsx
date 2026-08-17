@@ -27,7 +27,7 @@ export function Partnerships() {
                 <EcosystemIcon name={name} size={34} />
               </span>
               <span className="min-w-0">
-                <b className="block text-sm font-semibold text-[#173b2d] dark:text-white">{name}</b>
+                <b className="web-display block text-sm font-semibold text-brand-950 dark:text-brand-100">{name}</b>
                 <small className="mt-1 block text-[11px] leading-4 text-slate-500 dark:text-slate-400">{role}</small>
               </span>
             </div>

@@ -26,7 +26,7 @@ export function OpenAppGateway({ slug, resourceId, accessMode = "launch" }: { sl
         <div className="flex items-center justify-between gap-3"><Logo /><a href="/" className="web-text-button">Back to website</a></div>
         <div className="mt-10">
           <p className="web-eyebrow">PowerChain application</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-[-.035em] text-[#102b21] dark:text-white sm:text-4xl">Open a wallet-controlled workspace.</h1>
+          <h1 className="web-display mt-2 text-3xl font-semibold tracking-[-.035em] text-brand-950 dark:text-brand-100 sm:text-4xl">Open a wallet-controlled workspace.</h1>
           <p className="mt-3 max-w-xl text-sm leading-7 text-slate-600 dark:text-slate-300">Select your preferred chain context, optionally connect a wallet, and continue to <span className="font-semibold">{path}</span>. No signing happens on this handoff page.</p>
         </div>
         <div className="mt-7 grid gap-3 sm:grid-cols-3">

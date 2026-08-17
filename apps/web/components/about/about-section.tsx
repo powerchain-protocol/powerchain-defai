@@ -29,7 +29,7 @@ export function AboutSection() {
         {principles.map(({ title, body, icon: Icon }) => (
           <article key={title} className="web-card rounded-[26px] p-6 sm:p-7">
             <span className="web-icon-tile"><Icon /></span>
-            <h3 className="mt-5 text-lg font-semibold tracking-[-.015em] text-[#102b21] dark:text-white">{title}</h3>
+            <h3 className="web-display mt-5 text-lg font-semibold tracking-[-.015em] text-brand-950 dark:text-brand-100">{title}</h3>
             <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-400">{body}</p>
           </article>
         ))}

@@ -41,3 +41,15 @@ Marketing product cards use `website/shared/ui/product-icon.tsx` and infrastruct
 ## Ecosystem branding
 
 The ecosystem section prioritizes Solana, Sui, Pyth, and Supabase with branded icon treatment, followed by the configured bridge/liquidity/edge providers. Brand marks identify integration targets only; availability is still verified at runtime and no logo implies endorsement.
+
+## Public pages and legal routes
+
+The marketing site uses a reusable `website/ui/mini-hero.tsx` for public content surfaces. `/pages/about` is a dedicated static About route; `/pages/security`, `/pages/ecosystem`, and `/pages/developers` use the bounded dynamic public-page renderer. Legal content is hosted directly by the marketing site at `/legal/privacy`, `/legal/terms`, `/legal/cookies`, and `/legal/disclaimer`, with `/legal` as an index. These legal templates require jurisdiction-specific counsel review before a regulated production launch.
+
+`website/ui/cookies.tsx` only acknowledges essential browser storage used for product preferences; it does not enable advertising or analytics cookies. The root, public-page, legal, and app-handoff route groups include lightweight `loading.tsx` fallbacks.
+
+## Theme and wallet-modal behavior
+
+Tailwind CSS v4 theme variables are declared in `app/globals.css` with an explicit class-driven `dark` custom variant. Light remains the first-visit default, while saved dark mode uses brand ivory/sage typography, forest surfaces, and matching shadow/radius tokens. The root `<html>` includes `data-scroll-behavior="smooth"` because global smooth scrolling is enabled.
+
+The public wallet chooser is a centered modal card on desktop and mobile. Solana auto-connect is disabled on the marketing site so wallet access is always user-initiated; an explicit provider `onError` handler suppresses expected user-rejection noise while the modal converts a rejected prompt into a neutral cancellation state. Signing remains inside the operational application and connected wallets never become website custody.

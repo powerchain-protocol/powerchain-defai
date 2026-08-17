@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-08-17 — Website brand typography, public pages, legal routes and wallet-cancel hardening
+
+- Added explicit Tailwind CSS v4 brand theme variables and class-driven dark-mode variant wiring in `apps/web/app/globals.css`; light remains the default while dark typography uses PowerChain ivory/sage brand tones instead of generic white/gray inversion.
+- Added `data-scroll-behavior="smooth"` to the marketing root layout to match Next.js 16 smooth-scroll transition requirements.
+- Added a reusable public mini-hero, moved About to a dedicated static route, added public/legal loading states, and added local Privacy, Terms, Cookie/Storage and Risk Disclaimer pages.
+- Added an essential-storage cookie notice that does not enable advertising/analytics tracking.
+- Upgraded hero workspace capability cards with product-specific icons, runtime/evidence status pills and a status handoff.
+- Added a visible Home navigation item and expanded the footer with local legal/status routes.
+- Centered the wallet-connect popup card on all screen sizes, disabled marketing-site Solana auto-connect, suppressed expected user-rejection provider noise, and converted rejected wallet prompts into a neutral cancellation state.
+
 ## 2026-08-17 — Dependency build approvals and dashboard/website visual polish
 
 - Approved the reviewed `@google/genai` and `@reown/appkit` lifecycle builds in the source-controlled pnpm `allowBuilds` policy, added explicit non-interactive approval helpers, and made local workspace auto-repair reconcile reviewed build approvals before reinstalling.

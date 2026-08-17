@@ -20,6 +20,12 @@ function shortAddress(value: string) {
   return `${value.slice(0, 5)}…${value.slice(-4)}`;
 }
 
+function isUserRejectedWalletError(error: unknown) {
+  const candidate = error as { name?: string; message?: string } | null;
+  const text = `${candidate?.name ?? ""} ${candidate?.message ?? ""}`.toLowerCase();
+  return text.includes("user rejected") || text.includes("user reject") || text.includes("rejected the request") || text.includes("request rejected");
+}
+
 type SolanaWallet = ReturnType<typeof useWallet>["wallets"][number];
 
 export function WalletConnectModal({ open, onClose, targetSlug = "dashboard", resourceId }: { open: boolean; onClose: () => void; targetSlug?: string; resourceId?: string | null }) {
@@ -27,6 +33,7 @@ export function WalletConnectModal({ open, onClose, targetSlug = "dashboard", re
   const { chain, clusterId, clusters, setChain, setClusterId, suiAddress, suiWalletName } = useWebsiteWallet();
   const [busyWallet, setBusyWallet] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
@@ -61,12 +68,17 @@ export function WalletConnectModal({ open, onClose, targetSlug = "dashboard", re
 
   async function connectSolana(wallet: SolanaWallet) {
     setError(null);
+    setNotice(null);
     setBusyWallet(wallet.adapter.name);
     try {
       select(wallet.adapter.name);
       await wallet.adapter.connect();
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Wallet connection was not completed.");
+      if (isUserRejectedWalletError(cause)) {
+        setNotice("Connection cancelled. No wallet permissions were changed.");
+      } else {
+        setError("Wallet connection could not be completed. Check the wallet extension and try again.");
+      }
     } finally {
       setBusyWallet(null);
     }
@@ -80,7 +92,7 @@ export function WalletConnectModal({ open, onClose, targetSlug = "dashboard", re
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="web-eyebrow">Wallet access</p>
-            <h2 id="web-wallet-title" className="mt-1 text-xl font-semibold tracking-tight text-[#102b21] dark:text-white">Connect to PowerChain</h2>
+            <h2 id="web-wallet-title" className="web-display mt-1 text-xl font-semibold tracking-tight text-brand-950 dark:text-brand-100">Connect to PowerChain</h2>
             <p className="mt-1 max-w-md text-sm leading-6 text-slate-500 dark:text-slate-400">Choose a network and wallet. The website never receives a private key or signs transactions for you.</p>
           </div>
           <button ref={closeRef} type="button" onClick={onClose} className="web-icon-button" aria-label="Close wallet connection"><Cross2Icon /></button>
@@ -129,6 +141,7 @@ export function WalletConnectModal({ open, onClose, targetSlug = "dashboard", re
           )}
         </div>
 
+        {notice ? <p className="mt-3 rounded-xl border border-[#cddbd4] bg-[#f1f6f3] px-3 py-2 text-xs text-[#365746] dark:border-white/10 dark:bg-white/[.045] dark:text-[#bfd1c8]">{notice}</p> : null}
         {error ? <p className="mt-3 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-300">{error}</p> : null}
 
         <div className="mt-5 border-t border-slate-200 pt-4 dark:border-white/10">

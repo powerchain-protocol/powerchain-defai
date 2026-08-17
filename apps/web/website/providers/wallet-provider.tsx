@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { ConnectionProvider, WalletProvider, useWallet } from "@solana/wallet-adapter-react";
+import type { WalletError } from "@solana/wallet-adapter-base";
 import type { ClusterDefinition, ClusterId } from "@powerchain/clusters";
 import { POWERCHAIN_CLUSTERS } from "@powerchain/clusters";
 import type { HandoffChain } from "@/website/lib/redirects";
@@ -46,6 +47,17 @@ function SolanaSnapshotBridge({ setAddress }: { setAddress: (address: string | n
   return null;
 }
 
+function isUserRejectedWalletError(error: unknown) {
+  const candidate = error as { name?: string; message?: string } | null;
+  const text = `${candidate?.name ?? ""} ${candidate?.message ?? ""}`.toLowerCase();
+  return text.includes("user rejected") || text.includes("user reject") || text.includes("rejected the request") || text.includes("request rejected");
+}
+
+function handleSolanaWalletError(error: WalletError) {
+  if (isUserRejectedWalletError(error)) return;
+  if (process.env.NODE_ENV !== "production") console.warn(`[PowerChain wallet] ${error.name || "WalletError"}`);
+}
+
 function SolanaRuntime({ clusterId, setAddress, children }: { clusterId: ClusterId; setAddress: (address: string | null) => void; children: ReactNode }) {
   const endpoint = useMemo(() => {
     if (!clusterId.startsWith("solana:")) return SOLANA_RPC["solana:mainnet"]!;
@@ -55,7 +67,7 @@ function SolanaRuntime({ clusterId, setAddress, children }: { clusterId: Cluster
 
   return (
     <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={[]} autoConnect localStorageKey="powerchain-web-solana-wallet">
+      <WalletProvider wallets={[]} autoConnect={false} localStorageKey="powerchain-web-solana-wallet" onError={handleSolanaWalletError}>
         <SolanaSnapshotBridge setAddress={setAddress} />
         {children}
       </WalletProvider>

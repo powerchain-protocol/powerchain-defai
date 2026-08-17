@@ -45,9 +45,9 @@ export function FAQ() {
               <summary className="flex cursor-pointer list-none items-center justify-between gap-5 py-5 text-left marker:hidden sm:py-6">
                 <span className="flex min-w-0 items-start gap-4">
                   <span className="mt-0.5 hidden text-[10px] font-extrabold tabular-nums tracking-[.14em] text-slate-400 sm:block">{String(index + 1).padStart(2, "0")}</span>
-                  <span className="text-base font-semibold leading-6 text-[#173b2d] dark:text-white sm:text-[17px]">{question}</span>
+                  <span className="web-display text-base font-semibold leading-6 text-brand-950 dark:text-brand-100 sm:text-[17px]">{question}</span>
                 </span>
-                <span className="grid size-8 shrink-0 place-items-center rounded-full border border-slate-200 bg-[#f6f8f7] text-[#294a3b] transition duration-200 group-open:rotate-45 dark:border-white/10 dark:bg-white/[.05] dark:text-white">
+                <span className="grid size-8 shrink-0 place-items-center rounded-full border border-slate-200 bg-[#f6f8f7] text-brand-700 transition duration-200 group-open:rotate-45 dark:border-white/10 dark:bg-white/[.05] dark:text-brand-100">
                   <PlusIcon />
                 </span>
               </summary>
