@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ActiveTransferBanner } from "@/components/bridge/active-transfer-banner";
 import { BridgeAssetSummary } from "@/components/bridge/bridge-asset-summary";
 import { BridgeRuntimeGate } from "@/components/bridge/bridge-runtime-gate";
@@ -8,6 +9,11 @@ import { NetworkSettlementOverview } from "@/components/bridge/network-settlemen
 import { ProviderStatusStrip } from "@/components/bridge/provider-status-strip";
 import { RecentTransfersCard } from "@/components/bridge/recent-transfers-card";
 import { TradeWorkspace } from "@/components/trade/trade-workspace";
+
+export const metadata: Metadata = {
+  title: "Bridge",
+  description: "Bridge PWRC and wPWRC across Solana and Sui with Wormhole NTT, explicit fee review, wallet signing and finality tracking.",
+};
 
 export default function BridgePage() {
   return (

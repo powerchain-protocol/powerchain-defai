@@ -2,6 +2,13 @@
 
 import { apiFetch } from "@/lib/api/browser-api";
 
+const PUBLIC_ERROR_CODE = /^[A-Z][A-Z0-9:_-]{1,119}$/;
+
+function publicErrorCode(value: unknown, fallback = "BRIDGE_ACTION_FAILED") {
+  const candidate = typeof value === "string" ? value.trim() : "";
+  return PUBLIC_ERROR_CODE.test(candidate) ? candidate : fallback;
+}
+
 export class BridgeActionError extends Error {
   constructor(readonly code: string, message: string, readonly status: number, readonly requestId?: string) {
     super(message);
@@ -46,13 +53,22 @@ export async function postBridgeAction<T>(url: string, body: unknown, options: {
       cache: "no-store",
       signal: controller.signal,
     });
-    const payload = await response.json().catch(() => null) as { error?: string; message?: string; requestId?: string } | null;
-    if (!response.ok) throw new BridgeActionError(payload?.error ?? "BRIDGE_ACTION_FAILED", payload?.message ?? `Bridge request failed (${response.status})`, response.status, payload?.requestId ?? response.headers.get("x-request-id") ?? rid);
+    const payload = await response.json().catch(() => null) as {
+      error?: string | { code?: string; message?: string };
+      message?: string;
+      requestId?: string;
+    } | null;
+    if (!response.ok) {
+      const nested = payload?.error && typeof payload.error === "object" ? payload.error : null;
+      const code = publicErrorCode(typeof payload?.error === "string" ? payload.error : nested?.code);
+      const message = nested?.message ?? payload?.message ?? `Bridge request failed (${response.status})`;
+      throw new BridgeActionError(code, message, response.status, payload?.requestId ?? response.headers.get("x-request-id") ?? rid);
+    }
     return payload as T;
   } catch (error) {
     if (error instanceof BridgeActionError) throw error;
     if (controller.signal.aborted) throw new BridgeActionError("BRIDGE_ACTION_TIMEOUT_OR_ABORT", "Bridge request was cancelled or timed out. Check transfer status before retrying a submission.", 0, rid);
-    throw new BridgeActionError("BRIDGE_ACTION_NETWORK_ERROR", error instanceof Error ? error.message : "Bridge request failed", 0, rid);
+    throw new BridgeActionError("BRIDGE_ACTION_NETWORK_ERROR", "Bridge service is temporarily unreachable. Check runtime status before retrying.", 0, rid);
   } finally {
     window.clearTimeout(timer);
     options.signal?.removeEventListener("abort", abort);

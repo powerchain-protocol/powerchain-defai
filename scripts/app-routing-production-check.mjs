@@ -32,10 +32,10 @@ const redirects = [...routeSource.matchAll(/\{\s*source:\s*"([^"]+)",\s*destinat
 }));
 const redirectSources = new Set(redirects.map((item) => item.source));
 
-for (const required of ["/dashboard","/chat","/swap","/bridge","/staking","/wallet","/history","/explorer","/claim","/assets","/fees","/integrations","/status"]) {
+for (const required of ["/","/chat","/swap","/bridge","/staking","/wallet","/history","/explorer","/claim","/assets","/fees","/integrations","/status"]) {
   if (!concretePages.has(required)) errors.push(`Canonical page missing: ${required}`);
 }
-for (const required of ["/stake","/rewards","/validators","/transactions","/portfolio","/docs"]) {
+for (const required of ["/dashboard","/stake","/rewards","/validators","/transactions","/portfolio","/docs"]) {
   if (!redirectSources.has(required)) errors.push(`Compatibility redirect missing: ${required}`);
 }
 if (!nextSource.includes('import { APP_REDIRECTS } from "./config/app-routes"')) errors.push("Next config does not consume canonical APP_REDIRECTS");

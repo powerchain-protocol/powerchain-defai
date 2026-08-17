@@ -6,10 +6,10 @@ export const dynamic = "force-dynamic";
 export function GET() {
   try {
     return NextResponse.json({ data: publicBridgeConfiguration() }, { headers: { "cache-control": "no-store, max-age=0" } });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      { error: { code: "BRIDGE_CONFIG_UNAVAILABLE", message: error instanceof Error ? error.message : "Bridge configuration unavailable" } },
-      { status: 503, headers: { "cache-control": "no-store, max-age=0" } },
+      { error: { code: "BRIDGE_CONFIG_UNAVAILABLE", message: "Bridge configuration is temporarily unavailable" } },
+      { status: 503, headers: { "cache-control": "no-store, max-age=0", pragma: "no-cache" } },
     );
   }
 }

@@ -16,6 +16,7 @@
     ".": "./src/index.ts",
     "./swap/cetus": "./src/swap/cetus.ts",
     "./swap/solana": "./src/swap/solana.ts",
+    "./sui/client": "./src/sui/client.ts",
     "./fees/token2022-transfer-fee": "./src/fees/token2022-transfer-fee.ts",
     "./data/trusted-token-list": "./src/data/trusted-token-list.ts",
     "./data/pools": "./src/data/pools.ts",
@@ -90,7 +91,7 @@
   },
   "devDependencies": {
     "@types/node": "26.2.0",
-    "typescript": "7.0.2",
+    "typescript": "5.9.3",
     "tsx": "4.23.12"
   }
 }

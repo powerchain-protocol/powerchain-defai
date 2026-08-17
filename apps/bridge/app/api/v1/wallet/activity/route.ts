@@ -12,8 +12,10 @@ export async function GET(request: NextRequest) {
     const data = await getWalletActivityFeed({ solanaAddress, suiAddress, cursor: request.nextUrl.searchParams.get("cursor"), limit: Number.isFinite(limitRaw) ? limitRaw : 25 });
     return NextResponse.json(data, { status: data.status === "unavailable" ? 503 : 200, headers: { "Cache-Control": "no-store, max-age=0", "X-PowerChain-Wallet-Status": data.status } });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Wallet activity unavailable";
-    const invalidCursor = /cursor/.test(message);
-    return NextResponse.json({ code: invalidCursor ? "INVALID_CURSOR" : "WALLET_ACTIVITY_UNAVAILABLE", message }, { status: invalidCursor ? 400 : 503, headers: { "Cache-Control": "no-store, max-age=0" } });
+    const invalidCursor = error instanceof Error && error.message === "INVALID_CURSOR";
+    return NextResponse.json(
+      { code: invalidCursor ? "INVALID_CURSOR" : "WALLET_ACTIVITY_UNAVAILABLE", message: invalidCursor ? "Wallet activity cursor is invalid" : "Wallet activity is temporarily unavailable" },
+      { status: invalidCursor ? 400 : 503, headers: { "Cache-Control": "no-store, max-age=0", Pragma: "no-cache" } },
+    );
   }
 }

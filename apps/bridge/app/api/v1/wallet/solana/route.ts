@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   try {
     const data = await getSolanaWalletOverview(address, { before, limit: Number.isFinite(rawLimit) ? rawLimit : 25 });
     return NextResponse.json(data, { headers: { "Cache-Control": "no-store, max-age=0" } });
-  } catch (error) {
-    return NextResponse.json({ code: "SOLANA_WALLET_DATA_UNAVAILABLE", message: error instanceof Error ? error.message : "Solana wallet data unavailable" }, { status: 503, headers: { "Cache-Control": "no-store, max-age=0" } });
+  } catch {
+    return NextResponse.json({ code: "SOLANA_WALLET_DATA_UNAVAILABLE", message: "Solana wallet data is temporarily unavailable" }, { status: 503, headers: { "Cache-Control": "no-store, max-age=0", Pragma: "no-cache" } });
   }
 }

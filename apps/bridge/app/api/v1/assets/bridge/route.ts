@@ -10,10 +10,10 @@ export async function GET() {
       status: 200,
       headers: { "Cache-Control": "no-store, max-age=0" },
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      { error: { code: "BRIDGE_ASSET_REGISTRY_UNAVAILABLE", message: error instanceof Error ? error.message : "Bridge asset registry unavailable" } },
-      { status: 503, headers: { "Cache-Control": "no-store, max-age=0" } },
+      { error: { code: "BRIDGE_ASSET_REGISTRY_UNAVAILABLE", message: "Bridge asset registry is temporarily unavailable" } },
+      { status: 503, headers: { "Cache-Control": "no-store, max-age=0", Pragma: "no-cache" } },
     );
   }
 }

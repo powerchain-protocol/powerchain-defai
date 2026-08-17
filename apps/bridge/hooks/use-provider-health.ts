@@ -21,6 +21,13 @@ export function useProviderHealth(refreshMs = 30_000) {
   const activeController = useRef<AbortController | null>(null);
 
   const refresh = useCallback(async () => {
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      setOnline(false);
+      setLoading(false);
+      setRefreshing(false);
+      return;
+    }
+    setOnline(true);
     setRefreshing(true);
     const generation = ++requestGeneration.current;
     activeController.current?.abort();
@@ -54,7 +61,11 @@ export function useProviderHealth(refreshMs = 30_000) {
     }, intervalMs);
     const onVisible = () => { if (document.visibilityState === "visible" && navigator.onLine) void refresh(); };
     const onOnline = () => { setOnline(true); void refresh(); };
-    const onOffline = () => setOnline(false);
+    const onOffline = () => {
+      setOnline(false);
+      activeController.current?.abort();
+      setRefreshing(false);
+    };
     document.addEventListener("visibilitychange", onVisible);
     window.addEventListener("online", onOnline);
     window.addEventListener("offline", onOffline);

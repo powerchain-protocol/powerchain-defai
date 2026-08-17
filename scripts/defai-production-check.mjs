@@ -23,7 +23,7 @@ const stakingActions=text("apps/bridge/components/staking/solana-staking-actions
 ok(page.includes("StakingDashboard")&&stakingDashboard.includes("No invented APY")&&stakingDashboard.includes("No synthetic APY")&&stakingDashboard.includes("Your connected wallet signs")&&stakingActions.includes("sendTransaction"),"staking UI discloses no fabricated rewards and wallet-signing boundary");
 const layout=text("apps/bridge/app/layout.tsx");
 const appRoutes=text("apps/bridge/config/app-routes.ts");
-ok(layout.includes("PowerChain DeFAI")&&text("apps/bridge/app/page.tsx").includes("APP_ROUTES.home")&&appRoutes.includes('home: "/dashboard"'),"PowerChain DeFAI is product identity and dashboard is entry point");
+ok(layout.includes("PowerChain DeFAI")&&text("apps/bridge/app/page.tsx").includes("DashboardOverview")&&appRoutes.includes('home: "/"'),"PowerChain DeFAI is product identity and root dashboard is entry point");
 const rootPkg=JSON.parse(text("package.json"));
 ok(rootPkg.name==="powerchain-defai"&&rootPkg.version==="1.0.0","root package rebranded without version change");
 if(failed){console.error(`\n${failed} DeFAI checks failed`);process.exit(1);} console.log("\nPowerChain DeFAI production gate PASS");

@@ -1,4 +1,7 @@
 import type { SVGProps } from "react";
+import { DashboardIcon } from "@/components/icons/dashboard-icon";
+import { SwapIcon } from "@/components/icons/swap-icon";
+import { BridgeIcon } from "@/components/icons/bridge-icon";
 
 export type NavigationIconName = "dashboard" | "swap" | "bridge" | "history" | "wallet" | "claim" | "assets" | "fees" | "integrations" | "chat" | "staking" | "explorer" | "status" | "protocol" | "settings" | "profile";
 
@@ -13,11 +16,11 @@ function IconBase({ children, ...props }: SVGProps<SVGSVGElement> & { children: 
 export function NavigationIcon({ name, className = "size-4" }: { name: NavigationIconName; className?: string }) {
   switch (name) {
     case "dashboard":
-      return <IconBase className={className}><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></IconBase>;
+      return <DashboardIcon className={className}/>;
     case "swap":
-      return <IconBase className={className}><path d="M7 7h11l-3-3"/><path d="m18 7-3 3"/><path d="M17 17H6l3 3"/><path d="m6 17 3-3"/></IconBase>;
+      return <SwapIcon className={className}/>;
     case "bridge":
-      return <IconBase className={className}><path d="M7 7h11l-3-3" /><path d="m18 7-3 3" /><path d="M17 17H6l3 3" /><path d="m6 17 3-3" /></IconBase>;
+      return <BridgeIcon className={className}/>;
     case "explorer":
       return <IconBase className={className}><circle cx="11" cy="11" r="6" /><path d="m16 16 4 4" /><path d="M8 11h6" /><path d="M11 8v6" /></IconBase>;
     case "history":

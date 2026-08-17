@@ -1,0 +1,39 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="area" x1="320" y1="250" x2="1210" y2="760" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#AFC2B8" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#DDE6E1" stop-opacity="0.03"/>
+    </linearGradient>
+    <linearGradient id="line" x1="260" y1="650" x2="1320" y2="250" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#729382" stop-opacity="0.18"/>
+      <stop offset="0.52" stop-color="#355F4C" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#173B2D" stop-opacity="0.12"/>
+    </linearGradient>
+    <filter id="blur" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="44"/>
+    </filter>
+    <filter id="soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="#EEF2EF"/>
+  <ellipse cx="1250" cy="235" rx="330" ry="240" fill="#DCE7E1" fill-opacity="0.72" filter="url(#blur)"/>
+  <ellipse cx="310" cy="620" rx="290" ry="210" fill="#E4EAE7" fill-opacity="0.92" filter="url(#blur)"/>
+  <path d="M160 760C276 722 344 688 437 624C520 567 593 599 681 524C770 448 835 474 916 420C1008 359 1076 375 1160 318C1241 264 1311 278 1440 184V900H160V760Z" fill="url(#area)"/>
+  <path d="M152 758C281 715 350 684 435 622C527 555 591 594 678 520C766 445 834 471 914 417C1008 353 1072 371 1158 313C1240 258 1318 269 1447 177" stroke="url(#line)" stroke-width="4" stroke-linecap="round" filter="url(#soft)"/>
+  <g opacity="0.14">
+    <rect x="278" y="548" width="18" height="84" rx="9" fill="#456957"/>
+    <rect x="330" y="512" width="18" height="110" rx="9" fill="#456957"/>
+    <rect x="382" y="531" width="18" height="74" rx="9" fill="#456957"/>
+    <rect x="1002" y="340" width="18" height="96" rx="9" fill="#456957"/>
+    <rect x="1054" y="308" width="18" height="105" rx="9" fill="#456957"/>
+    <rect x="1106" y="326" width="18" height="71" rx="9" fill="#456957"/>
+  </g>
+  <g opacity="0.1" fill="#173B2D">
+    <circle cx="1190" cy="193" r="8"/>
+    <circle cx="1241" cy="260" r="5"/>
+    <circle cx="1315" cy="207" r="4"/>
+    <circle cx="420" cy="690" r="6"/>
+    <circle cx="510" cy="636" r="4"/>
+  </g>
+</svg>

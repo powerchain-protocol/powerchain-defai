@@ -22,6 +22,8 @@ const reviewed = Object.freeze([
   "protobufjs",
   "tiny-secp256k1",
   "usb",
+  "@google/genai",
+  "@reown/appkit",
 ]);
 
 function run(args, { allowFailure = false } = {}) {

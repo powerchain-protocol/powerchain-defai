@@ -1,5 +1,5 @@
 export type ClaimEligibilityStatus = "ELIGIBLE" | "NOT_ELIGIBLE" | "ALREADY_CLAIMED" | "RESERVED" | "SUBMITTED" | "FINALIZED" | "UNAVAILABLE";
-export type ClaimExecutionStatus = "RESERVED" | "SUBMITTING" | "SUBMITTED" | "FINALIZED" | "MANUAL_REVIEW" | "FAILED";
+export type ClaimExecutionStatus = "RESERVED" | "SUBMITTING" | "SUBMITTED" | "FINALIZED" | "MANUAL_REVIEW" | "FAILED" | "EXPIRED" | "UNKNOWN";
 
 export type ClaimEligibility = {
   wallet: string;
@@ -25,5 +25,10 @@ export function canStartClaim(value: ClaimEligibility) {
 }
 
 export function terminalClaimStatus(status: ClaimExecutionStatus) {
-  return status === "FINALIZED" || status === "MANUAL_REVIEW" || status === "FAILED";
+  return status === "FINALIZED" || status === "MANUAL_REVIEW" || status === "FAILED" || status === "EXPIRED";
 }
+
+export function claimStatusNeedsAttention(status: ClaimExecutionStatus) {
+  return status === "MANUAL_REVIEW" || status === "FAILED" || status === "EXPIRED" || status === "UNKNOWN";
+}
+

@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const node = process.execPath;
 const preflight = path.join(root, "scripts", "workspace-install-preflight.mjs");
+const approveReviewed = path.join(root, "scripts", "approve-reviewed-builds.mjs");
 const pnpmCommand = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
 const ci = /^(1|true)$/i.test(process.env.CI ?? "");
 const autoInstallDisabled = /^(0|false|off)$/i.test(process.env.POWERCHAIN_AUTO_INSTALL ?? "");
@@ -23,6 +24,11 @@ function preflightPasses() {
 }
 
 function installWorkspace() {
+  // Reconcile the source-controlled lifecycle allowlist before a local repair.
+  // approve-reviewed-builds uses explicit package names, so this is non-interactive.
+  const approval = run(node, [approveReviewed]);
+  if (approval.error || approval.status !== 0) return approval.status ?? 1;
+
   const direct = run(pnpmCommand, ["install", "--no-frozen-lockfile"]);
   if (!direct.error && direct.status === 0) return 0;
 
@@ -50,7 +56,7 @@ console.log("[workspace:ensure] Running a local pnpm install from the monorepo r
 const installStatus = installWorkspace();
 if (installStatus !== 0) {
   console.error("[workspace:ensure] Automatic install did not complete successfully.");
-  console.error("[workspace:ensure] Run `source ./bootstrap.sh` and then `pnpm workspace:repair` for a clean re-resolution.");
+  console.error("[workspace:ensure] Run `pnpm deps:builds:approve:reviewed`, then `source ./bootstrap.sh` and `pnpm workspace:repair` for a clean re-resolution.");
   process.exit(installStatus);
 }
 

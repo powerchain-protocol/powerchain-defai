@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   try {
     const data = await getWalletPortfolio({ solanaAddress, suiAddress });
     return NextResponse.json(data, { status: data.status === "unavailable" ? 503 : 200, headers: { "Cache-Control": "no-store, max-age=0", "X-PowerChain-Wallet-Status": data.status } });
-  } catch (error) {
-    return NextResponse.json({ code: "WALLET_PORTFOLIO_UNAVAILABLE", message: error instanceof Error ? error.message : "Wallet portfolio unavailable" }, { status: 503, headers: { "Cache-Control": "no-store, max-age=0" } });
+  } catch {
+    return NextResponse.json({ code: "WALLET_PORTFOLIO_UNAVAILABLE", message: "Wallet portfolio is temporarily unavailable" }, { status: 503, headers: { "Cache-Control": "no-store, max-age=0", Pragma: "no-cache" } });
   }
 }

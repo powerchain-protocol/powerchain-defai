@@ -10,6 +10,7 @@ export {
   ExternalLinkIcon,
   GearIcon,
   GlobeIcon,
+  ImageIcon,
   LightningBoltIcon,
   Link2Icon,
   LockClosedIcon,

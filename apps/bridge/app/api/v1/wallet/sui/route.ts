@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   try {
     const data = await getSuiWalletOverview(address, { cursor, limit: Number.isFinite(rawLimit) ? rawLimit : 25 });
     return NextResponse.json(data, { headers: { "Cache-Control": "no-store, max-age=0" } });
-  } catch (error) {
-    return NextResponse.json({ code: "SUI_WALLET_DATA_UNAVAILABLE", message: error instanceof Error ? error.message : "Sui wallet data unavailable" }, { status: 503, headers: { "Cache-Control": "no-store, max-age=0" } });
+  } catch {
+    return NextResponse.json({ code: "SUI_WALLET_DATA_UNAVAILABLE", message: "Sui wallet data is temporarily unavailable" }, { status: 503, headers: { "Cache-Control": "no-store, max-age=0", Pragma: "no-cache" } });
   }
 }

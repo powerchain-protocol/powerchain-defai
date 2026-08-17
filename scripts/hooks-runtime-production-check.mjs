@@ -15,7 +15,8 @@ const checks = [
   ["shared connected-wallet hook uses SSR-safe Sui snapshot", "apps/bridge/lib/wallet/connected-wallets.ts", (s) => s.includes("useSuiWalletSnapshot") && !s.includes("@mysten/dapp-kit-react")],
   ["Sui wallet runtime is a browser-only dynamic island", "apps/bridge/context/sui-wallet-context.tsx", (s) => s.includes("sui-wallet-runtime") && s.includes("ssr: false")],
   ["Sui connect UI is dynamically SSR-disabled", "apps/bridge/components/wallet/header-wallet-controls.tsx", (s) => s.includes("sui-connect-button") && s.includes("ssr: false")],
-  ["Sui swap UI is dynamically SSR-disabled", "apps/bridge/components/trade/multichain-swap-interface.tsx", (s) => s.includes("sui-swap-island") && s.includes("ssr: false")],
+  ["Sui swap avoids a stale Turbopack async chunk boundary", "apps/bridge/components/trade/multichain-swap-interface.tsx", (s) => s.includes('"use client"') && s.includes('import { SuiSwapIsland } from "./sui-swap-island"') && !s.includes("next/dynamic") && !s.includes("ssr: false")],
+  ["Sui swap island remains a Client Component boundary", "apps/bridge/components/trade/sui-swap-island.tsx", (s) => s.includes('"use client"') && s.includes("DAppKitProvider")],
   ["staking remains deployment gated", "apps/staking/README.md", (s) => s.includes("fail-closed") && s.includes("must not fabricate APR") && s.includes("connected wallet remains the signing authority")],
 ];
 let failed = false;

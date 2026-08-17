@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 
 const MAX_JSON_BYTES = 64 * 1024;
 const REQUEST_ID = /^[A-Za-z0-9._:-]{8,128}$/;
+const PUBLIC_ERROR_CODE = /^[A-Z][A-Z0-9:_-]{1,119}$/;
 
 export function requestId(req: Request): string {
   const supplied = req.headers.get("x-request-id")?.trim() ?? "";
@@ -14,6 +15,7 @@ export function responseHeaders(id: string, extra?: HeadersInit): Headers {
   headers.set("x-request-id", id);
   headers.set("x-content-type-options", "nosniff");
   headers.set("cache-control", headers.get("cache-control") ?? "no-store, max-age=0");
+  headers.set("pragma", headers.get("pragma") ?? "no-cache");
   return headers;
 }
 
@@ -21,9 +23,16 @@ export function ok<T>(data: T, status = 200, id = randomUUID(), extra?: HeadersI
   return Response.json({ ok: true, data, requestId: id }, { status, headers: responseHeaders(id, extra) });
 }
 
+export function safeErrorCode(reason: unknown, fallback = "INTERNAL_ERROR"): string {
+  const safeFallback = PUBLIC_ERROR_CODE.test(fallback) ? fallback : "INTERNAL_ERROR";
+  const candidate = reason instanceof Error ? reason.message.trim() : typeof reason === "string" ? reason.trim() : "";
+  return PUBLIC_ERROR_CODE.test(candidate) ? candidate : safeFallback;
+}
+
 export function fail(code: string, message: string, status: number, id = randomUUID(), retryable = false, details?: unknown): Response {
+  const publicCode = safeErrorCode(code);
   return Response.json(
-    { ok: false, error: { code, message, retryable, ...(details === undefined ? {} : { details }) }, requestId: id },
+    { ok: false, error: { code: publicCode, message, retryable, ...(details === undefined ? {} : { details }) }, requestId: id },
     { status, headers: responseHeaders(id) },
   );
 }

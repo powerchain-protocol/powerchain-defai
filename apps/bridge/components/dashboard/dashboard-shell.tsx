@@ -12,9 +12,9 @@ export function DashboardShell({ children }: { children: ReactNode }) {
         sidebar={<DashboardSidebar />}
         header={<DashboardHeader />}
         footer={<div className="hidden lg:block"><DashboardFooter /></div>}
-        backgroundClass="bg-[#f3f5f4] dark:bg-[#050807]"
+        backgroundClass="pc-dashboard-shell"
       >
-        <main id="main-content" tabIndex={-1} className="w-full flex-1 px-4 pb-24 pt-5 outline-none sm:px-6 lg:px-7 lg:pb-7 lg:pt-7">
+        <main id="main-content" tabIndex={-1} className="w-full flex-1 px-4 pb-24 pt-5 outline-none sm:px-6 sm:pt-6 lg:px-8 lg:pb-8 lg:pt-7 xl:px-9">
           {children}
         </main>
       </Shell>

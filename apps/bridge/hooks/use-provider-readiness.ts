@@ -25,8 +25,10 @@ export function useProviderReadiness(refreshMs = 60_000) {
     if (typeof navigator !== "undefined" && !navigator.onLine) {
       setOnline(false);
       setLoading(false);
+      setRefreshing(false);
       return;
     }
+    setOnline(true);
     setRefreshing(true);
     const generation = ++requestGeneration.current;
     controller.current?.abort();
@@ -58,7 +60,11 @@ export function useProviderReadiness(refreshMs = 60_000) {
     }, intervalMs);
     const onVisible = () => { if (document.visibilityState === "visible" && navigator.onLine) void refresh(); };
     const onOnline = () => { setOnline(true); void refresh(); };
-    const onOffline = () => setOnline(false);
+    const onOffline = () => {
+      setOnline(false);
+      controller.current?.abort();
+      setRefreshing(false);
+    };
     document.addEventListener("visibilitychange", onVisible);
     window.addEventListener("online", onOnline);
     window.addEventListener("offline", onOffline);

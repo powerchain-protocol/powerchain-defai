@@ -25,8 +25,11 @@ const config: NextConfig = {
   productionBrowserSourceMaps: false,
   transpilePackages: ["@powerchain/backend", "@powerchain/database", "@powerchain/runtime", "@powerchain/protocol", "@powerchain/blockchain", "@powerchain/clusters", "@powerchain/chat", "@powerchain/staking", "@powerchain/bridge-core", "@powerchain/swap-core"],
   serverExternalPackages: ["@prisma/adapter-pg", "@prisma/client", "pg"],
-  images: { formats: ["image/avif", "image/webp"] },
-  async headers() { return [{ source: "/:path*", headers: securityHeaders }]; },
+  images: { formats: ["image/avif", "image/webp"], minimumCacheTTL: 3_600 },
+  async headers() { return [
+    { source: "/:path*", headers: securityHeaders },
+    { source: "/tokens/:path*", headers: [{ key: "Cache-Control", value: "public, max-age=3600, stale-while-revalidate=86400" }] },
+  ]; },
   async redirects() { return [...APP_REDIRECTS]; },
 };
 initOpenNextCloudflareForDev();

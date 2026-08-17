@@ -1,6 +1,6 @@
 import "server-only";
 import { getSolanaRpc } from "../rpc/providers";
-import { getPowerChainSuiBalance, probePowerChainSuiGrpc } from "@powerchain/backend";
+import { getPowerChainSuiBalance, probePowerChainSuiGrpc } from "@powerchain/backend/sui/client";
 import { baseUnitsToDecimal } from "../../lib/data/decimal";
 
 const SOLANA_ADDRESS = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;

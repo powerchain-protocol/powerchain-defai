@@ -27,7 +27,7 @@ if (!String(pkg.scripts?.dev ?? "").includes("3001")) failures.push("apps/web de
 const page = fs.readFileSync(path.join(root, "apps/web/app/page.tsx"), "utf8");
 for (const name of ["Hero", "Products", "Features", "Partnerships", "FAQ", "CTA", "MarketingShell"]) if (!page.includes(name)) failures.push(`marketing page missing ${name}`);
 const routes = fs.readFileSync(path.join(root, "apps/bridge/config/app-routes.ts"), "utf8");
-if (!routes.includes('home: "/dashboard"')) failures.push("application home must resolve to /dashboard");
+if (!routes.includes('home: "/"') || !routes.includes('dashboard: "/"')) failures.push("application home/dashboard must resolve to /");
 const shell = fs.readFileSync(path.join(root, "apps/bridge/components/navigation/shell.tsx"), "utf8");
 if (!shell.includes("h-dvh") || !shell.includes("overflow-y-auto") || !shell.includes("no-scrollbar")) failures.push("application shell must own viewport scrolling with hidden page scrollbar");
 const footer = fs.readFileSync(path.join(root, "apps/bridge/components/dashboard/dashboard-footer.tsx"), "utf8");

@@ -4,7 +4,7 @@ PowerChain DeFAI uses one canonical browser-route contract in `apps/bridge/confi
 
 ## Canonical application routes
 
-- `/dashboard` — command center / workspace overview
+- `/` — command center / workspace overview
 - `/chat` — home / DeFAI assistant
 - `/swap` — wallet-signed swaps
 - `/bridge` — Wormhole NTT bridge
@@ -18,9 +18,11 @@ PowerChain DeFAI uses one canonical browser-route contract in `apps/bridge/confi
 - `/integrations` — configured protocol/provider integrations
 - `/status` — provider health, redundancy and execution readiness
 
-Desktop navigation is grouped into Overview, Intelligence, Markets, Portfolio, Network, and Account sections. The dashboard has its own command-center header/sidebar/footer shell, while transactional routes use the standard workspace shell. Mobile navigation and Next redirects consume the same canonical route registry rather than maintaining unrelated route lists.
+Desktop navigation is grouped into Overview, Intelligence, Markets, Portfolio, Network, and Account sections. The command-center header/sidebar/footer shell persists across the operational workspace, including Swap, Bridge, Chat, Staking, Wallet, History, Explorer and runtime pages. Mobile navigation and Next redirects consume the same canonical route registry rather than maintaining unrelated route lists.
 
 ## Compatibility redirects
+
+`/dashboard` is a permanent compatibility redirect to the canonical root dashboard at `/`.
 
 Legacy/product aliases such as `/stake`, `/rewards`, `/validators`, `/transactions`, `/activity`, `/portfolio`, `/account`, `/docs`, `/swagger`, and `/openapi` redirect to canonical application or API-documentation paths. Redirect sources are unique, framework-relative, and checked for loops.
 

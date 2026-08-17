@@ -35,7 +35,7 @@ Production variables are:
 
 The combined collection routes shared APIs through `baseUrl`, Swap APIs through `swapUrl`, and Bridge APIs through `bridgeUrl`.
 
-For local development, select the local environment and run `pnpm dev`. Its `baseUrl`, `swapUrl`, and `bridgeUrl` values all resolve to `http://localhost:3000`, preventing accidental production routing during a local collection run.
+For local development, select the local environment and run `pnpm dev:app`. Its `baseUrl`, `swapUrl`, and `bridgeUrl` values all resolve to `http://localhost:3000`, preventing accidental production routing during a local collection run.
 
 Configured workspace specification: <https://crimson-crescent-8585.postman.co/workspace/55a50a8b-cdb7-46f5-807e-3494d0262565/specification/1afb4b8d-159d-4f42-8805-f1f1a5143539/file/04e6ee61-ea2e-4c44-83c6-51471951a035>.
 

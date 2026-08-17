@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { responseHeaders } from "@/server/http";
 import { validateClaimMutationRequest } from "@/server/http/claim-mutation-contract";
 import { enforceBridgeRuntimeRequest } from "@/server/http/bridge-runtime-guard";
-import { submitReservedClaim } from "@powerchain/backend";
+import { submitReservedClaim } from "@powerchain/backend/claims";
 export const dynamic = "force-dynamic";
 export async function POST(request: Request) {
   const runtimeBlocked = await enforceBridgeRuntimeRequest("claim"); if (runtimeBlocked) return runtimeBlocked;

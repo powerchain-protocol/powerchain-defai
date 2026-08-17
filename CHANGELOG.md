@@ -1,5 +1,57 @@
 # Changelog
 
+## 2026-08-17 — Dependency build approvals and dashboard/website visual polish
+
+- Approved the reviewed `@google/genai` and `@reown/appkit` lifecycle builds in the source-controlled pnpm `allowBuilds` policy, added explicit non-interactive approval helpers, and made local workspace auto-repair reconcile reviewed build approvals before reinstalling.
+- Matched the Runtime Status header action to the 40px dashboard control height and widened/flattened the Status layout so cards use the shell workspace more efficiently across mobile, tablet, and wide desktop breakpoints.
+- Refined Status overview/service cards with equal-height grids, responsive metrics, and paired execution-envelope/request-policy panels.
+- Changed the website light-theme primary action to dark green, kept secondary actions white, and converted the final marketing CTA into a dark-green card with white/ghost buttons.
+- Elevated Solana, Sui, Pyth, and Supabase in the ecosystem section with branded icon treatment and resilient logo fallbacks.
+
+## 2026-08-17 — Public error contracts and bridge recovery hardening
+
+- Hardened browser/API error boundaries so wallet, chain-data, transaction, bridge-config, bridge-route and SSE surfaces return stable public codes with generic messages instead of reflecting provider/RPC exception text.
+- Added `public-error-contract:production:check` and wired it into `verify:production` to prevent raw-error reflection, manual bridge-status route construction, unbounded transfer-event queries and regression of bridge error-envelope parsing.
+- Refactored active/resumable bridge recovery, transfer deep links, NTT execution, wallet action readiness and wallet portfolio actions onto shared Card/Button/Badge/Alert geometry and canonical `bridgeStatusRoute()` navigation.
+- Bounded source-transaction JSON payloads, source signature/digest length and transfer-event limits; request IDs are normalized through the shared server HTTP contract.
+- Added a narrow `@powerchain/backend/sui/client` export and moved bridge-side Sui RPC/balance consumers off the backend root barrel.
+- Extended shared Card semantics so cards can render as `section`, `aside` or `article` landmarks without duplicating presentation styles.
+
+## 2026-08-17 — Shared operational surfaces and route metadata
+
+- Added reusable `Badge` and link-compatible `buttonClassName()` primitives so buttons and navigation actions share one interaction geometry.
+- Refactored Protocol verification, DEX pool discovery, cross-chain wallet activity and portfolio actions onto shared Button/Tabs/Select/Badge surfaces with safer public error copy.
+- Added explicit title/description metadata to all 16 primary operational routes and a `route-metadata:production:check` regression guard.
+- Improved the public website product catalog so product-specific cards hand users into allowlisted `/open/[slug]` app destinations instead of remaining presentation-only.
+- Normalized additional alert/panel radii onto the shared 14px/20px/24px theme system and hardened external wallet-history links with `noopener noreferrer`.
+
+### Operational polish and account recovery
+
+- Added Profile and Settings route-level loading/error boundaries using the shared safe recovery panel.
+- Refactored browser profile and service-fee estimator surfaces onto shared Card/Input/Select/Button geometry.
+- Hardened settings endpoint tests so raw browser/provider exception strings are not reflected into the UI.
+- Added 256 KB settings-import bounds and generic invalid-import feedback.
+- Improved token-picker focus restoration and query reset across keyboard, backdrop, selection and close-button paths.
+- Added request cancellation and bounded route-ID validation to the service-fee estimator.
+
+## 2026-08-17 — Operational route and UI resilience
+
+- Added shared operational route recovery for Swap, Chat, Explorer, Protocol, Staking, and persisted Bridge Status, including a loading boundary for transfer-status recovery.
+- Route error surfaces expose only opaque framework digests and canonical History/Status recovery links; raw exception messages remain hidden.
+- Refactored Explorer and History filtering onto shared Card/Input/Select/Button geometry and canonical safe transfer-status route construction.
+- Hardened provider health/readiness hooks to abort in-flight requests when the browser goes offline and made aggregate Status refresh tolerant of independently failing probes.
+- Standardized Card, Tabs, Dropdown, Pagination, Empty State, and route-loading geometry on the shared theme radius tokens.
+- Added a production guard for operational route boundaries and safe transfer-detail routing.
+
+## 2026-08-17 — Claim recovery and UI consistency hardening
+
+- Hardened claim submission recovery so ambiguous timeout/network failures after a successful reservation are journaled as `UNKNOWN` and routed to the persisted claim-status surface instead of encouraging a duplicate claim.
+- Improved operational Status with offline-aware manual refresh, centralized age-based stale detection, deduplicated diagnostics, and expandable operator error context.
+- Hardened shared runtime helpers: `TTLCache` now distinguishes a cached `undefined` value from a miss, validates TTL/capacity inputs, and preserves per-cache in-flight de-duplication; public server error codes now accept only explicit machine-style codes.
+- Added loading semantics to the shared Button primitive and migrated Settings endpoint tests, selectors, portability actions, Claim lifecycle controls, and transaction surfaces toward the shared 14px/20px/24px geometry system.
+- Aligned Swap and Bridge pay/receive, route, fee, and action surfaces with the shared light/dark card geometry while retaining the dimensional center swap/reverse controls.
+- Extended Claim production checks to enforce ambiguous-submission recovery behavior.
+
 ## 2026-08-17 — Self-healing local development install
 
 - Added `workspace:install:ensure` for local development. It probes critical workspace modules and performs one root `pnpm install --no-frozen-lockfile` when a fresh/stale checkout is missing dependencies.
@@ -768,3 +820,14 @@ Prisma Client generation no longer requires `DATABASE_URL`. `prisma.config.ts` u
 - Added richer AI chat identity, assistant/user avatars, suggestion cards and a dedicated `components/chat/chat-interface.tsx`.
 - Removed Next.js `server-only` markers from the shared backend runtime package so direct Node/tsx workers can execute backend modules.
 - Routed browser-safe explorer URL helpers through `@powerchain/protocol/explorers` and added a client/backend boundary production check.
+
+### Operational read reliability
+
+- Removed a portfolio refresh identity loop by decoupling the refresh callback from fetched portfolio state.
+- Added offline-aware abort handling and normalized public error codes for portfolio, pool, liquidity, and PWRC integrity reads.
+- Added explicit freshness tracking for portfolio and asset-integrity snapshots.
+- Restored canonical `bridgeStatusRoute()` construction in the Recent Transfers card.
+- Standardized bridge recovery, network settlement, asset-integrity, and mobile review actions on shared Card/Button/Badge primitives.
+- Replaced text-only Solana/Sui network markers in settlement health with branded network icons.
+- Prevented Swap error fallbacks from reflecting arbitrary provider/browser exception text.
+- Added `operational-read-hooks:production:check` to the production verification chain.

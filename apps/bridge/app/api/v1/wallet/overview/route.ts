@@ -30,10 +30,10 @@ export async function GET(request: NextRequest) {
         "X-PowerChain-Wallet-Status": data.status,
       },
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      { code: "WALLET_OVERVIEW_UNAVAILABLE", message: error instanceof Error ? error.message : "Wallet overview unavailable" },
-      { status: 503, headers: { "Cache-Control": "no-store, max-age=0" } },
+      { code: "WALLET_OVERVIEW_UNAVAILABLE", message: "Wallet overview is temporarily unavailable" },
+      { status: 503, headers: { "Cache-Control": "no-store, max-age=0", Pragma: "no-cache" } },
     );
   }
 }

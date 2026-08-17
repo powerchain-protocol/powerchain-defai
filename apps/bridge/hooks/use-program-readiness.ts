@@ -24,6 +24,7 @@ export function useProgramReadiness(refreshMs = 60_000) {
   const [data, setData] = useState<ProgramReadinessPayload>();
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
+  const [online, setOnline] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshingProgramId, setRefreshingProgramId] = useState<ProgramRuntimeItem["id"]>();
   const [clock, setClock] = useState(() => Date.now());
@@ -79,15 +80,19 @@ export function useProgramReadiness(refreshMs = 60_000) {
   }, []);
 
   useEffect(() => {
-    if (navigator.onLine) void refresh();
+    const initialOnline = navigator.onLine;
+    setOnline(initialOnline);
+    if (initialOnline) void refresh();
     else setLoading(false);
     const clockTimer = window.setInterval(() => setClock(Date.now()), 15_000);
     const timer = window.setInterval(() => {
       if (navigator.onLine && document.visibilityState === "visible") void refresh();
     }, interval);
-    const online = () => void refresh();
+    const handleOnline = () => { setOnline(true); void refresh(); };
+    const handleOffline = () => setOnline(false);
     const visible = () => { if (document.visibilityState === "visible" && navigator.onLine) void refresh(); };
-    window.addEventListener("online", online);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
     document.addEventListener("visibilitychange", visible);
     return () => {
       generation.current += 1;
@@ -95,7 +100,8 @@ export function useProgramReadiness(refreshMs = 60_000) {
       programController.current?.abort();
       window.clearInterval(timer);
       window.clearInterval(clockTimer);
-      window.removeEventListener("online", online);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
       document.removeEventListener("visibilitychange", visible);
     };
   }, [interval, refresh]);
@@ -106,5 +112,5 @@ export function useProgramReadiness(refreshMs = 60_000) {
   }).map((item) => item.id));
   const coreEvidenceFresh = Boolean(data) && data.programs.filter((item) => item.requiredForCoreBridge).every((item) => !staleProgramIds.has(item.id));
 
-  return { data, error, loading, refreshing, refreshingProgramId, staleProgramIds, coreEvidenceFresh, staleAfterMs, refresh, refreshProgram };
+  return { data, error, loading, refreshing, refreshingProgramId, online, staleProgramIds, coreEvidenceFresh, staleAfterMs, refresh, refreshProgram };
 }

@@ -22,16 +22,12 @@ async function timed(
       latencyMs,
       message: ok ? `Available · ${latencyMs} ms` : `HTTP ${response.status} · ${latencyMs} ms`,
     };
-  } catch (error) {
+  } catch {
     const latencyMs = Math.max(0, Math.round(performance.now() - started));
     return {
       ok: false,
       latencyMs,
-      message: controller.signal.aborted
-        ? `Timed out · ${latencyMs} ms`
-        : error instanceof Error
-          ? error.message
-          : "Endpoint unavailable",
+      message: controller.signal.aborted ? `Timed out · ${latencyMs} ms` : `Connection failed · ${latencyMs} ms`,
     };
   } finally {
     window.clearTimeout(timeout);
@@ -70,12 +66,12 @@ export async function testJupiterProvider(): Promise<EndpointTestResult> {
     const source = payload?.data?.source === "user" ? "User credential" : "Deployment credential";
     const origin = payload?.data?.apiOrigin ? ` · ${payload.data.apiOrigin}` : "";
     return { ok: true, latencyMs, message: `${source}${origin} · ${latencyMs} ms` };
-  } catch (error) {
+  } catch {
     const latencyMs = Math.max(0, Math.round(performance.now() - started));
     return {
       ok: false,
       latencyMs,
-      message: controller.signal.aborted ? `Timed out · ${latencyMs} ms` : error instanceof Error ? error.message : "Jupiter configuration unavailable",
+      message: controller.signal.aborted ? `Timed out · ${latencyMs} ms` : `Provider check failed · ${latencyMs} ms`,
     };
   } finally {
     window.clearTimeout(timeout);
@@ -99,16 +95,12 @@ export async function testSuiRpc(endpoint: string): Promise<EndpointTestResult> 
       ? String(result.chainIdentifier)
       : "mainnet";
     return { ok: true, latencyMs, message: `Sui gRPC · ${chainIdentifier} · ${latencyMs} ms` };
-  } catch (error) {
+  } catch {
     const latencyMs = Math.max(0, Math.round(performance.now() - started));
     return {
       ok: false,
       latencyMs,
-      message: controller.signal.aborted
-        ? `Timed out · ${latencyMs} ms`
-        : error instanceof Error
-          ? error.message
-          : "Sui gRPC endpoint unavailable",
+      message: controller.signal.aborted ? `Timed out · ${latencyMs} ms` : `Sui gRPC check failed · ${latencyMs} ms`,
     };
   } finally {
     window.clearTimeout(timeout);

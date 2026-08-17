@@ -1,4 +1,4 @@
-import { getPowerChainSuiBalance } from "@powerchain/backend";
+import { getPowerChainSuiBalance } from "@powerchain/backend/sui/client";
 import { normalizeSuiAddress } from "@mysten/sui/utils";
 import { configuredSwapAssets, type SwapAssetId } from "@/lib/swap/swap";
 import { fail, ok, requestId } from "@/server/http";
@@ -28,7 +28,7 @@ export async function GET(req: Request) {
       authoritativeForSettlement: false,
       checkedAt: new Date().toISOString(),
     }, 200, id, { "Cache-Control": "no-store" });
-  } catch (error) {
-    return fail("SWAP_BALANCE_UNAVAILABLE", error instanceof Error ? error.message : "Unable to load swap balance", 503, id, true);
+  } catch {
+    return fail("SWAP_BALANCE_UNAVAILABLE", "Swap balance is temporarily unavailable", 503, id, true);
   }
 }

@@ -1,4 +1,11 @@
-import { redirect } from "next/navigation";
-import { APP_ROUTES } from "@/config/app-routes";
+import type { Metadata } from "next";
+import { DashboardOverview } from "@/components/dashboard/dashboard-overview";
 
-export default function HomePage() { redirect(APP_ROUTES.home); }
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "PowerChain DeFAI command center for wallet connectivity, operations, runtime status and workspace shortcuts.",
+};
+
+export default function HomePage() {
+  return <DashboardOverview />;
+}

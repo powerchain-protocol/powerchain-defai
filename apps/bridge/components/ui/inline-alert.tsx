@@ -11,7 +11,7 @@ const toneClasses: Record<Tone, string> = {
 
 export function InlineAlert({ title, children, tone = "info" }: { title: string; children?: ReactNode; tone?: Tone }) {
   return (
-    <div role={tone === "danger" ? "alert" : "status"} className={`rounded-2xl border px-4 py-3 ${toneClasses[tone]}`}>
+    <div role={tone === "danger" ? "alert" : "status"} className={`rounded-[var(--pc-radius-card)] border px-4 py-3 ${toneClasses[tone]}`}>
       <p className="text-sm font-semibold">{title}</p>
       {children ? <div className="mt-1 text-sm opacity-85">{children}</div> : null}
     </div>

@@ -9,6 +9,7 @@ const must = [
   ["apps/bridge/lib/claim/claim-contract.ts", ["ELIGIBLE", "ALREADY_CLAIMED", "claimableBaseUnits"]],
   ["apps/bridge/server/http/claim-mutation-contract.ts", ["Idempotency-Key", "32 * 1024", "request.clone"]],
   ["apps/bridge/components/claim/claim-process-card.tsx", ["server challenge", "unknown submission outcome", "Claim PWRC"]],
+  ["apps/bridge/components/claim/claim-page-client.tsx", ["ambiguousSubmissionFailure", 'journal.updateStatus(\"UNKNOWN\")', "claimStatusRoute(reservedClaimId)"]],
   ["apps/bridge/components/bridge/bridged-assets-card.tsx", ["1 PWRC principal = 1 wPWRC principal", "Wormhole NTT"]],
 ];
 let failed = false;

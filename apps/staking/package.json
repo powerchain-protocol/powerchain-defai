@@ -30,7 +30,7 @@
     "@solana/kit": "7.1.0"
   },
   "devDependencies": {
-    "typescript": "7.0.2",
+    "typescript": "5.9.3",
     "@types/node": "26.2.0"
   }
 }

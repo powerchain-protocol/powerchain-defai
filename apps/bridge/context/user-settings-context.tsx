@@ -28,6 +28,7 @@ function mergeSettings(current: PowerChainUserSettings, patch: SettingsPatch): P
     jupiter: { ...current.jupiter, ...(patch.jupiter ?? {}) },
     swap: { ...current.swap, ...(patch.swap ?? {}) },
     bridge: { ...current.bridge, ...(patch.bridge ?? {}) },
+    operations: { ...current.operations, ...(patch.operations ?? {}) },
   });
 }
 

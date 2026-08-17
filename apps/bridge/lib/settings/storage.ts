@@ -3,7 +3,8 @@ import { clampSwapSlippageBps } from "@powerchain/swap-core";
 import { DEFAULT_JUPITER_SWAP_API, DEFAULT_USER_SETTINGS, EMPTY_SESSION_SECRETS } from "./defaults";
 import type { BridgeDirection, PowerChainUserSettings, PreferredCurrency, SwapChain, UserSessionSecrets } from "@/types/user-settings";
 
-export const SETTINGS_STORAGE_KEY = "powerchain.user-settings.v2";
+export const SETTINGS_STORAGE_KEY = "powerchain.user-settings.v3";
+const LEGACY_SETTINGS_STORAGE_KEY = "powerchain.user-settings.v2";
 export const SESSION_SECRETS_KEY = "powerchain.user-secrets.session.v1";
 const LEGACY_TRANSACTION_PREFERENCES_KEY = "powerchain.transaction-preferences.v1";
 const LEGACY_SLIPPAGE_KEY = "powerchain.swap.slippage-bps.v1";
@@ -45,12 +46,13 @@ export function sanitizeSettings(value: unknown): PowerChainUserSettings {
   const jupiter = record(root.jupiter) ?? {};
   const swap = record(root.swap) ?? {};
   const bridge = record(root.bridge) ?? {};
+  const operations = record(root.operations) ?? {};
   const preferredCurrency = CURRENCIES.has(profile.preferredCurrency as PreferredCurrency) ? profile.preferredCurrency as PreferredCurrency : DEFAULT_USER_SETTINGS.profile.preferredCurrency;
   const defaultChain = SWAP_CHAINS.has(swap.defaultChain as SwapChain) ? swap.defaultChain as SwapChain : DEFAULT_USER_SETTINGS.swap.defaultChain;
   const defaultDirection = BRIDGE_DIRECTIONS.has(bridge.defaultDirection as BridgeDirection) ? bridge.defaultDirection as BridgeDirection : DEFAULT_USER_SETTINGS.bridge.defaultDirection;
   const jupiterBase = string(jupiter.apiBaseUrl, DEFAULT_JUPITER_SWAP_API);
   return {
-    version: 2,
+    version: 3,
     profile: { displayName: string(profile.displayName, "", DISPLAY_NAME_MAX), preferredCurrency },
     connectivity: {
       useCustomApi: bool(connectivity.useCustomApi, false),
@@ -71,6 +73,10 @@ export function sanitizeSettings(value: unknown): PowerChainUserSettings {
       defaultDirection,
       statusPollMs: boundedNumber(bridge.statusPollMs, DEFAULT_USER_SETTINGS.bridge.statusPollMs, 2_000, 30_000),
       preferRealtime: bool(bridge.preferRealtime, true),
+    },
+    operations: {
+      statusRefreshMs: [15_000, 30_000, 60_000, 120_000].includes(Number(operations.statusRefreshMs)) ? Number(operations.statusRefreshMs) as 15_000 | 30_000 | 60_000 | 120_000 : DEFAULT_USER_SETTINGS.operations.statusRefreshMs,
+      showProcessTelemetry: bool(operations.showProcessTelemetry, true),
     },
   };
 }
@@ -117,6 +123,12 @@ export function readStoredSettings(): PowerChainUserSettings {
   try {
     const raw = window.localStorage.getItem(SETTINGS_STORAGE_KEY);
     if (raw) return sanitizeSettings(JSON.parse(raw));
+    const v2 = window.localStorage.getItem(LEGACY_SETTINGS_STORAGE_KEY);
+    if (v2) {
+      const migrated = sanitizeSettings(JSON.parse(v2));
+      try { window.localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(migrated)); window.localStorage.removeItem(LEGACY_SETTINGS_STORAGE_KEY); } catch { /* storage is optional */ }
+      return migrated;
+    }
     return migrateLegacySettings() ?? DEFAULT_USER_SETTINGS;
   } catch { return DEFAULT_USER_SETTINGS; }
 }
@@ -130,6 +142,7 @@ export function clearStoredSettings(): void {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.removeItem(SETTINGS_STORAGE_KEY);
+    window.localStorage.removeItem(LEGACY_SETTINGS_STORAGE_KEY);
     window.localStorage.removeItem(LEGACY_TRANSACTION_PREFERENCES_KEY);
     window.localStorage.removeItem(LEGACY_SLIPPAGE_KEY);
   } catch { /* storage is optional */ }

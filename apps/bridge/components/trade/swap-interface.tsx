@@ -3,7 +3,6 @@ import { TransactionCompleted } from "@/components/transactions/completed";
 import { TransactionMessage } from "@/components/transactions/messages";
 import { TransactionConfirmations } from "@/components/transactions/confirmations";
 
-import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDAppKit } from "@mysten/dapp-kit-react";
 import { Transaction } from "@mysten/sui/transactions";
@@ -15,6 +14,10 @@ import { useSlippageTolerance } from "@/hooks/use-slippage-tolerance";
 import { SwapSettings } from "./swap-settings";
 import { useUserSettings } from "@/context/user-settings-context";
 import { apiFetch } from "@/lib/api/browser-api";
+import { TokenPicker, type TokenPickerItem } from "@/components/assets/token-picker";
+import { CryptoAssetIcon } from "@/components/assets/crypto-asset-icon";
+import { SwapIcon } from "@/components/icons/swap-icon";
+import { Button } from "@/components/ui/button";
 
 function toBaseUnits(value: string, decimals: number): string | null {
   const normalized = value.trim();
@@ -47,8 +50,11 @@ function deviationLabel(value: number | null): { text: string; tone: string } | 
 }
 
 function AssetIcon({ asset }: { asset: SwapAsset }) {
-  if (asset.icon) return <Image src={asset.icon} alt="" width={34} height={34} className="size-8 rounded-full object-cover" />;
-  return <span className="grid size-8 place-items-center rounded-full bg-slate-100 text-[11px] font-bold text-slate-700 dark:bg-white/10 dark:text-slate-200">{asset.symbol.slice(0, 2)}</span>;
+  return <CryptoAssetIcon token={asset} size={32} />;
+}
+
+function pickerAsset(asset: SwapAsset): TokenPickerItem {
+  return { id: asset.id, symbol: asset.symbol, name: asset.name, chain: "SUI", address: asset.coinType, ...(asset.icon ? { icon: asset.icon } : {}) };
 }
 
 function parseEnvelope(value: unknown): Record<string, unknown> | null {
@@ -100,7 +106,7 @@ function friendlySwapError(error: unknown): string {
   if (raw.includes("SWAP_QUOTE_UNAVAILABLE")) return "Swap quote is temporarily unavailable. Check the route and try again.";
   if (raw.includes("SWAP_INSUFFICIENT_BALANCE")) return "Insufficient source-token balance for this swap amount.";
   if (raw.includes("SWAP_SUI_GAS_RESERVE_REQUIRED")) return "Keep some SUI available for network gas instead of swapping the entire SUI balance.";
-  return raw || "Swap failed. No completion is assumed.";
+  return "Swap is temporarily unavailable. No completion is assumed.";
 }
 
 export function SwapInterface() {
@@ -302,35 +308,33 @@ export function SwapInterface() {
   }
 
   return (
-    <section className="pc-cinematic-panel pc-subtle-shine rounded-[28px] p-3 text-white sm:p-4" aria-label="PowerChain swap" aria-busy={status === "quoting" || status === "signing"}>
+    <section className="pc-card rounded-[28px] border border-slate-200 bg-white p-3 text-slate-950 shadow-[0_12px_38px_rgba(7,16,13,.06)] dark:border-white/10 dark:bg-[#07100d] dark:text-white sm:p-4" aria-label="PowerChain swap" aria-busy={status === "quoting" || status === "signing"}>
       <div className="flex items-center justify-between gap-3 px-1 pb-3">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[.18em] text-[#d0dcd6]">Sui liquidity</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[.18em] text-[#557568] dark:text-[#d0dcd6]">Sui liquidity</p>
           <h2 className="mt-1 text-xl font-semibold tracking-tight">Swap</h2>
         </div>
         <SwapSettings slippageBps={slippageBps} onSlippageChange={(bps) => { setSlippageBps(bps); setQuote(null); }} protection={protection} onProtectionChange={(value) => { setProtection(value); setQuote(null); }} />
       </div>
 
-      <div className="pc-glass relative z-10 space-y-2 rounded-[22px] p-3 text-slate-950 dark:text-white">
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[.035]">
-          <div className="flex items-center justify-between gap-3"><span className="text-xs font-medium text-slate-500">You pay</span><div className="flex items-center gap-2 text-[11px] text-slate-500"><span>{balanceState === "loading" ? "Balance…" : balanceReady && balance ? `${fromBaseUnits(balance.balanceBaseUnits, from.decimals)} ${from.symbol}` : balanceState === "error" ? "Balance unavailable" : "Sui network"}</span>{balanceReady && balance && from.id !== "sui" && BigInt(balance.balanceBaseUnits) > 0n ? <button type="button" onClick={() => { setAmount(fromBaseUnits(balance.balanceBaseUnits, from.decimals)); setMessage(null); }} className="rounded-lg border border-slate-200 bg-white px-2 py-1 font-bold text-[#294a3b] transition hover:bg-slate-50 dark:border-white/10 dark:bg-white/[.04] dark:text-[#d0dcd6]">Max</button> : null}</div></div>
+      <div className="relative z-10 space-y-2 rounded-[22px] border border-slate-200 bg-[#fbfcfb] p-3 text-slate-950 dark:border-white/10 dark:bg-black/20 dark:text-white">
+        <div className="rounded-[var(--pc-radius-card)] border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[.035]">
+          <div className="flex items-center justify-between gap-3"><span className="text-xs font-medium text-slate-500">You pay</span><div className="flex items-center gap-2 text-[11px] text-slate-500"><span>{balanceState === "loading" ? "Balance…" : balanceReady && balance ? `${fromBaseUnits(balance.balanceBaseUnits, from.decimals)} ${from.symbol}` : balanceState === "error" ? "Balance unavailable" : "Sui network"}</span>{balanceReady && balance && from.id !== "sui" && BigInt(balance.balanceBaseUnits) > 0n ? <Button variant="ghost" size="sm" onClick={() => { setAmount(fromBaseUnits(balance.balanceBaseUnits, from.decimals)); setMessage(null); }} className="min-h-7 px-2 text-[#294a3b] dark:text-[#d0dcd6]">Max</Button> : null}</div></div>
           <div className="mt-3 flex items-center gap-3">
             <input value={amount} onChange={(event) => { setAmount(event.target.value); setMessage(null); }} inputMode="decimal" placeholder="0.0" className="min-w-0 flex-1 bg-transparent text-3xl font-semibold outline-none" aria-label="Swap amount" aria-invalid={insufficientBalance || suiGasReserveRequired} aria-describedby={insufficientBalance || suiGasReserveRequired ? "swap-balance-warning" : undefined} />
-            <select value={from.id} onChange={(event) => { const asset = assets.find((item) => item.id === event.target.value); if (asset) { setFrom(asset); if (asset.id === to.id) setTo(assets.find((item) => item.id !== asset.id) ?? to); } }} className="max-w-[145px] rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold outline-none dark:border-white/10 dark:bg-[#111b17]">
-              {assets.map((asset) => <option key={asset.id} value={asset.id}>{asset.symbol}</option>)}
-            </select>
+            <TokenPicker items={assets.map(pickerAsset)} value={pickerAsset(from)} disabledIds={[to.id]} label="Source token" onChange={(item) => { const asset = assets.find((candidate) => candidate.id === item.id); if (asset) setFrom(asset); }} />
           </div>
           {insufficientBalance ? <p id="swap-balance-warning" role="alert" className="mt-2 text-[11px] font-semibold text-rose-700 dark:text-rose-300">Insufficient {from.symbol} balance for this amount.</p> : suiGasReserveRequired ? <p id="swap-balance-warning" role="alert" className="mt-2 text-[11px] font-semibold text-amber-700 dark:text-amber-300">Keep some SUI in the wallet for network gas.</p> : from.id === "sui" && balanceReady ? <p className="mt-2 text-[11px] text-slate-500">SUI is also used for network gas, so an exact Max action is intentionally unavailable.</p> : null}
         </div>
 
-        <div className="relative h-0"><button type="button" onClick={swapAssets} aria-label="Switch swap assets" className="absolute left-1/2 top-[-19px] grid size-10 -translate-x-1/2 place-items-center rounded-xl border-4 border-white bg-[#0b1511] text-white transition hover:-translate-y-0.5 hover:bg-[#102b21] dark:border-[#0a1310]">↕</button></div>
+        <div className="relative h-0"><Button variant="secondary" size="icon" onClick={swapAssets} aria-label="Switch swap assets" className="absolute left-1/2 top-[-21px] -translate-x-1/2 border-4 border-white bg-[#eef3f0] text-[#173b2d] shadow-[0_10px_26px_rgba(7,16,13,.14)] hover:-translate-y-0.5 hover:scale-[1.03] dark:border-[#07100d] dark:bg-[#102b21] dark:text-white"><SwapIcon className="size-5"/></Button></div>
 
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[.035]">
+        <div className="rounded-[var(--pc-radius-card)] border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[.035]">
           <div className="flex items-center justify-between"><span className="text-xs font-medium text-slate-500">You receive</span>{quote ? <span className={`text-[11px] font-semibold ${quoteExpired ? "text-rose-600 dark:text-rose-300" : expiresInSeconds <= 10 ? "text-amber-600 dark:text-amber-300" : "text-[#294a3b] dark:text-[#d0dcd6]"}`}>{quoteExpired ? "Quote expired" : `Quote · ${expiresInSeconds}s`}</span> : null}</div>
-          <div className="mt-3 flex items-center justify-between gap-3"><strong className="truncate text-3xl font-semibold">{quote ? fromBaseUnits(quote.amountOutBaseUnits, to.decimals) : "—"}</strong><div className="flex items-center gap-2"><AssetIcon asset={to} /><span className="text-sm font-semibold">{to.symbol}</span></div></div>
+          <div className="mt-3 flex items-center justify-between gap-3"><strong className="min-w-0 flex-1 truncate text-3xl font-semibold">{quote ? fromBaseUnits(quote.amountOutBaseUnits, to.decimals) : "—"}</strong><TokenPicker items={assets.map(pickerAsset)} value={pickerAsset(to)} disabledIds={[from.id]} label="Destination token" onChange={(item) => { const asset = assets.find((candidate) => candidate.id === item.id); if (asset) setTo(asset); }} /></div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 p-3.5 text-xs dark:border-white/10">
+        <div className="rounded-[var(--pc-radius-control)] border border-slate-200 p-3.5 text-xs dark:border-white/10">
           <div className="grid gap-2 sm:grid-cols-2">
             <p className="flex justify-between gap-4"><span className="text-slate-500">Slippage</span><strong>{(slippageBps / 100).toFixed(2)}%</strong></p>
             <p className="flex justify-between gap-4"><span className="text-slate-500">PowerChain fee</span><strong>2.5%</strong></p>
@@ -341,12 +345,12 @@ export function SwapInterface() {
           {quote ? <div className="mt-3 border-t border-slate-200 pt-3 dark:border-white/10"><div className="flex items-center justify-between gap-3"><p className="text-slate-500">Route</p><span className="rounded-full bg-[#f1f4f2] px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-[#294a3b] dark:bg-[#09110e]/50 dark:text-[#d0dcd6]">{protection ? "Protected" : "Standard"}</span></div><p className="mt-1 font-semibold text-slate-800 dark:text-slate-100">{quote.providers.join(" → ") || "Cetus Aggregator"}</p><p className="mt-1 text-[11px] leading-4 text-slate-500">Cetus overlay fee is included in the quoted output. No sponsored gas: your connected wallet signs and pays Sui network gas.</p></div> : null}
         </div>
 
-        {!wallets.suiConnected ? <div className="rounded-xl bg-amber-50 px-3 py-2.5 text-xs font-medium text-amber-900 dark:bg-amber-950/30 dark:text-amber-100">Connect a Sui wallet to quote and sign swaps.</div> : balanceState === "error" ? <div className="flex items-center justify-between gap-3 rounded-xl bg-amber-50 px-3 py-2.5 text-xs font-medium text-amber-900 dark:bg-amber-950/30 dark:text-amber-100"><span>Balance preflight is unavailable. Quotes stay disabled until the source balance can be verified.</span><button type="button" onClick={() => void loadBalance()} className="shrink-0 font-bold underline underline-offset-2">Retry</button></div> : null}
+        {!wallets.suiConnected ? <div className="rounded-xl bg-amber-50 px-3 py-2.5 text-xs font-medium text-amber-900 dark:bg-amber-950/30 dark:text-amber-100">Connect a Sui wallet to quote and sign swaps.</div> : balanceState === "error" ? <div className="flex items-center justify-between gap-3 rounded-xl bg-amber-50 px-3 py-2.5 text-xs font-medium text-amber-900 dark:bg-amber-950/30 dark:text-amber-100"><span>Balance preflight is unavailable. Quotes stay disabled until the source balance can be verified.</span><Button variant="ghost" size="sm" onClick={() => void loadBalance()} className="min-h-8 shrink-0 px-2">Retry</Button></div> : null}
         {status === "submitted" && submittedDigest ? <TransactionCompleted chain="SUI" digest={submittedDigest} explorerUrl={suiscanTransactionUrl(submittedDigest)} label="Swap transaction submitted" finalityNotice="Verify execution status before treating the operation as confirmed. Bridge settlement uses separate finality and reconciliation evidence." /> : message ? <TransactionMessage tone="error">{message}</TransactionMessage> : null}
 
-        <button type="button" onClick={quoteExpired ? () => void loadQuote() : quote ? () => setReviewOpen(true) : () => void loadQuote()} disabled={!canQuote || status === "quoting" || status === "signing"} className="pc-button-light min-h-12 w-full rounded-xl px-4 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-45">
-          {status === "signing" ? "Confirm in wallet…" : status === "quoting" ? "Getting quote…" : quoteExpired ? "Refresh quote" : quote ? "Review & swap" : "Get swap quote"}
-        </button>
+        <Button variant="primary" size="lg" onClick={quoteExpired ? () => void loadQuote() : quote ? () => setReviewOpen(true) : () => void loadQuote()} disabled={!canQuote || status === "signing"} loading={status === "quoting" || status === "signing"} loadingLabel={status === "quoting" ? "Getting quote…" : "Confirm in wallet…"} className="w-full">
+          {quoteExpired ? "Refresh quote" : quote ? "Review & swap" : "Get swap quote"}
+        </Button>
       </div>
 
       {reviewOpen && quote && wallets.suiAddress ? (
@@ -354,7 +358,7 @@ export function SwapInterface() {
           <section ref={reviewDialogRef} className="pc-review-sheet w-full max-w-md rounded-[26px] p-4 text-slate-950 dark:text-white sm:p-5" role="dialog" aria-modal="true" aria-labelledby="swap-review-title">
             <div className="flex items-start justify-between gap-4">
               <div><p className="text-[10px] font-bold uppercase tracking-[.18em] text-[#557568] dark:text-[#b9c8c1]">Wallet confirmation</p><h3 id="swap-review-title" className="mt-1 text-xl font-semibold tracking-tight">Review swap</h3><p className="mt-1 text-xs leading-5 text-slate-500">Check the protected output and payer before opening your wallet.</p></div>
-              <button type="button" onClick={() => setReviewOpen(false)} disabled={status === "signing"} className="pc-button-light grid size-9 shrink-0 place-items-center rounded-xl text-lg disabled:cursor-not-allowed disabled:opacity-45" aria-label="Close swap review">×</button>
+              <Button variant="secondary" size="icon" onClick={() => setReviewOpen(false)} disabled={status === "signing"} className="size-9 shrink-0 text-lg" aria-label="Close swap review">×</Button>
             </div>
 
             <div className="mt-4 rounded-2xl border pc-hairline bg-white/65 p-4 dark:bg-white/[.025]">
@@ -380,8 +384,8 @@ export function SwapInterface() {
             <div className="mt-3 flex items-center justify-between gap-3 rounded-xl bg-[#f1f4f2] px-3 py-2.5 text-[11px] text-[#294a3b] dark:bg-white/[.045] dark:text-[#d0dcd6]"><span>{protection ? "Minimum-output protection enabled" : "Standard slippage protection"}</span><strong>{quoteExpired ? "Expired" : `${expiresInSeconds}s`}</strong></div>
 
             <div className="mt-4 grid grid-cols-[.72fr_1.28fr] gap-2">
-              <button type="button" onClick={() => setReviewOpen(false)} disabled={status === "signing"} className="pc-button-light min-h-11 rounded-xl px-4 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-45">Back</button>
-              <button type="button" onClick={() => void execute()} disabled={quoteExpired || status === "signing" || !balanceReady || insufficientBalance || suiGasReserveRequired} className="pc-button-primary min-h-11 rounded-xl px-4 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-45">{status === "signing" ? "Opening wallet…" : quoteExpired ? "Quote expired" : "Confirm & open wallet"}</button>
+              <Button variant="secondary" onClick={() => setReviewOpen(false)} disabled={status === "signing"}>Back</Button>
+              <Button variant="primary" onClick={() => void execute()} disabled={quoteExpired || !balanceReady || insufficientBalance || suiGasReserveRequired} loading={status === "signing"} loadingLabel="Opening wallet…">{quoteExpired ? "Quote expired" : "Confirm & open wallet"}</Button>
             </div>
           </section>
         </div>

@@ -1,0 +1,4 @@
+"use client";
+import { useState } from "react";
+import { cn } from "./cn";
+export function Avatar({ src, alt = "", fallback, size = 36, className }: { src?: string | null; alt?: string; fallback: string; size?: number; className?: string }) { const [failed,setFailed]=useState(false); const initials=fallback.trim().split(/\s+/).map(part=>part[0]).join("").slice(0,2).toUpperCase(); return <span className={cn("grid shrink-0 place-items-center overflow-hidden rounded-full border border-slate-200 bg-slate-100 font-bold text-slate-600 shadow-sm dark:border-white/10 dark:bg-white/[.07] dark:text-slate-200",className)} style={{width:size,height:size,fontSize:Math.max(10,Math.round(size*.3))}}>{src&&!failed?<img src={src} alt={alt} className="size-full object-cover" onError={()=>setFailed(true)}/>:<span aria-hidden="true">{initials||"?"}</span>}</span>; }

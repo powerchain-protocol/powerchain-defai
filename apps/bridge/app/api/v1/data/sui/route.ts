@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     const data = await getSuiWpwrcSnapshot(owner);
     const metadata = await getSuiCoinMetadata(String(data.coinType)).catch(() => null);
     return NextResponse.json({ ...data, metadata }, { headers: { "cache-control": "no-store, max-age=0" } });
-  } catch (error) {
-    return NextResponse.json({ error: "CHAIN_DATA_UNAVAILABLE", message: error instanceof Error ? error.message : "Sui data unavailable" }, { status: 503, headers: { "cache-control": "no-store" } });
+  } catch {
+    return NextResponse.json({ error: "CHAIN_DATA_UNAVAILABLE", message: "Sui chain data is temporarily unavailable" }, { status: 503, headers: { "cache-control": "no-store, max-age=0", pragma: "no-cache" } });
   }
 }

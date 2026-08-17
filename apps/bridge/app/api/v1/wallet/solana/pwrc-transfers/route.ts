@@ -15,10 +15,10 @@ export async function GET(request: NextRequest) {
       status: data.source === "unavailable" ? 503 : 200,
       headers: { "Cache-Control": "no-store, max-age=0" },
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      { code: "PWRC_TRANSFER_HISTORY_UNAVAILABLE", message: error instanceof Error ? error.message : "PWRC transfer history unavailable" },
-      { status: 503, headers: { "Cache-Control": "no-store, max-age=0" } },
+      { code: "PWRC_TRANSFER_HISTORY_UNAVAILABLE", message: "PWRC transfer history is temporarily unavailable" },
+      { status: 503, headers: { "Cache-Control": "no-store, max-age=0", Pragma: "no-cache" } },
     );
   }
 }

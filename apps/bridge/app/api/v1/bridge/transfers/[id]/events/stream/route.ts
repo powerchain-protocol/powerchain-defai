@@ -33,8 +33,8 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
           if (last) cursor = last;
           write(`event: snapshot\ndata: ${JSON.stringify({ data: snapshot })}\n\n`);
           if (TERMINAL.has(snapshot.status)) return close();
-        } catch (error) {
-          write(`event: error\ndata: ${JSON.stringify({ error: error instanceof Error ? error.message : "TRANSFER_STREAM_FAILED" })}\n\n`);
+        } catch {
+          write(`event: error\ndata: ${JSON.stringify({ error: "TRANSFER_STREAM_FAILED" })}\n\n`);
           return close();
         }
         timer = setTimeout(() => void tick(), 2_000);

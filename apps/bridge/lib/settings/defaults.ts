@@ -4,7 +4,7 @@ import type { PowerChainUserSettings, UserSessionSecrets } from "@/types/user-se
 export const DEFAULT_JUPITER_SWAP_API = "https://api.jup.ag/swap/v2";
 
 export const DEFAULT_USER_SETTINGS: PowerChainUserSettings = Object.freeze({
-  version: 2,
+  version: 3,
   profile: Object.freeze({ displayName: "", preferredCurrency: "USD" }),
   connectivity: Object.freeze({
     useCustomApi: false,
@@ -26,6 +26,7 @@ export const DEFAULT_USER_SETTINGS: PowerChainUserSettings = Object.freeze({
     statusPollMs: 5_000,
     preferRealtime: true,
   }),
+  operations: Object.freeze({ statusRefreshMs: 30_000, showProcessTelemetry: true }),
 });
 
 export const EMPTY_SESSION_SECRETS: UserSessionSecrets = Object.freeze({ powerChainApiKey: "", jupiterApiKey: "" });

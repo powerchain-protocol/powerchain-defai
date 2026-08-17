@@ -1,7 +1,7 @@
 /** Canonical browser routes for the PowerChain DeFAI application. */
 export const APP_ROUTES = Object.freeze({
-  home: "/dashboard",
-  dashboard: "/dashboard",
+  home: "/",
+  dashboard: "/",
   chat: "/chat",
   swap: "/swap",
   bridge: "/bridge",
@@ -81,7 +81,7 @@ export function isDashboardWorkspaceRoute(pathname: string): boolean {
 }
 
 export const APP_REDIRECTS = [
-  { source: "/", destination: APP_ROUTES.dashboard, permanent: false },
+  { source: "/dashboard", destination: APP_ROUTES.dashboard, permanent: true },
   { source: "/home", destination: APP_ROUTES.dashboard, permanent: true },
   { source: "/app", destination: APP_ROUTES.dashboard, permanent: true },
   { source: "/defai", destination: APP_ROUTES.chat, permanent: true },

@@ -63,3 +63,6 @@ allowBuilds:
   protobufjs: true
   tiny-secp256k1: true
   usb: true
+  # Reviewed application SDK lifecycle scripts required by the installed dependency graph.
+  "@google/genai": true
+  "@reown/appkit": true

@@ -1,0 +1,7 @@
+"use client";
+import type { ReactNode } from "react";
+import { cn } from "./cn";
+export type TabItem<T extends string> = { value: T; label: string; icon?: ReactNode; badge?: string };
+export function Tabs<T extends string>({ value, onValueChange, items, label, className }: { value: T; onValueChange: (value:T)=>void; items: readonly TabItem<T>[]; label:string; className?:string }) {
+  return <div className={cn("grid gap-1 rounded-[var(--pc-radius-card)] border border-slate-200/80 bg-slate-100/80 p-1 dark:border-white/8 dark:bg-white/[.035]", className)} style={{gridTemplateColumns:`repeat(${items.length},minmax(0,1fr))`}} role="tablist" aria-label={label}>{items.map(item=>{const active=value===item.value;return <button key={item.value} type="button" role="tab" aria-selected={active} onClick={()=>onValueChange(item.value)} className={cn("flex min-h-11 items-center justify-center gap-2 rounded-[var(--pc-radius-control)] px-3 text-xs font-semibold transition-all duration-200", active?"bg-white text-slate-950 shadow-[0_6px_18px_rgba(7,16,13,.08)] dark:bg-white/[.09] dark:text-white":"text-slate-500 hover:bg-white/60 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/[.05] dark:hover:text-white")}>{item.icon}<span>{item.label}</span>{item.badge?<span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[9px] dark:bg-white/10">{item.badge}</span>:null}</button>})}</div>;
+}

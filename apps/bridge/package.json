@@ -16,7 +16,7 @@
     "build": "node ../../scripts/next-cli.mjs build",
     "start": "node ../../scripts/next-cli.mjs start --port 3000",
     "typecheck": "tsc --noEmit",
-    "predev": "pnpm -w workspace:install:ensure && pnpm -w env:bootstrap && pnpm -w prisma:ensure",
+    "predev": "pnpm -w workspace:install:ensure && pnpm -w env:bootstrap && pnpm -w prisma:ensure && node ../../scripts/clean-next-dev-cache.mjs apps/bridge",
     "prebuild": "pnpm -w workspace:install:check && pnpm -w env:check && pnpm -w prisma:ensure",
     "pretypecheck": "pnpm -w workspace:install:check && pnpm -w env:check && pnpm -w prisma:ensure",
     "preview:cloudflare": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
@@ -65,7 +65,7 @@
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",
     "tailwindcss": "4.1.14",
-    "typescript": "7.0.2",
+    "typescript": "5.9.3",
     "wrangler": "4.120.0"
   }
 }

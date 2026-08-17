@@ -18,6 +18,10 @@ must(pkg.scripts?.["env:runtime:check"]?.includes("env-runtime-check.mjs product
 must(pkg.scripts?.["deploy:preflight"]?.includes("pnpm env:runtime:check"),"deploy preflight must validate live production environment values");
 must(read("scripts/production-smoke.mjs").includes("POWERCHAIN_SMOKE_ATTEMPTS") && read("scripts/production-smoke.mjs").includes("assertSecurityHeaders") && read("scripts/production-smoke.mjs").includes("POWERCHAIN_SMOKE_API_KEY") && read("scripts/production-smoke.mjs").includes("must use HTTPS outside localhost"),"production smoke must include bounded retry, authenticated API access, HTTPS enforcement and security-header checks");
 must(fs.existsSync(path.join(root,".env.example")) && fs.existsSync(path.join(root,".env.local.example")),"environment templates must be packaged");
+must(read("pnpm-workspace.yaml").includes('"@google/genai": true') && read("pnpm-workspace.yaml").includes('"@reown/appkit": true'),"Google GenAI and Reown AppKit lifecycle builds must be explicitly approved");
+must(read("scripts/approve-reviewed-builds.mjs").includes('"@google/genai"') && read("scripts/approve-reviewed-builds.mjs").includes('"@reown/appkit"'),"reviewed build approval helper must include Google GenAI and Reown AppKit");
+must(read("scripts/workspace-install-ensure.mjs").includes("approve-reviewed-builds.mjs"),"local workspace auto-repair must reconcile reviewed dependency build approvals before install");
+must(pkg.scripts?.["deps:builds:approve:required"]==="pnpm approve-builds @google/genai @reown/appkit","required dependency build approval helper must remain explicit and non-interactive");
 must(fs.existsSync(path.join(root,"scripts/bootstrap-env.mjs")),"pnpm environment bootstrap helper missing");
 must(read("pnpm-workspace.yaml").includes('"@prisma/engines": true') && read("pnpm-workspace.yaml").includes("sharp: true"),"reviewed pnpm build dependencies must be allowlisted");
 must(app.scripts.dev.includes("next-cli.mjs") && app.scripts.build.includes("next-cli.mjs"),"Next commands must run through telemetry-disabled wrapper");

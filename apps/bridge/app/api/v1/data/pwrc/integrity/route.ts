@@ -13,11 +13,11 @@ export async function GET() {
         "x-powerchain-asset-integrity": result.healthy ? "healthy" : "unhealthy",
       },
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({
       asset: "PWRC",
       healthy: false,
-      error: error instanceof Error ? error.message : "asset integrity unavailable",
+      error: "ASSET_INTEGRITY_UNAVAILABLE",
       checkedAt: new Date().toISOString(),
       authoritativeForBridgeAccounting: false,
     }, {

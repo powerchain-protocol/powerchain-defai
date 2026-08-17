@@ -8,5 +8,14 @@ export const metadata: Metadata = {
 };
 
 export default function StatusPage() {
-  return <main className="mx-auto max-w-5xl space-y-6"><PageHeader eyebrow="Operations" title="Runtime status" description="Fail-closed provider readiness and bounded request-policy diagnostics for wallet actions, with non-authoritative operational telemetry."/><OperationalStatusDashboard/></main>;
+  return (
+    <div className="mx-auto w-full max-w-[1440px] space-y-5 sm:space-y-6">
+      <PageHeader
+        eyebrow="Operations"
+        title="Runtime status"
+        description="Fail-closed provider readiness and bounded request-policy diagnostics for wallet actions, with non-authoritative operational telemetry."
+      />
+      <OperationalStatusDashboard />
+    </div>
+  );
 }
