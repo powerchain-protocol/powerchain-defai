@@ -6,51 +6,139 @@
   "artifacts": [
     {
       "path": "package.json",
-      "sha256": "f8492f8e6f4b3c8680bca96b86061c3d19476ed9c8499f0dc0c34705a1588af0"
+      "sha256": "8a6920ae9b3427923e37de66224d1ddcf98518359f3c6394231e3eaddb02ee58"
+    },
+    {
+      "path": "packages/database/package.json",
+      "sha256": "0acda4ee4e88aea4d297c4f3000295917c145403d960aaf55d402281fc22f91f"
+    },
+    {
+      "path": "packages/database/src/supabase.ts",
+      "sha256": "2f0a4fe443398df24bd46f96e75969eceba706894922c8df79fdf4d15226e3e8"
+    },
+    {
+      "path": "scripts/database-stack-production-check.mjs",
+      "sha256": "d165513bdd9bf2f3bcbdcaa989efa0d2e07346c531cec74b256de0137c4f0987"
+    },
+    {
+      "path": "config/env.defaults",
+      "sha256": "92baad5432763f91a7b977a04d19d302e30e923a4279938a7465b8db1ed87863"
+    },
+    {
+      "path": "apps/bridge/package.json",
+      "sha256": "8725da1866c07231dc3cd0d0c60f5aff6ec9fd9e0df9b57cfe1645df74627241"
+    },
+    {
+      "path": "apps/backend/package.json",
+      "sha256": "4a91dddbe857d8beed41eec71cadbff85560729127b9ce9c3fe401e34d91bd3c"
+    },
+    {
+      "path": "apps/worker-bridge/package.json",
+      "sha256": "7b7f28e5de927d6f3abca1aa542542e5e79609814ed8d07facb9b320c5fd444f"
+    },
+    {
+      "path": "apps/worker-claims/package.json",
+      "sha256": "413b1f0d491446f4933a963a508c9b8d6e65ac3b54e595c90cdc58f3fc91057b"
+    },
+    {
+      "path": "apps/worker-fees/package.json",
+      "sha256": "f50b2e724d1b4e0891c3fbed01add788d73462d7dc4cd09d288c925e5a1af74a"
+    },
+    {
+      "path": "scripts/lockfile-production-check.mjs",
+      "sha256": "53d77117eefd28b5ba8ce6783bad8ec89b467804a3417e55e4b108b6a39d691f"
+    },
+    {
+      "path": "scripts/workspace-dependency-boundaries-production-check.mjs",
+      "sha256": "7dc1600c960b86d9ada3722c26edbff001b0289baba32610e2ba2a1b1d018d50"
+    },
+    {
+      "path": "scripts/service-topology-production-check.mjs",
+      "sha256": "b7ea3f7c6542b55adb7b225b1bd1fb277c8492091eee0073cc58760740698d09"
+    },
+    {
+      "path": "scripts/swap-dependency-surface-production-check.mjs",
+      "sha256": "ad30bdc55694050a287e907c01d7201a74f29161b698cb21bababef540fcca6d"
+    },
+    {
+      "path": "docs/SWAP_DEPENDENCY_SURFACE.md",
+      "sha256": "830eb266432b9393087af47f54b0c776976dd9a61327efab2be49e2baee13f05"
+    },
+    {
+      "path": "docs/validation/SWAP_DEPENDENCY_SURFACE_2026-08-17.md",
+      "sha256": "98f9f38a79bf01569d3f6e1f87d8984478cbe3dfc2bfdb0237c4ee83c087834d"
+    },
+    {
+      "path": "README.md",
+      "sha256": "da4a3123130291a0dee4143ebb0e81d7d41771f3ad99a0bf9ff6daf18f7b0dc4"
     },
     {
       "path": "pnpm-workspace.yaml",
-      "sha256": "31f2a681d7b2975903e1bb04ccdbbd25d5de5248952dc8f70e14ec8129cf476d"
+      "sha256": "4ab5996d84d02b7f0535a8f390542c11b35d2ae0cb77921c5120e9d19528604c"
     },
     {
       "path": ".nvmrc",
-      "sha256": "68ca3fba3b7e864770cb61aeb306d4bd4354b68ab4dd38450860c5d823e42a53"
+      "sha256": "7e8a2fa94951112b894a3dbe3d05efef5e9263741fa49125f0a70f40fedab4cc"
     },
     {
       "path": ".node-version",
-      "sha256": "68ca3fba3b7e864770cb61aeb306d4bd4354b68ab4dd38450860c5d823e42a53"
+      "sha256": "7e8a2fa94951112b894a3dbe3d05efef5e9263741fa49125f0a70f40fedab4cc"
     },
     {
       "path": "scripts/require-node.mjs",
-      "sha256": "1797dc9b4d960d942c9fb9c8a21c6b27b45baf8528a62672fb03068660276117"
+      "sha256": "08eeb8d78a7f629f0c20cfe7c0f118a5b5392a523cb9e972b12355195d83313f"
     },
     {
       "path": "scripts/require-pnpm.mjs",
-      "sha256": "bda0ec2732fc7467b82a48399d9d733083fb6f830e73819350f323e71fc41379"
+      "sha256": "de26fe40a67af51e9462bc0264991d5e0971405721cf48fe9b0e01f27726ad07"
     },
     {
       "path": "scripts/react-type-resolution-production-check.mjs",
-      "sha256": "fdeb28eec26f1b1383af03516392ce6c32a0e60cc6886654e302b00e027c1159"
+      "sha256": "266fdf8af20bcc29f454c4ed258dfdd2eb1af6cca836eb907939caf6a86446ea"
+    },
+    {
+      "path": "scripts/workspace-config-check.mjs",
+      "sha256": "2419db9fc4a9125a2201a88baa8e34f6cf8bb7374408f85c743cddac40e63688"
+    },
+    {
+      "path": "scripts/workspace-production-check.mjs",
+      "sha256": "b5ee9603ad0ec2130399a5f8d28cdc2e3da484ee7e74ffe9ebc0831d951eb920"
     },
     {
       "path": "scripts/exact-optional-types-production-check.mjs",
-      "sha256": "9097b25c09ddb9a6043b2625fcd18c2c349adcc10dd4e05ca1ddc0fcaf615639"
+      "sha256": "bbe1fdd033e52e162c17d56cc923bcc155169adf2c99dd0953de295a056f5dbd"
     },
     {
       "path": "scripts/postinstall.mjs",
-      "sha256": "22c5232afc17120fa1b3388cc9c918239c94496a34c68198a698f13743ec5cc6"
+      "sha256": "fb2796434bf54269000fbaa2d59c9aca547fe0883922259a7b81ab36007a4275"
+    },
+    {
+      "path": "scripts/ensure-prisma-client.mjs",
+      "sha256": "0070dde315c0ff725fd22ec77cae7c9eed67d615cb2b4a3aa8154a42c49e1165"
+    },
+    {
+      "path": "scripts/workspace-typecheck-coverage-production-check.mjs",
+      "sha256": "4afec2a7de0d3bec93961240fc8da635ac54b7edbe0a3e522efe4c6334f2123d"
+    },
+    {
+      "path": "scripts/workspace-lifecycle-production-check.mjs",
+      "sha256": "7b4d3d441ae690e12f18500f90a8206587256310ae653b909166adee044cb313"
+    },
+    {
+      "path": "scripts/runtime-hardening-production-check.mjs",
+      "sha256": "eec603a1157a9cb55de9b6d61d7bbd17db62f04824bec0cadad3df5b2eaabaee"
     },
     {
       "path": "scripts/setup-local.sh",
-      "sha256": "8ce4441c1cb8e78ad0d1367bb6dd70fc0599724a854df55f25ee2236c67b27d5"
+      "sha256": "3a0d3d9dd15f6914b435fabcfb8198905666a2f8cff2217fefe0cfe949446e9f"
     },
     {
       "path": "scripts/bootstrap-env.mjs",
-      "sha256": "9606acff8c0a1d0350171537114fb3a07b5a443752b1124ccea5e45fa340feb3"
+      "sha256": "764d5948f2c64b419cb672714014fdfc75bcf21cb22a4eaa7bab76163af30989"
     },
     {
       "path": ".gitignore",
-      "sha256": "8044e0bf863e67505b234a1df0fc139670069eb59ffac14617f1a99228a8cf9e"
+      "sha256": "9d687b0133798fb49c0ca0cd661f0e7c2b9ba75b95c02ab7fba31a23982fb72b"
     },
     {
       "path": ".npmignore",
@@ -62,39 +150,219 @@
     },
     {
       "path": ".env.example",
-      "sha256": "6708bd1e82bd02adee3e5e35ca85ca404b684e5a018e5f9547e5fc13751bef79"
+      "sha256": "92baad5432763f91a7b977a04d19d302e30e923a4279938a7465b8db1ed87863"
     },
     {
       "path": ".env.local.example",
-      "sha256": "a981e1d75b6c2391c3d6a45aa50e3da42cba10f0ddae3742bdd2cc93062bca77"
+      "sha256": "924664446a72e7efc680b399691134b7ae2df43978ec610e67a59002ede518ed"
     },
     {
       "path": ".env.production.example",
-      "sha256": "2deb8af78eba172fc34ff087688c44b045cb0077b896f788f8b7a1e420996cf4"
+      "sha256": "03a24d9a6ce32e2ef98deac1966fc47bf5289b2df90d1bec12b55b5220bd53db"
     },
     {
       "path": "apps/bridge/proxy.ts",
-      "sha256": "24534090beddaf69acf5a98f94ac71f21121b1645fb0babb3385773c87868b85"
+      "sha256": "691144b4c54f6d082f3d2043abfac6d78ff1b34cbe564ad0e3f17fcd21afcd1c"
+    },
+    {
+      "path": "apps/bridge/server/routing/core-policy.ts",
+      "sha256": "33342f76afd04f2c86beb23ec578dcd32b561cdd4976bf6f051eaba78c4f9ef5"
+    },
+    {
+      "path": "apps/bridge/server/routing/api-router.ts",
+      "sha256": "ce4bcd8f4d534f639f00e93354f947b4a4b4519722323850d056f3953ef2293b"
+    },
+    {
+      "path": "apps/backend/src/utils/rate-limiter.ts",
+      "sha256": "46a94030f1ab58708d76e66c18ac465f0174ad789a776b739c7a3403cdbdfc92"
+    },
+    {
+      "path": "scripts/route-policy-production-check.mjs",
+      "sha256": "f1face4e01bb1b512faf02ed41e182979b70b0bc1f420d475f9958f4472efcaf"
+    },
+    {
+      "path": "apps/backend/src/routing/diagnostics.ts",
+      "sha256": "8b31af7e5897f9d31879357829debfcc3592db04225356beae9f5eee6c8e1de3"
+    },
+    {
+      "path": "apps/bridge/app/api/v1/system/route-policy/route.ts",
+      "sha256": "414b98946d716ea31f70ce9dd7a3cb5ce3f0909273b7b58332a611af041de79c"
+    },
+    {
+      "path": "apps/bridge/types/route-policy.ts",
+      "sha256": "f9fd8f6420550ba2332cc0e0936b6f83bb7a03e0b4b21dc8b19bac3508780048"
+    },
+    {
+      "path": "apps/bridge/lib/data/route-policy-validation.ts",
+      "sha256": "63e5da248d25458dd57346d75eb17cafb997667abb8e6b0d33f78ddbf2ca9205"
+    },
+    {
+      "path": "apps/bridge/backend/route-policy-client.ts",
+      "sha256": "05e0a65d948068438490006c86822cc235bbd3bf08cff680fb7182beeb04a85c"
+    },
+    {
+      "path": "apps/bridge/hooks/use-route-policy-diagnostics.ts",
+      "sha256": "7d46f4a791845b7cdc03b15c30d4f8d2db4d8ed1f445f960772e8bc681f2343d"
+    },
+    {
+      "path": "apps/bridge/components/status/operational-status-dashboard.tsx",
+      "sha256": "217ecd9078b38c72cea0f44ff838018e24def97c4368a0fe004b30990e0d0efe"
+    },
+    {
+      "path": "scripts/route-policy-diagnostics-production-check.mjs",
+      "sha256": "9082298a66164c8bfb981429d6d75ad459b486b6ca1b1b2c0524d0efd108a8ed"
+    },
+    {
+      "path": "docs/ROUTE_POLICY_DIAGNOSTICS.md",
+      "sha256": "30a1b0d4fe9866af66cdb34cd52faefc14a601e6ad9601418c15196381e3e88e"
+    },
+    {
+      "path": "docs/validation/ROUTE_POLICY_DIAGNOSTICS_2026-08-17.md",
+      "sha256": "ab2a80d7e11abc1676caf58f8435966e1c53fc15770d1e3fb0113e561bf4a9e1"
+    },
+    {
+      "path": "apps/bridge/server/services/system-readiness.ts",
+      "sha256": "0209347e6766b829872e949a2bc79e8b65fecf5a1f312840a5407ffa9c6b366d"
+    },
+    {
+      "path": "apps/bridge/app/api/v1/system/readiness/route.ts",
+      "sha256": "0e91ed17af45270c383b25ba7271c40c27cb17679600d9870a28075a2a453f1f"
+    },
+    {
+      "path": "apps/bridge/types/system-readiness.ts",
+      "sha256": "4a5eab82f6229ed7452029d29ec52f70fd60f7126381d593f40675efdebad904"
+    },
+    {
+      "path": "apps/bridge/lib/data/system-readiness-validation.ts",
+      "sha256": "e24d27992ddaa2571290ddabfd2c2ac9c74eab7ea48144672c2419fa957d78f4"
+    },
+    {
+      "path": "apps/bridge/backend/system-readiness-client.ts",
+      "sha256": "39636eeb9e0b5acfb6dbff51a9522dd313806646793572eb8e85dcaad92afbf3"
+    },
+    {
+      "path": "apps/bridge/hooks/use-system-readiness.ts",
+      "sha256": "c5fc6a4e9a0a09805c1232a726d80aee3385f8f46fe8663b0cc84a5cf8a2bf60"
+    },
+    {
+      "path": "scripts/system-readiness-production-check.mjs",
+      "sha256": "dc412446028194947c922fa437a3f4ff38e4aee4deb338b6472b1a236ae3592f"
+    },
+    {
+      "path": "scripts/production-smoke.mjs",
+      "sha256": "c1917e517a5e5e93a418a9f6ac78f0bc3adf61782d0bd1bc117e8c7833dc7b61"
+    },
+    {
+      "path": "docs/PRODUCTION_READINESS.md",
+      "sha256": "aa7eef0ef3a183073d5ef2b6acb5283562e70afeba00aab26ecef5b458fc61cb"
+    },
+    {
+      "path": "docs/validation/RUNTIME_TRUST_2026-08-17.md",
+      "sha256": "d14388a9749c1e39ada306d3c7909bdb177c5dfdfcab9aaf3c94d16606e3ebc4"
+    },
+    {
+      "path": "docs/validation/SYSTEM_READINESS_2026-08-17.md",
+      "sha256": "4ec01bbcdd79a67dd3325998c8386fa3c661bb1c767cca46523bbe2a87c298e5"
+    },
+    {
+      "path": "scripts/route-observability-production-check.mjs",
+      "sha256": "2280618474bf03a85b90f43f661aa398fe8f454350755afb5fb3e94d9634c70f"
+    },
+    {
+      "path": "docs/ROUTE_POLICY_ENFORCEMENT.md",
+      "sha256": "a6d0dc8656e4182081a4032fc63d3b125415672ab80b9d45724a6bb654d51c2d"
+    },
+    {
+      "path": "docs/validation/ROUTE_POLICY_ENFORCEMENT_2026-08-17.md",
+      "sha256": "a7c3ce44a41ad4b62f95100bda3e243f83dfbaf9c6dc5363cbe85da56e20edff"
     },
     {
       "path": "scripts/api-key-security-production-check.mjs",
-      "sha256": "80abf528dca1a231dd04575de9342c65a9d157a20f64e42656e1bf3476868839"
+      "sha256": "8156ebaef0ce3f92678fe61fe0f6b0eb5bf2adf6b1651bd7e4ec57885a2ffd19"
+    },
+    {
+      "path": "scripts/runtime-trust-production-check.mjs",
+      "sha256": "f41ddd3fcfb8f153d726933df4b994da3647628f51111af68a80b6a1f46d6d17"
+    },
+    {
+      "path": "scripts/env-runtime-check.mjs",
+      "sha256": "8a608760d063456d07bfe8b2448207e853fa86bc71babe04df6a6b99acf6c49b"
+    },
+    {
+      "path": "apps/bridge/wrangler.jsonc",
+      "sha256": "2819653242143038e6842e004413d219b66151b45c105fdd8786b96d7e46e2df"
+    },
+    {
+      "path": "apps/bridge/server/rate-limiter.ts",
+      "sha256": "07f7f38e5927c76df4e1ad2202488a40787cb4d2ea859dc68cec1b990d94d9d2"
+    },
+    {
+      "path": "scripts/cloudflare-production-check.mjs",
+      "sha256": "3ea8237b7246cced5fc3a4498e41c86d1a74bd4ea6b09184e7a6a785680427e2"
+    },
+    {
+      "path": "scripts/ci-production-check.mjs",
+      "sha256": "6cef1a7ac969a8388672baab5df39411dde922e262bb1f867035554d428a99eb"
+    },
+    {
+      "path": "scripts/defai-production-check.mjs",
+      "sha256": "a4b7dc7ad1ae33b5c11f3207f2c5a516090c5a2f6cb5505a0067206eb5627f26"
+    },
+    {
+      "path": "scripts/ai-ui-stack-production-check.mjs",
+      "sha256": "39b92a6cca3b323331145c2791270960405ff3ffd6e48bc46c01c3bf9ccada63"
+    },
+    {
+      "path": "apps/backend/src/services/ai/provider-clients.ts",
+      "sha256": "09e7ef9b9eb2f61020a258848ef97592fb2f93493009363b0805e9f20e73fb21"
+    },
+    {
+      "path": "apps/backend/src/services/staking.ts",
+      "sha256": "502c309ffe2b69f998b6767f059597158147a290c5f38f351e05f6aaea9ac3dd"
+    },
+    {
+      "path": "apps/chat/package.json",
+      "sha256": "a712e6fa06c13b9239e0bc24a019db18465b4cd37815440cc672dbaec453082c"
+    },
+    {
+      "path": "apps/chat/src/ai/providers.ts",
+      "sha256": "27e9cd522671d50a7c633be13065d9f6e6711d2a70c29981bd47683d4fd2fa2b"
+    },
+    {
+      "path": "apps/chat/src/ai/model-settings.ts",
+      "sha256": "4c0fa1a73868aa9b9744456573881ad2b7634b028ec8b8bdd1d069679d950a51"
+    },
+    {
+      "path": "apps/chat/src/ai/messages.ts",
+      "sha256": "d3caae99828ed0b303a689e2c4d5df56453f6061ead7b0f0a51f86a194d0f03f"
+    },
+    {
+      "path": "apps/chat/src/icons.tsx",
+      "sha256": "b4858d212b235d70c447fd1a24221b6282f48dde8cfaff93d31b61f33bad2a93"
+    },
+    {
+      "path": "apps/bridge/components/icons.tsx",
+      "sha256": "758a5f6f41899a0b659e41d458d7ac668a751b63eb41854353c092fe99f12bca"
+    },
+    {
+      "path": "scripts/product-safety-production-check.mjs",
+      "sha256": "8d7ae18d1dfd8a57c6ed75dc1be811bf409449d0a042e88df5254163755e0d89"
     },
     {
       "path": "scripts/generate-separated-api-contracts.mjs",
-      "sha256": "27d9a093fc2f6ef9f44e91ea8cddb52cbffa157d4f70b394b0a2db3394d7bec6"
+      "sha256": "441e2dffa9245b7fe9774b25414130567408d472c200fb97f9a3fe7d596196e1"
     },
     {
       "path": "scripts/generate-api-registry.mjs",
-      "sha256": "9bf51c4af60ee11f61cc29910fc987444e3b7d3c1bb13d075e14845e77f2819f"
+      "sha256": "17f7e27a03d527e8a1bfd2f6e1e77d1290d9d7b475a514cc3e0364c29f1e2ea0"
     },
     {
       "path": "scripts/generate-postman.mjs",
-      "sha256": "e3175c76d50881ca9b9741fb8c9eeaf76c2b2c7e01d092864a94893a9395cfd8"
+      "sha256": "d26187afbe473e126262ee3b6e6bb54dad1f403f7f7034d70fc587d2ccee0189"
     },
     {
       "path": "scripts/route-contract-check.mjs",
-      "sha256": "1d35c324fcf369aaf236abdf374b145de967223bb692546ac0d8fa2c7d8b88d1"
+      "sha256": "71fa2fa5fb1719d367738cd4408974283573a0891f1a2242cc69731f228e9e9a"
     },
     {
       "path": "scripts/root-layout-production-check.mjs",
@@ -110,11 +378,55 @@
     },
     {
       "path": "apps/bridge/next.config.ts",
-      "sha256": "66b15da58a6d7388fc7940d69538df51d0177bda9603ad5cdc5b8f6da2961093"
+      "sha256": "2ee1833571f2bb747740b0d61ff35df6b6b6a05e0a8989eed0bf859905599e30"
+    },
+    {
+      "path": "packages/database/src/prisma.ts",
+      "sha256": "389cf32c10340d2e568baf96f5e8bd1405514cd9c1b074d7e61c5e122056aa11"
+    },
+    {
+      "path": "packages/database/src/index.ts",
+      "sha256": "bec34254b2386a4cdbf1a5428c4568415a036111af3e66872f035c61b161de76"
+    },
+    {
+      "path": "packages/database/src/queries.ts",
+      "sha256": "4e169e14ed45ae24fe49b4a5de09d09779ecfa28389ae6d1b670cea2772abddd"
+    },
+    {
+      "path": "packages/runtime/package.json",
+      "sha256": "0f04f1f9a30676dc22963f4505b90d24c7c8519cd09e6fb2ec80ce8e0c687089"
+    },
+    {
+      "path": "apps/bridge/lib/realtime/reconnecting-websocket.ts",
+      "sha256": "1e27c43d017e96f3d9b0b705f618287c491336198573857f58c4a2772eb51f09"
+    },
+    {
+      "path": "apps/bridge/lib/wallet/cursor.ts",
+      "sha256": "b40909e9e8bdd16fa52a168895dee9d39f85e7a9fb954d1599c02711f3fc21c4"
+    },
+    {
+      "path": "programs/solana/powerchain_escrow/src/lib.rs",
+      "sha256": "006261dbd9506d4932073d116e9b60b231e2fb8a66a0f2c8d16bd10bd07a4b9d"
+    },
+    {
+      "path": "programs/solana/tests/powerchain-escrow.ts",
+      "sha256": "6fca9cd0f631a83984394ebfa9894255c2d0164ea7f26e362bbaf40a1a17d1b6"
+    },
+    {
+      "path": "docs/BUILD_RECOVERY.md",
+      "sha256": "db5f74baa8f2d1cd37660e43a07f54b69281d289fe168fc31befff4440580575"
+    },
+    {
+      "path": "docs/ESCROW.md",
+      "sha256": "5885420402269b4f2a3846c016ff72501b6721bd76d31b9248126b4192a753f2"
+    },
+    {
+      "path": "docs/VALIDATION_RUNTIME_LIFECYCLE_HARDENING_2026-08-16.md",
+      "sha256": "e3f2220dc995a07d129875d64ba175d099d748d7b3eaa40a566ff5cd4223c44f"
     },
     {
       "path": "apps/backend/src/config/endpoints.ts",
-      "sha256": "8dace1df046435cf783e6e4193b1aa267f221aa75b5c26a5f023eb6de412caef"
+      "sha256": "73fd6618e570a406f6dce26872e5459d601dc2d60e308cb6bb77c0ac2a14b106"
     },
     {
       "path": "docs/RUNTIME_PACKAGE_BOUNDARIES.md",
@@ -126,15 +438,15 @@
     },
     {
       "path": "packages/sdk/src/swap-client.ts",
-      "sha256": "c4a058f87ae0fe0dcb1d31ff2bb3204710687e11afd11ec8236fb573cbba98ff"
+      "sha256": "eef1bec1de4bb65e9be0a77a6e2ffcb1302003f2d7c840caeb261bcb4ebba795"
     },
     {
       "path": "packages/sdk/src/bridge-client.ts",
-      "sha256": "86d8dba963dccf80bd3fff0815703303e60a888c1ef84d284ab152886859c4c2"
+      "sha256": "1a34c205e46c2611f4787c00c7f6dbda41d346afae79f7ef73993ae63eb2128b"
     },
     {
       "path": "apps/backend/src/routing/swap-routes.ts",
-      "sha256": "a4e4672fc84f2dc6bc1ce63f7ba4a12dc2e44b6fe83ca35dafc90c124ea54151"
+      "sha256": "d84b8a5a372692320f8874cab0f3f5218b36e40f911a649416ccdc134caa31dd"
     },
     {
       "path": "apps/backend/src/routing/bridge-routes.ts",
@@ -142,23 +454,23 @@
     },
     {
       "path": "api/swap/openapi.yaml",
-      "sha256": "3faed0b8851abf89e02fa62a353bdf30db6ef0a3ef7bb57d61144dac45f33736"
+      "sha256": "9dac98f7ac8b3c1566dce4351828552e61ca4628e97be758687fa7bcbf578f16"
     },
     {
       "path": "api/bridge/openapi.yaml",
-      "sha256": "282b76879d20a9ce72b79bc71844b65b40d8fc1b1a429d67bf2c6dad33a8ed31"
+      "sha256": "c7f091f2a7c5aa8e794fafc9ef994cc7beab99a8c505c695ea8045d023b5c17e"
     },
     {
       "path": "api/postman/PowerChain-DeFAI.postman_collection.json",
-      "sha256": "b661718e82cd5200956281d8271aaecbe8b2e4c1306bd91c30c4f3a70188a8fc"
+      "sha256": "6700b3729b5f0eef641c0def0f4991264862c0cb59844b079b25f84d88e31c22"
     },
     {
       "path": "api/postman/API_DOCS.md",
-      "sha256": "d5d4a98c5f75d3e1f79a9af0cc4be99d193757faf80d32e008151d28a7596bb1"
+      "sha256": "31245f2561c8731cfa91a962845c9573499e1bd7adc0a307c12f832b8fe30a5d"
     },
     {
       "path": "api/postman/specs/PowerChain-DeFAI.postman_specs.json",
-      "sha256": "cac232cf10a7ae2903ed90cd4efeea1035e0015ef4916d77d73dbd67770be43e"
+      "sha256": "dc9e8673932d4cf5a08a181e509a674e5aecdc92dce81e7233be3b78383c342f"
     },
     {
       "path": "api/postman/specs/README.md",
@@ -190,27 +502,27 @@
     },
     {
       "path": "scripts/postman-lifecycle-production-check.mjs",
-      "sha256": "0c2201ede6001a459e26ed06e360b45df80fa62c6e14919e6b651d0df0ead054"
+      "sha256": "063e7222ddbd145647c072752d36af1fbb9322af677d1a94a1c76a357e2a724c"
     },
     {
       "path": "api/postman/PowerChain-DeFAI.local.postman_environment.json",
-      "sha256": "36513a1447ac7d2966038753d8056cb7351929bb197df6e3d959000a2157ea44"
+      "sha256": "3f83a5f457099c521e5dbbd937ba2dc9c99887fe7a5c1af8680f21ceced8b5fe"
     },
     {
       "path": "api/postman/PowerChain-DeFAI.production.postman_environment.json",
-      "sha256": "01a1fe246a105adade8e7ce568f9d5a6d5eef8799c0dce2ac24cc49ca719c7c3"
+      "sha256": "fc5e1a9127733cf2677ac510cf7aab49fe79a92d3f3164817f08225838628da4"
     },
     {
       "path": "api/bridge/postman/PowerChain-Bridge.postman_collection.json",
-      "sha256": "f996e572f2ca2f56df8c7ccee0cb50eaa7af09394a9870da25ab992f47f1c621"
+      "sha256": "171eaa9d3bd3e009c9bcc63b84dd279b297068b7b79223db4dc53d3119c3ded6"
     },
     {
       "path": "api/swap/postman/PowerChain-Swap.postman_collection.json",
-      "sha256": "60098849096174439cff3cc3e9a8e600dfb96cac19e415fa637a7a4e61ed7bfb"
+      "sha256": "ba9c5205e43a8f43f567d42b183707fa55b92cdb68323134c7e17b4c43c9d1d0"
     },
     {
       "path": "scripts/check-program-placeholders.mjs",
-      "sha256": "7d20f0c5c1e0bab5c1f83d3b7541eaa7b03519394123c3ec8f838b276eff6089"
+      "sha256": "b1c999f289edf64c6972d1cc3b7e1275857444771e1b920589a4ec6f4780f9f6"
     },
     {
       "path": "scripts/sync-protocol-deployments.mjs",
@@ -226,15 +538,15 @@
     },
     {
       "path": "api/package.json",
-      "sha256": "27800745eff154efc022db3a9809c28a2764070acaa425b51d1adbbd09707f38"
+      "sha256": "5f95d73cb03d41749d95920dd86621a6ad8b155d3d629520a7a79f1ce16ace03"
     },
     {
       "path": "api/README.md",
-      "sha256": "443a96f1f987c583d11ded373e10ec820bc1122110d4ea80013e3e9a42d45e5d"
+      "sha256": "8bc639679bb2ef46b6a310e2874cdd539cba5a16669e33f60e970016eabf3afb"
     },
     {
       "path": "api/swagger.yaml",
-      "sha256": "fee119610f3e7f54893f24f7df35e85061c4fb5bcba956b854089524d430fa13"
+      "sha256": "84f43caf0ee78a29408f013f9758c33cabcc6f0056183231a753184c3166f62d"
     },
     {
       "path": "tokens/metadata/providers.json",
@@ -261,20 +573,308 @@
       "sha256": "953172773625b95347bd7bcc4173641bd40ea9d0c94e410f56c103fee3e8f66a"
     },
     {
+      "path": "packages/protocol/src/programs.ts",
+      "sha256": "52b1f3f79b43c54403f4ea0be1e9734f5207f4dfae34a4b3e6d86cb8227e2789"
+    },
+    {
+      "path": "apps/bridge/types/programs.ts",
+      "sha256": "1b7aed97a935536c0f8831a83d0ac0e4f73028183805ae3dbd9916569628cb2b"
+    },
+    {
+      "path": "apps/bridge/server/services/program-readiness.ts",
+      "sha256": "2c649776bff075b5f82bd5ec35441cb1f2a02977e2a722b2be61047c76450941"
+    },
+    {
+      "path": "apps/bridge/app/api/v1/programs/readiness/route.ts",
+      "sha256": "0db19dacf54df7c42b890491af7216b3fae426e216fd39f9b10f6dc3dd056821"
+    },
+    {
+      "path": "apps/bridge/app/api/v1/programs/readiness/[programId]/route.ts",
+      "sha256": "159cf83629a44c01d468e8c60ae59d21d1f58c17e87baf8b5cc2c56f85539058"
+    },
+    {
+      "path": "apps/bridge/backend/program-client.ts",
+      "sha256": "2b373bb9622d040b260c5f4deece2a1914653e9d2cabe4d55cd2fbb558432383"
+    },
+    {
+      "path": "apps/bridge/hooks/use-program-readiness.ts",
+      "sha256": "7ce70e91d4cd7ec9c8e8d9759c781399d1ebd9d61042b343739e2553329a1f29"
+    },
+    {
+      "path": "apps/bridge/lib/data/program-runtime-validation.ts",
+      "sha256": "5f52759784344693f09ebf3262d966e515ce9578070efaad7cece759965b0720"
+    },
+    {
+      "path": "apps/bridge/components/protocol/protocol-dashboard.tsx",
+      "sha256": "b84bb3da24a14bf8a41ac6fe20fb17a31da9ac2875f6596c48ae5976c34f117f"
+    },
+    {
+      "path": "apps/bridge/app/protocol/page.tsx",
+      "sha256": "e79d461bfc0bd24bc2b089e0ee0c5fb74989bef7206b6ca4bc9efa0f4a24ba34"
+    },
+    {
+      "path": "apps/bridge/app/protocol/loading.tsx",
+      "sha256": "7a95c722034b97b7f964d352a45507488b602c7852c990d6417098692c869507"
+    },
+    {
+      "path": "scripts/program-contract-runtime-production-check.mjs",
+      "sha256": "4dba0c4d2950e2a8c48ef1f8cebec92b1b8b2794560976d1fd3010bd708a9fde"
+    },
+    {
+      "path": "scripts/program-runtime-freshness-production-check.mjs",
+      "sha256": "91910cca9ebdc8fa050c73cb786d428b7f257bdd83f656e0690ec90b030daf74"
+    },
+    {
+      "path": "scripts/program-runtime-cache-production-check.mjs",
+      "sha256": "0cd3aa3372b025da29f865d670501fa2cc8827b4f18e15071c30ea26e203aeb3"
+    },
+    {
+      "path": "scripts/program-runtime-abort-cache-production-check.mjs",
+      "sha256": "330731983ec634e00e89fed1beba46f340039dfc9fa8ac2ae609340c6570b7ec"
+    },
+    {
+      "path": "scripts/program-deployment-evidence-production-check.mjs",
+      "sha256": "17cf698bfdb6908359af60dc95093b8da20e8407135527902432f17f325c5fe5"
+    },
+    {
+      "path": "docs/PROGRAM_DEPLOYMENT_EVIDENCE.md",
+      "sha256": "b0761d72745bf04b42d6016fa1a45356cd510b0094afa0a69e0e63d60ff8c70b"
+    },
+    {
+      "path": "docs/validation/PROGRAM_DEPLOYMENT_EVIDENCE_2026-08-17.md",
+      "sha256": "3099dc47cef1e8da7a31d9f8bf5d4407d15dfa7273125621a0be141a99fdffde"
+    },
+    {
+      "path": "docs/PROGRAM_RUNTIME_ABORT_AND_CACHE_INVALIDATION.md",
+      "sha256": "3b212688ea4ac1a842c635dd74f17e2839ded5bd3940e6e642107fd5961ddb3c"
+    },
+    {
+      "path": "docs/validation/PROGRAM_RUNTIME_ABORT_CACHE_2026-08-17.md",
+      "sha256": "8b162c4fae03ec8b4adcef347b002be4bb88d92c6f0c42a19a48c17910394bd0"
+    },
+    {
+      "path": "docs/PROGRAM_RUNTIME_EVIDENCE_CACHE.md",
+      "sha256": "b23458f7db9573707bf02f02e3beb17c02b8205f99ab7f18855d0eb8d7c29973"
+    },
+    {
+      "path": "docs/validation/PROGRAM_RUNTIME_CACHE_2026-08-17.md",
+      "sha256": "fc8b481111871d3c87c80fbe6171e8361e62302e06e714337a8978b735e4e144"
+    },
+    {
+      "path": "docs/PROGRAM_RUNTIME_FRESHNESS.md",
+      "sha256": "82ded80611d1fc58366858b84891b6490bb1834727233c45eaa88217c815774c"
+    },
+    {
+      "path": "docs/validation/PROGRAM_RUNTIME_FRESHNESS_2026-08-17.md",
+      "sha256": "fe8ffab867b7a421831e87ea8d70c4eccb7c116332dde382fb111176abdee9de"
+    },
+    {
+      "path": "docs/PROGRAMS_AND_CONTRACTS.md",
+      "sha256": "650f444069bb7f8bc070b0fac85e8708007be32c08377d6a32ffc628292ea7b2"
+    },
+    {
+      "path": "docs/validation/PROGRAM_CONTRACT_RUNTIME_2026-08-17.md",
+      "sha256": "2f18c170c3f0ca130f244a431c0288ecca28d7c866ca38a46aaa34e1773f2c6f"
+    },
+    {
+      "path": "docs/validation/PROGRAM_RUNTIME_ISOLATION_2026-08-17.md",
+      "sha256": "15c28631bf428af302dbd7f071481a73d0f4197f8f855f9a3100d1a611d7db76"
+    },
+    {
+      "path": "packages/protocol/src/integrations.ts",
+      "sha256": "0895d195c8524b0d5be56d376f9ceed7daa12ebee4dfa9d44ea6c836c7efd777"
+    },
+    {
       "path": "apps/backend/src/services/defai.ts",
-      "sha256": "024210e716653a6ee5bd41737914d18059fc00227b9ae7a2e06f328bdab14ddb"
+      "sha256": "8a2d883f9ce922d308d793080fb1ffca0dcc92b16ead56adcca9e0c2206184d8"
     },
     {
       "path": "apps/backend/src/services/transactions.ts",
-      "sha256": "6d723053c521f9cfc1f29d124ac5df9a1fd9e94745ef06fb51c72eb29f5df428"
+      "sha256": "41ff422e747f16533495dcd1e6a89842d3249dd667df084d0230975b43216966"
     },
     {
       "path": "apps/backend/src/services/operations.ts",
-      "sha256": "863e4d65a15612b39fac779abcd333cc670424527e91d454f00b2623f402d757"
+      "sha256": "b9c7043bde3c5e0e12cd28aa6c6b1286ed74d98ee6262b5937db6af2a5580a9c"
     },
     {
       "path": "apps/backend/src/workers/heartbeat.ts",
-      "sha256": "df9ff90c4b042907b10689badc733d57e55a1c3a7ae4c0d85d7245921aa47809"
+      "sha256": "8aabcf2a3c7acfea42f6c3b0df6a67fea6b18e2abdb4340daabf32be5d8b7b22"
+    },
+    {
+      "path": "apps/backend/src/workers/config.ts",
+      "sha256": "0716a1c24c4ea6ba91ce815df12f1649466a3b1f713a2847ebdc9280eba617ba"
+    },
+    {
+      "path": "apps/backend/src/bridge/worker.ts",
+      "sha256": "7836e43c0870499ebad1a96e5f11ae3f8c73a1cb27055974cc8716d506066607"
+    },
+    {
+      "path": "apps/backend/src/claims/queue.ts",
+      "sha256": "11e4987760f315660b352293cc412a08a22ebe07fe34d479a4c740d4b5273f5e"
+    },
+    {
+      "path": "apps/backend/src/fees/queue.ts",
+      "sha256": "7a1e151f0868f1c471e56d77e72f8243f52c9a265521a1f99f36230de4748e41"
+    },
+    {
+      "path": "apps/worker-bridge/src/main.ts",
+      "sha256": "810a4d203b489a3f7f1cea4b6bea8dd27f513148911b593d1402b3f33e571dd8"
+    },
+    {
+      "path": "apps/worker-claims/src/main.ts",
+      "sha256": "31798c8d5270768c5068003584bee1f40a5344a7f7816552be1f62e2e1d1f533"
+    },
+    {
+      "path": "apps/worker-fees/src/main.ts",
+      "sha256": "feb01660f54c73a09f4e2d9b584775a2bfb9f7a6af56b823ad68c0bc50f27e28"
+    },
+    {
+      "path": "packages/runtime/src/index.ts",
+      "sha256": "afb5c544bfcb6a9235b3288bc7dd72fa9509d5b99a8d7ac7d5e4259a8b3bd85d"
+    },
+    {
+      "path": "scripts/worker-lease-heartbeat-production-check.mjs",
+      "sha256": "cae29a8a46fd0b8561713627ceb175d021a21ce0ec8d65913b9bc770b055b887"
+    },
+    {
+      "path": "scripts/worker-queue-backpressure-production-check.mjs",
+      "sha256": "bb86b5ae91a65ef57dbf3cdc055cb88f6d808b0c25c340252d1f920f4a3be080"
+    },
+    {
+      "path": "scripts/worker-retry-deadletter-production-check.mjs",
+      "sha256": "046c4c820558822e8683244991d5ffb0643130893555be529c666007753912e5"
+    },
+    {
+      "path": "apps/backend/src/workers/maintenance.ts",
+      "sha256": "27725603b0486a27de06497f0220b832ec2e8758f46a0735c41ff0f468ed43f8"
+    },
+    {
+      "path": "apps/bridge/server/services/runtime-maintenance.ts",
+      "sha256": "f2cb162b62cbc04f40f2058d0cfff07b4ee5dc9bc45de100b88719bf963755d9"
+    },
+    {
+      "path": "apps/bridge/app/api/v1/operator/maintenance/route.ts",
+      "sha256": "f7c40e48141b60c4a670748bf44d451418f5e8631acc0120aca46c3edb3efece"
+    },
+    {
+      "path": "scripts/operator-maintenance-state.mjs",
+      "sha256": "ceeeaf8af44324f7a5ae1afdd27ac4e223d46fd75ce1c4b8782810cd987a7535"
+    },
+    {
+      "path": "scripts/runtime-maintenance-production-check.mjs",
+      "sha256": "3a794309fccf38272f0f7fdc884256067295015a895a63745bef9bcf3ad3fd72"
+    },
+    {
+      "path": "scripts/runtime-maintenance-freshness-production-check.mjs",
+      "sha256": "7fbe20a34eaf92707801aa9fc92adcdbcc862f2ae1d2ae42167cb6712ced1131"
+    },
+    {
+      "path": "docs/RUNTIME_MAINTENANCE_FRESHNESS.md",
+      "sha256": "7c55a6c0e46180ec8007100c2b8c06b788444c729f71cc56bdba9da62d06eb5c"
+    },
+    {
+      "path": "docs/validation/RUNTIME_MAINTENANCE_FRESHNESS_2026-08-17.md",
+      "sha256": "2c9f897775e116369ddb7dbd986ec91afa11cf5bc9ff45b2278981041c83b347"
+    },
+    {
+      "path": "docs/RUNTIME_MAINTENANCE_CONTROL.md",
+      "sha256": "f13f1f41e2a263fa3d46ad6864b3579abd8ad40153b690bd4b9ee5d98a19e989"
+    },
+    {
+      "path": "docs/validation/RUNTIME_MAINTENANCE_2026-08-17.md",
+      "sha256": "cce280d3bab3fe38fdde9c2d5ad4ce1d355240be21c7011887a787b9b7a8d4fd"
+    },
+    {
+      "path": "prisma/migrations/20260817000100_runtime_maintenance_state/migration.sql",
+      "sha256": "cd53aeef3b957a0aebd6fa3ff62785ba65705330557a7b5f84c90b514eae955d"
+    },
+    {
+      "path": "supabase/migrations/20260817000100_runtime_maintenance_state.sql",
+      "sha256": "cd53aeef3b957a0aebd6fa3ff62785ba65705330557a7b5f84c90b514eae955d"
+    },
+    {
+      "path": "scripts/worker-drain-mode-production-check.mjs",
+      "sha256": "c390eaa63745afd1b4d3b50b1b6a705a612bf3da85ff691006a0aeb4c0d1a5d0"
+    },
+    {
+      "path": "docs/WORKER_DRAIN_MODE.md",
+      "sha256": "06e5b3a8e7f1944b2875b0d4fa56e39c224977ed15974f1bfebb0e7dc28cc890"
+    },
+    {
+      "path": "docs/validation/WORKER_DRAIN_MODE_2026-08-17.md",
+      "sha256": "7425081d505e7cd22dd066b962d78a2b2280c7d96e708c8a2556c02d74b4ba63"
+    },
+    {
+      "path": "scripts/worker-drain-quiescence-production-check.mjs",
+      "sha256": "a1857b0d7479d2c33666870bb3167208c28ca3ee1297d04d9080631b165cc178"
+    },
+    {
+      "path": "docs/WORKER_DRAIN_QUIESCENCE.md",
+      "sha256": "4b34c50fc8b3dd8986614ceda9aec25c902f9b81d4d9754b81d2c376e5fcaff3"
+    },
+    {
+      "path": "docs/validation/WORKER_DRAIN_QUIESCENCE_2026-08-17.md",
+      "sha256": "207c748722634723657d2ac0ca7d87f905c54d15bd711962c5b9079caa3a0c1c"
+    },
+    {
+      "path": "scripts/operator-maintenance-production-check.mjs",
+      "sha256": "335fa76245b5e69b5467d4b89c86404a9e21fc89c123ea91e020ec544d5e421c"
+    },
+    {
+      "path": "scripts/deploy-drain-wait.mjs",
+      "sha256": "54d8698f5e8150fef34b6128f2b64e4df9a94fca36b31daad663781c65ed0a9e"
+    },
+    {
+      "path": "scripts/deploy-resume-check.mjs",
+      "sha256": "e0e66da2eb28b5eb0bcf9169b84b080f3c4916546b469fc972a5d8bb9486b8b5"
+    },
+    {
+      "path": "scripts/operator-attention.mjs",
+      "sha256": "ea7a9a3412fe0e50aa65e412f10e1081a41f3e5d5f3d5e60b3cd4fdf3f9f4812"
+    },
+    {
+      "path": "docs/OPERATOR_MAINTENANCE_WORKFLOW.md",
+      "sha256": "ca1a9b4d4775de51f212f6fcb40d53cbdfb63efbdddd23b91b210a7e385ddc64"
+    },
+    {
+      "path": "docs/validation/OPERATOR_MAINTENANCE_2026-08-17.md",
+      "sha256": "19712b98f6147193807166a45aec72365482f564c3a897990830a9242038b46b"
+    },
+    {
+      "path": "apps/bridge/app/api/v1/system/readiness/route.ts",
+      "sha256": "0e91ed17af45270c383b25ba7271c40c27cb17679600d9870a28075a2a453f1f"
+    },
+    {
+      "path": "apps/bridge/app/api/v1/operator/operations/attention/route.ts",
+      "sha256": "57ce7300f40acec721f9b28d6b1ee7ca06923f6472d5bf7481742f5d7d703d19"
+    },
+    {
+      "path": "apps/backend/src/workers/retry-policy.ts",
+      "sha256": "d6ee79fe70d7b21fb72a406831ba7ccf5a3d29f0c2d884c700f694d24f8ba7f7"
+    },
+    {
+      "path": "docs/WORKER_RETRY_AND_QUEUE_AGE.md",
+      "sha256": "6fb89cbffe07a18675666d3b4747001cd6f19f4df00336d635653d95fb1f1097"
+    },
+    {
+      "path": "docs/validation/WORKER_RETRY_DEADLETTER_2026-08-17.md",
+      "sha256": "61a327d83a1d96f3b47cc2e52b66617829b26f938d113cc853610f9f75942cc9"
+    },
+    {
+      "path": "docs/WORKER_QUEUE_BACKPRESSURE.md",
+      "sha256": "cf02c25cce7ed9e44c4710b9a193f1dd0ecd9427a879960040c242b097ee71f8"
+    },
+    {
+      "path": "docs/validation/WORKER_QUEUE_BACKPRESSURE_2026-08-17.md",
+      "sha256": "5262f064b621edabab8df3903ce07cb2186fb4e93eb3acdc443dd402f0c4285b"
+    },
+    {
+      "path": "docs/WORKER_LEASES_AND_HEARTBEATS.md",
+      "sha256": "1ee4a15fb8f2ab7abb54dca1ee0e621c48c94a44f038cf207706c801692e3423"
+    },
+    {
+      "path": "docs/validation/WORKER_LEASE_HEARTBEAT_2026-08-17.md",
+      "sha256": "5621a317104a830460d9280fdfa174b1ab80e496517d30452298d5973464c331"
     },
     {
       "path": "docs/BACKEND_OPERATIONS.md",
@@ -282,27 +882,27 @@
     },
     {
       "path": "apps/backend/src/routing/routes.ts",
-      "sha256": "fcb5506c32d641c69dfc7d6dd8f1f90c82b79430d262eccd5d395df61d2455e6"
+      "sha256": "1ba8fe02a88d76d1ae3bd05361fb5446aee25c13802cce4bdba64ffbeb39bd9b"
     },
     {
       "path": "apps/backend/src/routing/router.ts",
-      "sha256": "d369794dad6d3b161cf34555f5e2e1a3ad392eb96eb1854836787d14f16db91e"
+      "sha256": "4c19c872dc5b3be3740c8b87726a3c23a4d4f7f990543ffbda4629d2dced188b"
     },
     {
       "path": "apps/backend/src/services/security.ts",
-      "sha256": "db7d40c3cce2d5a60c5389f43de0b768f23893a8ee782e5a9c240810be57e2ad"
+      "sha256": "53a83ff4e225f6e8575b050d21b76c758dd1aa0a390fddafdcaf4b0a33aa92d7"
     },
     {
       "path": "apps/backend/src/services/calculators.ts",
-      "sha256": "9797b73025180b2149b1a6db59ea588b1a71b85c052e594166daa0972434815f"
+      "sha256": "a7893701aa19d1b3534710a6149212ccfbb15bd65a236a8a4acc202d65f20486"
     },
     {
       "path": "apps/backend/src/services/prices.ts",
-      "sha256": "fbe3cb50fdac543785c11192e8c0ad47a7c6c3bc4fc124faac25aeb1e70f7293"
+      "sha256": "d4818e64f17eb3341548618bcb996900074518af23cdac11a40bd80a5f028306"
     },
     {
       "path": "apps/backend/src/services/rates.ts",
-      "sha256": "7f41dd3ec80cf87eb3a2210cc2c952d14e9b2bca9d5998909bc53315834ed05c"
+      "sha256": "d3ea569929783560900a86a278f86215daa3681e6f63434e2a775a5efe444312"
     },
     {
       "path": "apps/backend/src/services/currencies.ts",
@@ -310,7 +910,7 @@
     },
     {
       "path": "apps/backend/src/services/rpc.ts",
-      "sha256": "49f7562b129947aea12c61b4578f36acdd2720e5f539a6ae97baf0d290b6ac64"
+      "sha256": "182c91bb8629e31d60741436ec47e3a92a7fbce5b38e6b6fb4097352103f2773"
     },
     {
       "path": "apps/backend/src/data/trusted-token-list.ts",
@@ -318,15 +918,55 @@
     },
     {
       "path": "docs/STABLECOINS_PYTH_RPC.md",
-      "sha256": "4fbdbaa2307f8a6efe70eb8f764c31519c4eaa01a5fb778f1c00e8399192b463"
+      "sha256": "8c7a4d404c626a53de9114cab2b8d4ebd6544dd7e39466d8cd56994ca93d143f"
     },
     {
       "path": "clusters/src/index.ts",
-      "sha256": "e75c5fbe3bf36c7a4a4edf4708427fd4c82addb43a63ae6b66bcfe30c46e6a62"
+      "sha256": "aea749683b2a76a6105cec26318d14298cd20409a551208a68a00799f635e6d2"
     },
     {
       "path": "shared/blockchain/src/addresses.ts",
       "sha256": "b6dd1f9d7e317a5a092685e6dcbaa6fe966bac8c833c1c2554db53d9d2b9a154"
+    },
+    {
+      "path": "shared/blockchain/src/sui.ts",
+      "sha256": "b124506d75bf2c0e3731c589d10ff5ae62487ee21bfb0b9e916c4b6d565f0908"
+    },
+    {
+      "path": "shared/blockchain/src/pyth-sui.ts",
+      "sha256": "ea3b42e63c731f8593c9bdb0773c318e6fc0512b1df38155017433b86a14b862"
+    },
+    {
+      "path": "apps/backend/src/services/pyth-sui.ts",
+      "sha256": "f640f76dcad4dd58a7e0f56e429aafd3bcca6a2f42b7b5e64d584692dd29a2b7"
+    },
+    {
+      "path": "apps/bridge/app/api/v1/oracles/pyth/sui/updates/route.ts",
+      "sha256": "703ee7f83e07a0364da77fcffcac430330db496aed341efc4d1f19e93e685d4d"
+    },
+    {
+      "path": "scripts/database-preflight.mjs",
+      "sha256": "bce6c2564034e45ce89c469e8e338cc34a401e856f793f35030af01f1c85b366"
+    },
+    {
+      "path": "scripts/next-cli.mjs",
+      "sha256": "14284e2caeef040c9e62f2737361bee43c984baaf3353ca152fc0d3f65033d2b"
+    },
+    {
+      "path": "scripts/repair-workspace.mjs",
+      "sha256": "070cc03489ef8f9a73846261ebf3e82e305b0c88412cafa8266c6cf0b08eccfe"
+    },
+    {
+      "path": "scripts/install-runtime-production-check.mjs",
+      "sha256": "5abc58c7cb3ee240dad5c77f616a4f7361689a0d1bab45e87410c7497d7eb615"
+    },
+    {
+      "path": "apps/bridge/README.md",
+      "sha256": "a7f1306dc8bc42602e3b3237f4848a473e175f1efe2251d53a93b2bf3ac95f0c"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "8e130ffe9feec1798e22a6faf6a9158e521816ee2097038a3dd48cf6d3f1fd2c"
     },
     {
       "path": "shared/blockchain/src/routes.ts",
@@ -354,7 +994,7 @@
     },
     {
       "path": "apps/backend/src/services/ip-security.ts",
-      "sha256": "e46eab2699d1a8746b64a7ae420cf58a36fe10fe8e65fbbe93176b66e19d70d6"
+      "sha256": "535239f22f083ce22eba31abc58d69027f2a3a0497df38a049997b64f9ee04df"
     },
     {
       "path": "apps/bridge/hooks/use-cookies.ts",
@@ -370,7 +1010,7 @@
     },
     {
       "path": "docs/PRODUCT_SAFETY_LEGAL.md",
-      "sha256": "71314ed02175d262becdc7fa1b2b0fa7c1fe424cb7da1dcfee33c7b94b526dd5"
+      "sha256": "3b596ad429b761626ed76841d09ab57916819ae45900f38b814e101721bd67cf"
     },
     {
       "path": "apps/chat/src/types/chat.ts",
@@ -381,20 +1021,88 @@
       "sha256": "959ed97be73a55d9aec35359902b34a0d8e86c9b474707b484f44043a51b87f3"
     },
     {
+      "path": "apps/staking/package.json",
+      "sha256": "1ee193d3e3e47541ad0e6f11e2e1c66f1a1b92dfa6dc62720e066ef2f585c076"
+    },
+    {
+      "path": "apps/staking/src/config.ts",
+      "sha256": "d0a8f5f2c90c117207d8b6cdf05bc57b07263c4113ea08af3fd6a0cf4b0a29eb"
+    },
+    {
+      "path": "apps/staking/src/types/staking.ts",
+      "sha256": "efc4ba7e97cea15ec2f32e3c8441deda1c1652f0e17438452507a46e3ef6af56"
+    },
+    {
+      "path": "apps/staking/src/verification.ts",
+      "sha256": "03a3bf7754a046f21e8914cec1f61bb78aa18dc2d9f6d79afafe6d23a197c9e2"
+    },
+    {
       "path": "apps/staking/src/services/staking.ts",
-      "sha256": "ad8277624c62d669e983045df2c47a9572067fbfe19c8eaa324ab344d223059d"
+      "sha256": "50cd2844c68da5afdb6121ddf30c2fad60be608a3f9488bedaeaa0bc4249968a"
+    },
+    {
+      "path": "apps/staking/README.md",
+      "sha256": "b0c37f7dca3129d3a9b59f6e3afb5eb46d0df1ab57f8b2c94f9b22b743304500"
+    },
+    {
+      "path": "config/staking.json",
+      "sha256": "b2604238cf167dc2ed159d95599c3ba86bb8664cd0d1f4630b962fa177af5e17"
+    },
+    {
+      "path": "programs/solana/powerchain_staking/Cargo.toml",
+      "sha256": "b2315258dc9beba74621a43bf0a46eea83c6acab78fc91bc2fd6ca1d5b70dbbb"
+    },
+    {
+      "path": "programs/solana/powerchain_staking/src/lib.rs",
+      "sha256": "dc3f5e78de28703b6dfd3c0512d2e5404c626ca57df5211392b2bc365565947e"
+    },
+    {
+      "path": "programs/solana/tests/powerchain-staking.ts",
+      "sha256": "cc5bcc12826bef185ef0e9fbbcf5f7b350a4f50024224c0bb80e8fc9c94be766"
+    },
+    {
+      "path": "programs/solana/Anchor.toml",
+      "sha256": "2884524cd09a648d00747133db05794b5416fa6bf4a0e89d95b7e83bf0e03f5e"
+    },
+    {
+      "path": "scripts/staking-production-check.mjs",
+      "sha256": "4c9812694bb789e565737373682ecc189c18f82438e93f34d893f8bf2d81d5e2"
+    },
+    {
+      "path": "scripts/sync-staking-program-id.mjs",
+      "sha256": "31dc7a60c246cf7c1f224edbe4f5fed79445f46ee21c7d0245da3c228d0e0716"
+    },
+    {
+      "path": "docs/STAKING.md",
+      "sha256": "b0fdc72cd80b62fcd234e7504b7441568822416e411374e635a2d436c6445188"
+    },
+    {
+      "path": "docs/README.md",
+      "sha256": "7b33cec20c61d61d04b903995c1fdeeb3bb3b67164940a1a62a338472db9a9a1"
+    },
+    {
+      "path": "docs/VALIDATION_STAKING_2026-08-16.md",
+      "sha256": "8e4a80acb07dac061afa7272f18a93e96a61ca3a002870a465e5c3561aefef90"
     },
     {
       "path": "docs/DEFAI_ARCHITECTURE.md",
-      "sha256": "7ef3e693d6c2a0d0d48b03d1a939957f461fc7d1cc87f99dc347f6d9d918861d"
+      "sha256": "1aacaddad3c329eeaaf7ee2f63e4bfb5e4b80645b73b2d0a0e04c82ca5e369d6"
     },
     {
       "path": "docs/POSTMAN_FLOWS_ARCHITECTURE.md",
       "sha256": "f315999f380947e3365cf4bd9571eee056594ffe46676e6aff910750cfa4f25d"
     },
     {
+      "path": "programs/README.md",
+      "sha256": "17fff7a9b874ef290161190cd3da1620a387bea50df0dd1df2c65a5d49e1b22a"
+    },
+    {
+      "path": "contracts/README.md",
+      "sha256": "6bdd98ad337f1f8ccec7fc5208eeb6c1f1dd0e8e90b03d352492aa4d2b8f630b"
+    },
+    {
       "path": "programs/solana/powerchain_bridge/src/lib.rs",
-      "sha256": "8f94ff5fa9cdb80f5868002f8ca89935f0c507e591f6889a57e20c10ecfccc5c"
+      "sha256": "6788b4e67e8c2a1309fa2d2a9356081d1b8661bd6a595626d3c85d291f149819"
     },
     {
       "path": "contracts/sui/powerchain_bridge/Move.toml",
@@ -402,11 +1110,11 @@
     },
     {
       "path": "contracts/sui/powerchain_bridge/sources/powerchain_bridge.move",
-      "sha256": "814b9d8d0082a1de70a766e9b3f73e3d95ae50b5f605a8c4554ff151c7536b5e"
+      "sha256": "1f8c1db5f81eb8c7cf23548bcfa01beecfb519e8e2817ab6fdee023c8dd5dcfc"
     },
     {
       "path": "contracts/sui/powerchain_bridge/README.md",
-      "sha256": "53851164a5a188054d54bd44678a60f052b8b439e76d3e8510c07bb1193470c0"
+      "sha256": "12b3045e82d1342a63ae95ad6fe2dee8eb52b8f377dafb9dbc36a64958754873"
     },
     {
       "path": "apps/backend/src/bridge/sui-targets.ts",
@@ -426,7 +1134,7 @@
     },
     {
       "path": "apps/bridge/server/openapi.ts",
-      "sha256": "a4a645f6ee3e6e4886ad48d67aae7cf70fd45245eeb7dd1dd2e1a3b525ffb343"
+      "sha256": "2aff0245ca70723bd7c441f572e449ee44b2be3b2164c8f934f4607f001edae7"
     },
     {
       "path": "packages/sdk/src/types.ts",
@@ -434,7 +1142,7 @@
     },
     {
       "path": "packages/sdk/src/client.ts",
-      "sha256": "108e82d48e45bdaf7da56b43c7598fd2c90c2364dcf9abcb0bec525f18ab1eb0"
+      "sha256": "4a9e718b1b5ef417b0ff3755b0578a62839ffa2df67beeaa7c26cdec7a76aa47"
     },
     {
       "path": "docs/TOKEN_INFORMATION_COMMITMENT.md",
@@ -470,7 +1178,7 @@
     },
     {
       "path": "apps/backend/src/services/ai-providers.ts",
-      "sha256": "afd7d247d2d1c13a400a71781cae203f63b5039f6d9d485f8cd8ffb758099efd"
+      "sha256": "a3f8b36c38edc275ba715751f98e9b2d0c3be6021a8aff139172510f8a85d694"
     },
     {
       "path": "apps/backend/src/services/storage-config.ts",
@@ -494,7 +1202,7 @@
     },
     {
       "path": "scripts/env-provider-features-production-check.mjs",
-      "sha256": "6ddabc965e693ccdb03eb0450b37beb2ac308de08f256706ba6864631ea7482a"
+      "sha256": "e7c12553018457c63bc3e76ec4048ff8dd39548b5b95d1a4b55e95d607d09f0d"
     },
     {
       "path": "docs/ENV_PROVIDER_FEATURES.md",
@@ -502,11 +1210,11 @@
     },
     {
       "path": "packages/bridge-core/package.json",
-      "sha256": "bbb193d953d81947860f980d81086e5ae3f70f9766d9f5b601588cda3fbc4fdb"
+      "sha256": "8d7dc2d8ba1e30db692b153c028db9e0cbb1b0dc028a1de51b19f4508f0de929"
     },
     {
       "path": "packages/swap-core/package.json",
-      "sha256": "ac3368c4314c6370fb7e85f658e3aacdbe3071f8dd827b3f6325a8b78210e28c"
+      "sha256": "85386c26d2b33e8104448d8a306e98a590879fa9c2afb19b6e283028c58ceac3"
     },
     {
       "path": "packages/swap-core/src/swap.ts",
@@ -534,7 +1242,7 @@
     },
     {
       "path": "scripts/monorepo-programs-production-check.mjs",
-      "sha256": "49d2e8bd943adb516150524b3c8df80d843ce05309167d2d8929c2b15de5c3d5"
+      "sha256": "c68c16ec0bf4fd3f7d90c909739fe5d236a80b633b80b836a103d041dc43db62"
     },
     {
       "path": "docs/MONOREPO_PROGRAM_ARCHITECTURE.md",
@@ -546,7 +1254,7 @@
     },
     {
       "path": "apps/bridge/hooks/use-slippage-tolerance.ts",
-      "sha256": "cf64530f1cb17a8c07e0631a9e4a0ca0e44841a7a87165bd9b660ff33ae7b11d"
+      "sha256": "b47b90c0d25097024a5d819bf888a7c467782229b68fdeb11c7ffc9b172aaaaf"
     },
     {
       "path": "apps/bridge/components/transactions/completed.tsx",
@@ -578,7 +1286,7 @@
     },
     {
       "path": "packages/database/src/queries.ts",
-      "sha256": "33d7fdde7beffd83d41c3e2715ac497eb57d9148489532d676b99a6d08e603a6"
+      "sha256": "4e169e14ed45ae24fe49b4a5de09d09779ecfa28389ae6d1b670cea2772abddd"
     },
     {
       "path": "packages/database/src/types/db.ts",
@@ -602,7 +1310,7 @@
     },
     {
       "path": "prisma/schema.prisma",
-      "sha256": "0dab27dbf1e5ef52391063c548e4a1262a0044385c541b9743fe07756e58dc8a"
+      "sha256": "195242a6e286ea718df5f7fd969aa3f204606aba061c61822e80eeafc2f3babb"
     },
     {
       "path": "supabase/schemas/swap_execution_portfolio.sql",
@@ -638,11 +1346,11 @@
     },
     {
       "path": "apps/bridge/hooks/use-provider-health.ts",
-      "sha256": "52d25c67acc4e123d9a877891a12c6982e5bc2cb010c1f22beef66aa79567d3c"
+      "sha256": "835aafb345b5dd374cd0e1b8034be577afca412cee5a254d8fd793928894f45e"
     },
     {
       "path": "apps/bridge/hooks/use-provider-readiness.ts",
-      "sha256": "8afe04ba5891f3597d060e5c6ff57d72bbb56d0adee7c28a3e5ba09dea1c5ea1"
+      "sha256": "494e251a3d7d89edb31a191c7c1a4b1439616abe7fed74f583b01555e388ab53"
     },
     {
       "path": "apps/bridge/hooks/use-operation-journal.ts",
@@ -662,15 +1370,343 @@
     },
     {
       "path": "apps/bridge/hooks/use-transfer-status.ts",
-      "sha256": "e8b62f0efdc03343afba47afca27ebf77abfca142aa7f26a3ede3e0d84315774"
+      "sha256": "b8ea1de56754d0bcc6b078c735d9065a6016c4c6da95ab864173cd2337fb5a6a"
     },
     {
       "path": "scripts/hooks-runtime-production-check.mjs",
-      "sha256": "1f6456142640c0fccf3f8915c84b3a2b2d5497bae5d1eb3a47cff800fe3dbf85"
+      "sha256": "e8a1b8c0e3bf42c700b56aa09e6343a0bd5b91b5008795c497f31de19acbe354"
     },
     {
       "path": "docs/HOOKS_RUNTIME_RESILIENCE.md",
       "sha256": "83fd2cf250afe7794b3140c7667ee24f8a758024b07f088111c3c65dab604c16"
+    },
+    {
+      "path": "scripts/provider-diagnostics-production-check.mjs",
+      "sha256": "a608334e98400b7bd99e431a2d78565a9d0083646dca0f6a8541a4e08d625ff4"
+    },
+    {
+      "path": "apps/bridge/backend/provider-client.ts",
+      "sha256": "ddc729b40970c14fa6451e443ed017f13eb927f6498b1b19931a8f2019511b65"
+    },
+    {
+      "path": "apps/bridge/backend/endpoints.ts",
+      "sha256": "59b5b390bfddffe52d940fbee5aead6ef54f7c0e5c11f905766778bf22fd37ea"
+    },
+    {
+      "path": "apps/bridge/types/providers.ts",
+      "sha256": "794e2aa1efd261c404cbe345323799f1cbf72a07734d5163b2ae0a25c0072c51"
+    },
+    {
+      "path": "apps/bridge/lib/data/runtime-validation.ts",
+      "sha256": "c16967fe1b7af92f6603b7f93bd6287ca2a369829d3d6f4cb9040a1fb8be178c"
+    },
+    {
+      "path": "apps/bridge/app/api/v1/providers/diagnostics/route.ts",
+      "sha256": "13ffcc5fc7a2acd568f2c188a772c69bd8ce560dff595f39dcd79ef52bcadff7"
+    },
+    {
+      "path": "apps/bridge/components/integrations/provider-diagnostics-card.tsx",
+      "sha256": "e5dfb3f5b08586ef2eb66e14c6d447cbd50e25b53d5b49ccfe1859f55ddd5b4d"
+    },
+    {
+      "path": "apps/bridge/app/integrations/page.tsx",
+      "sha256": "0db1455402ee944ae36cdf5bf61cdaae9f1cc8115068347e80d0ac7facc01d03"
+    },
+    {
+      "path": "apps/backend/src/escrow/config.ts",
+      "sha256": "61419f7e1fb8a7e3fc493615c45d4db1a9dfc20f16ffe800ca25646b9a257358"
+    },
+    {
+      "path": "apps/backend/src/payments/checkout.ts",
+      "sha256": "75659946e472a66064d1ad0b79fb2b173538a1dd24385e455d2567a4fa3f605e"
+    },
+    {
+      "path": "apps/bridge/app/api/v1/payments/checkout/route.ts",
+      "sha256": "cf1d75fe51f524455a1fc8e1661e1559f268f7fd6d56131686140b8703e01a66"
+    },
+    {
+      "path": "apps/bridge/app/api/v1/escrow/readiness/route.ts",
+      "sha256": "7e11bf20e14a78746ddf7514b9b215971ea537124b069e3e80636e00b26b0eb6"
+    },
+    {
+      "path": "apps/bridge/types/escrow.ts",
+      "sha256": "a713110874105711e18a0d98a0a124d8af9e54bf3dd4416dc4a5b4ae33e13ca1"
+    },
+    {
+      "path": "apps/bridge/app/api/v1/staking/status/route.ts",
+      "sha256": "eb1066ea088b70e656e233140907722db7091217bf447c61085653ea74339944"
+    },
+    {
+      "path": "apps/bridge/app/api/v1/staking/position/route.ts",
+      "sha256": "3f7eb6f51da133025eacf7aeb06fc29b42f352b62a29eea0827e95ed898076f5"
+    },
+    {
+      "path": "apps/bridge/app/staking/page.tsx",
+      "sha256": "1f12326bf88d51bf09c74060e021d77d377de8c243aa44fce0843ecb159b4e69"
+    },
+    {
+      "path": "apps/bridge/components/staking/staking-dashboard.tsx",
+      "sha256": "e7e1cf543612137003d1bbd4ba4fa5fdc9698a03b8af4a89e929b38de0db5099"
+    },
+    {
+      "path": "apps/bridge/components/staking/solana-staking-actions.tsx",
+      "sha256": "594845dd5ff556fb5e1ac6c8f2416220bf8a938d7a5af662a3ffe3aefbb1d2b5"
+    },
+    {
+      "path": "apps/bridge/hooks/use-staking-position.ts",
+      "sha256": "7b9fa2accdec440334ac5e2aae4f1d11450e0c6ec790b5975b30e740e6292450"
+    },
+    {
+      "path": "apps/bridge/hooks/use-staking-runtime.ts",
+      "sha256": "b444d975357d26032ac2fde5d9e921ebd404f81f5b580898276603813625dfd0"
+    },
+    {
+      "path": "apps/bridge/server/staking/position.ts",
+      "sha256": "859fc0adba7906fbb5191515631a07e73acf60468ecdae799aa2ec7310bfe449"
+    },
+    {
+      "path": "apps/bridge/server/staking/transaction-status.ts",
+      "sha256": "150fb4fe936560a0f9237607006cee9cd1a2332b6eff8411dc71ea66a8ff97b5"
+    },
+    {
+      "path": "apps/bridge/app/api/v1/staking/transactions/[signature]/route.ts",
+      "sha256": "257ad5ceec3b3596da8eb58f9416cb960cf33fcedf9810cbca06c7164b13365e"
+    },
+    {
+      "path": "apps/bridge/hooks/use-staking-transaction-journal.ts",
+      "sha256": "bac04149a53738d839d4ada701ef4eef9460b00182b442c70d738bc880805394"
+    },
+    {
+      "path": "apps/bridge/components/staking/staking-transaction-recovery.tsx",
+      "sha256": "ae5346ec81c5b0b20d29e335d33d96c4d669ddf50464c3aa3b34f8df72812698"
+    },
+    {
+      "path": "scripts/staking-reconciliation-production-check.mjs",
+      "sha256": "a118034230ba69a9231bacaf17eecd067d91b7769a8027f9a3781ccfb3ba630c"
+    },
+    {
+      "path": "docs/VALIDATION_STAKING_TRANSACTION_RECOVERY_2026-08-17.md",
+      "sha256": "dfd15d8c6db5c8c02286bf545d3ff8b431503b583209e13ab86fffa05b677b49"
+    },
+    {
+      "path": "scripts/staking-ui-production-check.mjs",
+      "sha256": "44795250ca11f5236c19375464f549bacf5c200092ea594fea9bb0091fe166b8"
+    },
+    {
+      "path": "scripts/staking-runtime-ux-production-check.mjs",
+      "sha256": "605c9e8d8955f1e9c3a5c17f65b0371abd55935ce4cce48242b1c06ac9cbfe61"
+    },
+    {
+      "path": "docs/VALIDATION_STAKING_UI_LIGHT_FIRST_2026-08-16.md",
+      "sha256": "6f00ad37e4d5dce1a1ebaa3920297292fb2ce286e229f5ddd995b5308d648da3"
+    },
+    {
+      "path": "docs/VALIDATION_STAKING_RUNTIME_UX_2026-08-17.md",
+      "sha256": "a5cf6093eac66e822f6e8016936f90a99b9018ec396e360f226567c4f5600c7f"
+    },
+    {
+      "path": "docs/VALIDATION_RUNTIME_EVIDENCE_HARDENING_2026-08-16.md",
+      "sha256": "8df5f48e663677d8f1c84adc19a443dccb906527b039f2cec543f0026faa0a74"
+    },
+    {
+      "path": "apps/bridge/config/app-routes.ts",
+      "sha256": "b1b819aff77267917f661fca3b1c779ebf776cd7a4ac2462fbc932f9a5e3fe17"
+    },
+    {
+      "path": "apps/bridge/components/navigation/navigation-config.ts",
+      "sha256": "5b1ccbaab645a741a03184f34649d548c43a492a2085a8a181c7f613b55f2057"
+    },
+    {
+      "path": "apps/bridge/components/navigation/app-sidebar.tsx",
+      "sha256": "0d863d5cb5a6342f4a2dfcca27cc670ee90b0ee04880d45463070ea3f23dd54a"
+    },
+    {
+      "path": "apps/bridge/components/navigation/mobile-navigation-menu.tsx",
+      "sha256": "643da2880cbcb9c7eedff91bf3cc954658ce64e0d6c752f3795a356db1d8dac8"
+    },
+    {
+      "path": "apps/bridge/components/navigation/mobile-bottom-navigation.tsx",
+      "sha256": "518ee0a38bbbb5744fa60241db7ed8639619e40bf62f47ab004bab387cbd1e47"
+    },
+    {
+      "path": "apps/bridge/components/navigation/primary-navigation.tsx",
+      "sha256": "4921662910071f44980855632b3486c951860d4000a5526c3c780b400855ee5c"
+    },
+    {
+      "path": "apps/bridge/components/navigation/app-footer.tsx",
+      "sha256": "9baba0c646c8bb6f0a6111f8aee9f816ccd51f2e33f6345ca618c0db3b4733b0"
+    },
+    {
+      "path": "apps/bridge/hooks/use-provider-diagnostics.ts",
+      "sha256": "06c5f0a3f494927dd0bf24679e5979b92eb022c12be0dae2292b5576f4698e38"
+    },
+    {
+      "path": "apps/bridge/components/status/operational-status-dashboard.tsx",
+      "sha256": "217ecd9078b38c72cea0f44ff838018e24def97c4368a0fe004b30990e0d0efe"
+    },
+    {
+      "path": "apps/bridge/app/status/page.tsx",
+      "sha256": "5128fbeda00e1dc0b232283422ec02c0b04722a1554c15be4cda44b1ed2e9439"
+    },
+    {
+      "path": "apps/backend/src/routing/routes.ts",
+      "sha256": "1ba8fe02a88d76d1ae3bd05361fb5446aee25c13802cce4bdba64ffbeb39bd9b"
+    },
+    {
+      "path": "apps/backend/src/routing/router.ts",
+      "sha256": "4c19c872dc5b3be3740c8b87726a3c23a4d4f7f990543ffbda4629d2dced188b"
+    },
+    {
+      "path": "scripts/app-routing-production-check.mjs",
+      "sha256": "eb248d2c38ada250a61edf74d2a2695d7d674a3fb702a4b7748b6f9cb9831769"
+    },
+    {
+      "path": "scripts/backend-routing-production-check.mjs",
+      "sha256": "a051149da51567d69434b014977879cdd77b0d97b2938a8c9a5a0d8b4ae34e72"
+    },
+    {
+      "path": "docs/ROUTING_AND_REDIRECTS.md",
+      "sha256": "d796f9804723e0678bd8e856b838779cbd5e8368e754addf753d586b75c266db"
+    },
+    {
+      "path": "docs/VALIDATION_MONOREPO_ROUTING_2026-08-17.md",
+      "sha256": "89da039a95be2be4ffe4b72c56f18561d608ef4e1bbadaa3cd11fd1bb8b0b432"
+    },
+    {
+      "path": "scripts/workspace-install-preflight.mjs",
+      "sha256": "a10cccf4e9f7b7949cba3af829e496480f37a78ac62c7593a60ea99b07b2c21d"
+    },
+    {
+      "path": "scripts/dev-stack-recovery-production-check.mjs",
+      "sha256": "ff14443fd6773bf9398eb45aaa56d7027de0861fbfe534e2b673af071ad0a48e"
+    },
+    {
+      "path": "tsconfig.base.json",
+      "sha256": "13b8cd3e7f249fd46a93bcd980b55f3cef9c49dd0a487e991e21eaef94c6f589"
+    },
+    {
+      "path": "apps/backend/src/bridge/config.ts",
+      "sha256": "a12bea262b42c5d2a5789a6471f6ab8575d05e0aaa2e8c837c420a97759c3d83"
+    },
+    {
+      "path": "apps/backend/src/bridge/rpc.ts",
+      "sha256": "2223e9b3ba6d0afbf6dfb8317c5c472d60909d4a98081840f88b4e5b59c0d11d"
+    },
+    {
+      "path": "apps/backend/src/data/pools.ts",
+      "sha256": "7a79db1e2f9436fcdcbdfab30b184eeb8839a02f5fc35fe9191b8ccbb8244cac"
+    },
+    {
+      "path": "apps/backend/src/data/persistence.ts",
+      "sha256": "b65aa722605951a13262acf3d94333dde0f87123010a499e2f8c51b8d18d8d4e"
+    },
+    {
+      "path": "apps/backend/src/index.ts",
+      "sha256": "de2cd073d809a145fe78ac9bbdff7ab1fd46fbbc7353f18e15570da41e032584"
+    },
+    {
+      "path": "apps/backend/src/swap/cetus.ts",
+      "sha256": "1890ee33312bc615fe2421a7933253fa0f612ed1137420dc13158c2085625d9a"
+    },
+    {
+      "path": ".devcontainer/devcontainer.json",
+      "sha256": "7483608c119954d3721f9379b517d74cd4cd70e057678cd17a9f884cafbc5664"
+    },
+    {
+      "path": ".devcontainer/Dockerfile",
+      "sha256": "8fce12502af7cd9f83f46815bcb0aa9eaab0409f0fd8baeef9187f865cb7de67"
+    },
+    {
+      "path": ".devcontainer/docker-compose.yml",
+      "sha256": "298bed8cf3a5e70676ab505d8d0aaef5622056b2a09af79e5ec5ff441ff1cf7f"
+    },
+    {
+      "path": ".devcontainer/devcontainer.env.example",
+      "sha256": "ec651b47a0f498d17012ba039bc347b1be743811267756e8b607e14d206f51ac"
+    },
+    {
+      "path": ".devcontainer/init-env.sh",
+      "sha256": "3d62f5d3844f7a8b9863fbddbfe18f03db0f87330d2d9e83bc941b231d256ced"
+    },
+    {
+      "path": ".devcontainer/post-create.sh",
+      "sha256": "01f344458529c9b8db0166a846535ae562b9ba8563571e2f5f44e0a0ef7a9685"
+    },
+    {
+      "path": "scripts/devcontainer-production-check.mjs",
+      "sha256": "43ff57953097ee39de6ad51988dc87cf8af4cb660d3e8bad481b7c0331281278"
+    },
+    {
+      "path": "bootstrap.sh",
+      "sha256": "04788b7242cfe97fb4105fd764d3a248eafd4905ecb58e564a7c026c8059bcdb"
+    },
+    {
+      "path": "pnpmw",
+      "sha256": "04ddb79ee5a57e7dea03e1f486b9233b423f29a990d230ebb629540c466f934c"
+    },
+    {
+      "path": "scripts/bootstrap-toolchain.sh",
+      "sha256": "beca6b40e81f88745aea6725a92767283407fd24c34cb8826e15a44ee0bd7f67"
+    },
+    {
+      "path": "scripts/bootstrap-runtime.sh",
+      "sha256": "8c13a6010beb987513b1b89b63d37be9e3846dcb2ff14e0785a31f1ba4391a5c"
+    },
+    {
+      "path": "scripts/activate-runtime.sh",
+      "sha256": "94990b309817b894acaa2a081eb37916aee9debe6eb5e24cb15af2a24fb5b567"
+    },
+    {
+      "path": "scripts/compose-dev.sh",
+      "sha256": "a2aa5bcf6a72cc16bc64769ab15665c81f1900232321417fa90004d4f73aa3a2"
+    },
+    {
+      "path": ".vscode/tasks.json",
+      "sha256": "252917581744abbb0272ec4da99c070e309c3e6d007ab4112b551f7a0f18b90b"
+    },
+    {
+      "path": "scripts/toolchain-bootstrap-production-check.mjs",
+      "sha256": "1ea66bf2eaefe3d87ec784e0c4cf8eb90d47046c3bf1dc82b682ab31f8911a8f"
+    },
+    {
+      "path": "scripts/toolchain-bootstrap-selftest.sh",
+      "sha256": "d63a6c9fc37c854c54bc8cdc32b1a9376f7783277baa4c55a82a89822c66c7cd"
+    },
+    {
+      "path": "scripts/node-runtime-marker-production-check.mjs",
+      "sha256": "50a8d1e241c37fb909eacf490e321ca217272564cdd2bc0d82be885de4e28930"
+    },
+    {
+      "path": "docs/NODE_RUNTIME.md",
+      "sha256": "484e6f7fc225f5d658c5401f4c7f7916fd5f960e9c6120831e1edc3ab11f7350"
+    },
+    {
+      "path": "compose.dev.yaml",
+      "sha256": "9e3b45c92acefe6b46f36b45bf97c3058ddf5ac2a5725f3c9cbc1f943d79bb6e"
+    },
+    {
+      "path": "scripts/local-postgres.mjs",
+      "sha256": "b442cd450e9a68e2e99eaee69ab7fca1c3a4d888c90067535036fc27ea8b9439"
+    },
+    {
+      "path": "scripts/dev-stack-bootstrap.sh",
+      "sha256": "c374e00e576b39612f0054d3b1e76bcc25a6c71f41d5d1508c723472f837f551"
+    },
+    {
+      "path": "scripts/local-dev-infrastructure-production-check.mjs",
+      "sha256": "60730372fe5919d8985baa33362afa44981ea16597f16079d0db03cdd3774298"
+    },
+    {
+      "path": "docs/LOCAL_DEVELOPMENT.md",
+      "sha256": "2cadb9309766ab0a7514922ab245640d29f24455d7a102a7fc742b04e8145649"
+    },
+    {
+      "path": "docs/DEVCONTAINER.md",
+      "sha256": "73f9d7b3d9a149d9b2caa5bd01a4b9a0c29f730f8176094911530a982d51090b"
+    },
+    {
+      "path": ".dockerignore",
+      "sha256": "dff0d0d126516a8b58b387f0458729dc31a56eb4bcb87596be90341216664abb"
     }
   ]
 }

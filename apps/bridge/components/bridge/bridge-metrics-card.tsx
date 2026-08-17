@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/lib/api/browser-api";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { baseUnitsToDecimalString } from "@/lib/bridge/base-units";
@@ -63,7 +64,7 @@ export function BridgeMetricsCard() {
     const timeout = window.setTimeout(() => next.abort(), 8_000);
 
     try {
-      const response = await fetch(`/api/v1/metrics/bridge?windowHours=${hours}`, { cache: "no-store", signal: next.signal });
+      const response = await apiFetch(`/api/v1/metrics/bridge?windowHours=${hours}`, { cache: "no-store", signal: next.signal });
       const body: unknown = await response.json();
       if (!response.ok || !isBridgeMetricsPayload(body)) throw new Error("Invalid metrics response");
       setData(body);

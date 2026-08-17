@@ -7,10 +7,34 @@ const outDir = path.join(root, "api", "postman");
 const collectionPath = path.join(outDir, "PowerChain-DeFAI.postman_collection.json");
 const environmentPath = path.join(outDir, "PowerChain-DeFAI.local.postman_environment.json");
 const productionEnvironmentPath = path.join(outDir, "PowerChain-DeFAI.production.postman_environment.json");
+const methodsCollectionPath = path.join(outDir, "PowerChain-DeFAI.methods.postman_collection.json");
 const apiDocsPath = path.join(outDir, "API_DOCS.md");
 const check = process.argv.includes("--check");
 
 const { actions } = JSON.parse(fs.readFileSync(actionsPath, "utf8"));
+
+const postmanSpecificationUrl = "https://crimson-crescent-8585.postman.co/workspace/55a50a8b-cdb7-46f5-807e-3494d0262565/specification/1afb4b8d-159d-4f42-8805-f1f1a5143539/file/04e6ee61-ea2e-4c44-83c6-51471951a035";
+
+function exampleResponseFor(action, request) {
+  const body = {
+    ok: true,
+    example: true,
+    authoritative: false,
+    method: action.method,
+    path: action.path,
+    note: "Illustrative Postman example only; actual response schema is defined by OpenAPI and runtime behavior.",
+  };
+  return {
+    name: "Illustrative 200 response",
+    originalRequest: request,
+    status: "OK",
+    code: 200,
+    _postman_previewlanguage: "json",
+    header: [{ key: "Content-Type", value: "application/json" }],
+    cookie: [],
+    body: JSON.stringify(body, null, 2),
+  };
+}
 function title(value) { return value.split(/[._-]/).filter(Boolean).map((part) => part[0].toUpperCase() + part.slice(1)).join(" "); }
 function folderName(action) { const rest = action.path.replace(/^\/api\/v1\//, ""); return title((rest.split("/")[0] || "root").replace(/^:/, "parameter")); }
 function baseVariableFor(action) {
@@ -81,7 +105,7 @@ function requestFor(action) {
     headers.push({ key: "Content-Type", value: "application/json" });
     request.body = { mode: "raw", raw: bodyTemplate(action), options: { raw: { language: "json" } } };
   }
-  return { name: title(action.name), request, response: [] };
+  return { name: title(action.name), request, response: [exampleResponseFor(action, request)] };
 }
 const groups = new Map();
 for (const action of actions) {
@@ -126,6 +150,43 @@ const collection = {
   item: [...groups.entries()].sort(([a],[b]) => a.localeCompare(b)).map(([name,item]) => ({name,item}))
 };
 
+function environmentValues(overrides) {
+  return collection.variable.map((variable) => ({
+    key: variable.key,
+    value: Object.prototype.hasOwnProperty.call(overrides, variable.key) ? overrides[variable.key] : variable.value,
+    enabled: true,
+  }));
+}
+
+const methodGroups = new Map();
+for (const action of actions) {
+  const items = methodGroups.get(action.method) ?? [];
+  items.push(requestFor(action));
+  methodGroups.set(action.method, items);
+}
+const methodsCollection = {
+  info: {
+    name: "PowerChain DeFAI API by HTTP Method 1.0.0",
+    description: "Generated from shared/actions.json. Requests are grouped under GET, POST and PUT folders and include sanitized illustrative response examples. Use OpenAPI and live responses as the authoritative runtime contract.",
+    schema: "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  variable: collection.variable,
+  event: [{
+    listen: "test",
+    script: {
+      type: "text/javascript",
+      exec: [
+        "pm.test('response is not a server error', function () {",
+        "  pm.expect(pm.response.code).to.be.below(500);",
+        "});",
+      ],
+    },
+  }],
+  item: [...methodGroups.entries()]
+    .sort(([a],[b]) => a.localeCompare(b))
+    .map(([name,item]) => ({ name, item: item.sort((a,b) => String(a.request?.url).localeCompare(String(b.request?.url))) })),
+};
+
 function markdownApiDocs() {
   const grouped = new Map();
   for (const action of actions) {
@@ -163,11 +224,15 @@ function markdownApiDocs() {
     "",
     "## Import into Postman",
     "",
-    "1. Import `PowerChain-DeFAI.postman_collection.json`.",
-    "2. Import `PowerChain-DeFAI.local.postman_environment.json` for local development or `PowerChain-DeFAI.production.postman_environment.json` for production hosts.",
-    "3. Set the `apiKey` environment variable only when the selected environment requires one.",
-    "4. Use the split collections under `../bridge/postman/` and `../swap/postman/` when you want domain-isolated testing.",
-    "5. For schema-first workflows, import `../swagger.yaml`, `../bridge/openapi.yaml`, or `../swap/openapi.yaml` directly into Postman.",
+    "1. Import `PowerChain-DeFAI.postman_collection.json` for domain-oriented navigation.",
+    "2. Import `PowerChain-DeFAI.methods.postman_collection.json` when you want requests grouped explicitly under `GET`, `POST`, and `PUT` folders with saved response examples.",
+    "3. Import `PowerChain-DeFAI.local.postman_environment.json` for local development or `PowerChain-DeFAI.production.postman_environment.json` for production hosts.",
+    "4. Set the `apiKey` environment variable only when the selected environment requires one.",
+    "5. Add test data from `datasets/PowerChain-DeFAI.dataset.csv` when creating a Postman dataset/data source.",
+    "6. Use the split collections under `../bridge/postman/` and `../swap/postman/` when you want domain-isolated testing.",
+    "7. For schema-first workflows, import `../swagger.yaml`, `../bridge/openapi.yaml`, or `../swap/openapi.yaml` directly into Postman.",
+    "",
+    `Workspace specification reference (requires access to the configured Postman workspace): ${postmanSpecificationUrl}`,
     "",
     "## Postman Flow architecture",
     "",
@@ -180,6 +245,8 @@ function markdownApiDocs() {
     "| Specs | `api/postman/specs/PowerChain-DeFAI.postman_specs.json` | Machine-readable action/domain/auth/idempotency inventory |",
     "| Runner flows | `api/postman/flows/PowerChain-DeFAI.flows.postman_collection.json` | Ordered preflight, Swap and Bridge workflows for Collection Runner |",
     "| Flow manifest | `api/postman/flows/PowerChain-DeFAI.flows.json` | Declarative source describing flow steps and safety boundaries |",
+    "| Method collection | `api/postman/PowerChain-DeFAI.methods.postman_collection.json` | Requests grouped by HTTP method with sanitized saved response examples |",
+    "| Datasets | `api/postman/datasets/` | CSV input for Postman datasets/data-driven runs |",
     "| Mocks | `api/postman/mocks/PowerChain-DeFAI.mocks.postman_collection.json` | Saved examples for Postman mock servers |",
     "",
     "Mock fixtures always declare `mock: true` and `authoritativeForBridgeAccounting: false`. A mocked quote, transaction, balance or runtime response is never evidence that a wallet signed, a transaction executed, or Wormhole NTT settled principal.",
@@ -228,12 +295,11 @@ function markdownApiDocs() {
 const environment = {
   id: "powerchain-defai-local-1-0-0",
   name: "PowerChain DeFAI · Local",
-  values: [
-    { key: "baseUrl", value: "http://localhost:3000", enabled: true },
-    { key: "apiKey", value: "", enabled: true },
-    { key: "id", value: "replace-me", enabled: true },
-    { key: "transferId", value: "replace-me", enabled: true },
-  ],
+  values: environmentValues({
+    baseUrl: "http://localhost:3000",
+    swapUrl: "http://localhost:3000",
+    bridgeUrl: "http://localhost:3000",
+  }),
   _postman_variable_scope: "environment",
   _postman_exported_using: "PowerChain DeFAI source generator"
 };
@@ -241,18 +307,15 @@ const environment = {
 const productionEnvironment = {
   id: "powerchain-defai-production-1-0-0",
   name: "PowerChain DeFAI · Production",
-  values: [
-    { key: "baseUrl", value: "https://powerchain.app", enabled: true },
-    { key: "swapUrl", value: "https://swap.powerchain.app", enabled: true },
-    { key: "bridgeUrl", value: "https://bridge.powerchain.app", enabled: true },
-    { key: "apiKey", value: "", enabled: true },
-    { key: "id", value: "replace-me", enabled: true },
-    { key: "transferId", value: "replace-me", enabled: true },
-  ],
+  values: environmentValues({
+    baseUrl: "https://powerchain.app",
+    swapUrl: "https://swap.powerchain.app",
+    bridgeUrl: "https://bridge.powerchain.app",
+  }),
   _postman_variable_scope: "environment",
   _postman_exported_using: "PowerChain DeFAI source generator"
 };
-const files = [[collectionPath, JSON.stringify(collection,null,2)+"\n"],[environmentPath, JSON.stringify(environment,null,2)+"\n"],[productionEnvironmentPath, JSON.stringify(productionEnvironment,null,2)+"\n"],[apiDocsPath, markdownApiDocs()]];
+const files = [[collectionPath, JSON.stringify(collection,null,2)+"\n"],[methodsCollectionPath, JSON.stringify(methodsCollection,null,2)+"\n"],[environmentPath, JSON.stringify(environment,null,2)+"\n"],[productionEnvironmentPath, JSON.stringify(productionEnvironment,null,2)+"\n"],[apiDocsPath, markdownApiDocs()]];
 if (check) {
   let ok = true;
   for (const [file, expected] of files) {
@@ -263,5 +326,5 @@ if (check) {
 } else {
   fs.mkdirSync(outDir,{recursive:true});
   for (const [file, value] of files) fs.writeFileSync(file,value);
-  console.log(`Generated Postman collection/environment from ${actions.length} actions`);
+  console.log(`Generated Postman collections/environments from ${actions.length} actions`);
 }

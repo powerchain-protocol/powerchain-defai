@@ -15,3 +15,5 @@ export * from "./blockchains";
 export * from "./ai-providers";
 export * from "./storage-config";
 export * from "./notification-config";
+
+export * from "./pyth-sui";

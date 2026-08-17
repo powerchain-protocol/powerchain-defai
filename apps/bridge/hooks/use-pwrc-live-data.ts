@@ -1,5 +1,7 @@
 "use client";
+
 import { useCallback, useEffect, useRef, useState } from "react";
+import { apiFetch } from "@/lib/api/browser-api";
 
 type LiveState = { data: unknown; loading: boolean; error: string | null; updatedAt: number | null };
 
@@ -10,14 +12,14 @@ export function usePwrcLiveData(solanaOwner?: string, suiOwner?: string) {
   const refresh = useCallback(async () => {
     const current = ++generation.current;
     controller.current?.abort();
-    const abort = new AbortController();
-    controller.current = abort;
+    const abort = new AbortController(); controller.current = abort;
     setState((old) => ({ ...old, loading: true, error: null }));
     try {
-      const url = new URL("/api/v1/data/pwrc", window.location.origin);
-      if (solanaOwner) url.searchParams.set("solanaOwner", solanaOwner);
-      if (suiOwner) url.searchParams.set("suiOwner", suiOwner);
-      const response = await fetch(url, { signal: abort.signal, cache: "no-store" });
+      const params = new URLSearchParams();
+      if (solanaOwner) params.set("solanaOwner", solanaOwner);
+      if (suiOwner) params.set("suiOwner", suiOwner);
+      const suffix = params.size ? `?${params}` : "";
+      const response = await apiFetch(`/api/v1/data/pwrc${suffix}`, { signal: abort.signal, cache: "no-store" });
       const json = await response.json();
       if (!response.ok && response.status !== 503) throw new Error(json?.message || `HTTP ${response.status}`);
       if (generation.current !== current) return;

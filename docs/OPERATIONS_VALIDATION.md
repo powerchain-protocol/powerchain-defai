@@ -7,7 +7,7 @@ Validation performed for this improvement pass:
 - Prisma/Supabase migration parity: PASS (5 mirrored migrations).
 - Environment contract: PASS (66 canonical keys).
 - Operational runtime hardening gate: PASS.
-- All source-level production check scripts except the Node-26 runtime pin gate: PASS.
+- All source-level production check scripts except the environment-specific Node runtime/lockfile gates: PASS.
 - TypeScript parser sweep: PASS (243 TS/TSX files, 0 syntax errors; parser available in execution environment was TypeScript 5.8.3).
 - Node typings aligned to 26.1.2 across all first-party workspaces.
 

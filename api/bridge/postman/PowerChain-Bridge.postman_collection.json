@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "PowerChain Bridge API 1.0.0",
-    "description": "Generated bridge-only collection from shared/actions.json. See api/postman/API_DOCS.md for the PowerChain | DeFAI API Docs, authentication policy, production domains, and shared API inventory.",
+    "description": "Generated bridge-only collection from shared/actions.json. See api/postman/API_DOCS.md for authentication, environments and the shared API inventory.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [

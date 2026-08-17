@@ -83,7 +83,7 @@ export async function checkProviderHealth(): Promise<{ ok: boolean; status: Prov
     const endpoints = suiGrpcSnapshots(result.value.endpoints);
     const status = result.value.healthyEndpointCount >= 2 ? "healthy" : "degraded";
     providers.push({
-      provider: "sui", ok: true, status, latencyMs: result.latencyMs, head: undefined,
+      provider: "sui", ok: true, status, latencyMs: result.latencyMs,
       stale: false, source: "grpc", endpoints, poolCooldownRemainingMs: 0, metrics: emptyMetrics(),
     });
   } catch (error) {
@@ -121,7 +121,7 @@ export async function checkProviderReadiness() {
       ? { provider: "solana" as const, ready: !solana.value.value.meta.stale, redundancy: redundancy(solanaEndpoints), latencyMs: solana.value.latencyMs, head: String(solana.value.value.value) }
       : { provider: "solana" as const, ready: false, redundancy: redundancy(solanaEndpoints), error: sanitizeError(solana.reason) },
     sui.status === "fulfilled"
-      ? { provider: "sui" as const, ready: sui.value.value.healthyEndpointCount > 0, redundancy: sui.value.value.healthyEndpointCount >= 2 ? "full" as const : sui.value.value.healthyEndpointCount === 1 ? "reduced" as const : "none" as const, latencyMs: sui.value.latencyMs, head: undefined }
+      ? { provider: "sui" as const, ready: sui.value.value.healthyEndpointCount > 0, redundancy: sui.value.value.healthyEndpointCount >= 2 ? "full" as const : sui.value.value.healthyEndpointCount === 1 ? "reduced" as const : "none" as const, latencyMs: sui.value.latencyMs }
       : { provider: "sui" as const, ready: false, redundancy: "none" as const, configuredEndpoints: suiEndpointCount, error: sanitizeError(sui.reason) },
   ];
   const ready = providers.every((provider) => provider.ready);

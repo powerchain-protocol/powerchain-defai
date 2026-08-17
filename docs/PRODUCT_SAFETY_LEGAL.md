@@ -19,7 +19,7 @@ These are production-ready application surfaces but remain operator templates. T
 
 ## IP abuse protection
 
-`clientIpSecurityContext()` ignores generic `X-Forwarded-For` and `X-Real-IP` headers. When `VERCEL=1`, it may read Vercel's platform `x-vercel-forwarded-for` value, validate it as an IP address, and convert it to a pseudonymous rate-limit key. `POWERCHAIN_IP_HASH_SECRET` may provide a stable HMAC key; otherwise a process-local random salt is used so the raw IP does not become the stored rate-limit key.
+`clientIpSecurityContext()` ignores generic `X-Forwarded-For` and `X-Real-IP` headers. When `VERCEL=1`, it may read Vercel's platform `x-vercel-forwarded-for` value. When `POWERCHAIN_RUNTIME_PLATFORM=cloudflare`, it may read Cloudflare's `CF-Connecting-IP` value. In both cases the value is validated as an IP address and converted to a pseudonymous rate-limit key. `POWERCHAIN_IP_HASH_SECRET` may provide a stable HMAC key; otherwise a process-local random salt is used so the raw IP does not become the stored rate-limit key.
 
 IP-derived state is never authoritative for wallet identity, transaction authorization, or Bridge accounting.
 

@@ -2,9 +2,33 @@
   "name": "@powerchain/blockchain",
   "version": "1.0.0",
   "private": true,
+  "description": "Shared PowerChain blockchain primitives, chain adapters, wallet-safe utilities, and transaction helpers.",
+  "license": "MIT",
+  "author": {
+    "name": "PowerChain"
+  },
   "type": "module",
-  "exports": { ".": "./src/index.ts", "./addresses": "./src/addresses.ts", "./routes": "./src/routes.ts" },
-  "scripts": { "typecheck": "tsc --noEmit" },
-  "dependencies": { "@powerchain/clusters": "workspace:*", "bs58": "6.0.0" },
-  "devDependencies": { "typescript": "5.9.3" }
+  "engines": {
+    "node": ">=24 <26",
+    "pnpm": ">=11.22.0 <12"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./addresses": "./src/addresses.ts",
+    "./routes": "./src/routes.ts",
+    "./sui": "./src/sui.ts",
+    "./pyth-sui": "./src/pyth-sui.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@powerchain/clusters": "workspace:*",
+    "bs58": "6.0.0",
+    "@mysten/sui": "2.26.1",
+    "@solana/kit": "7.1.0"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2"
+  }
 }

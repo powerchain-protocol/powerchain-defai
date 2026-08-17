@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { apiFetch } from "@/lib/api/browser-api";
 import type { WalletPortfolioResponse } from "@/lib/types/wallet-api";
 
 export function useWalletPortfolio(solanaAddress?: string | null, suiAddress?: string | null) {
@@ -17,10 +18,10 @@ export function useWalletPortfolio(solanaAddress?: string | null, suiAddress?: s
     const timer = window.setTimeout(() => abort.abort(), 10_000);
     setLoading(true); setError(null);
     try {
-      const url = new URL("/api/v1/wallet/portfolio", window.location.origin);
-      if (solanaAddress) url.searchParams.set("solanaAddress", solanaAddress);
-      if (suiAddress) url.searchParams.set("suiAddress", suiAddress);
-      const response = await fetch(url, { cache: "no-store", signal: abort.signal });
+      const params = new URLSearchParams();
+      if (solanaAddress) params.set("solanaAddress", solanaAddress);
+      if (suiAddress) params.set("suiAddress", suiAddress);
+      const response = await apiFetch(`/api/v1/wallet/portfolio?${params}`, { cache: "no-store", signal: abort.signal });
       const payload = await response.json();
       if (current !== generation.current) return;
       if (!response.ok && response.status !== 503) throw new Error(payload?.message || `HTTP ${response.status}`);
@@ -29,7 +30,10 @@ export function useWalletPortfolio(solanaAddress?: string | null, suiAddress?: s
     } catch (cause) {
       if (current !== generation.current) return;
       setError(abort.signal.aborted ? "Wallet portfolio request timed out" : cause instanceof Error ? cause.message : "Wallet portfolio unavailable");
-    } finally { window.clearTimeout(timer); if (current === generation.current) setLoading(false); }
+    } finally {
+      window.clearTimeout(timer);
+      if (current === generation.current) setLoading(false);
+    }
   }, [solanaAddress, suiAddress]);
   useEffect(() => { void refresh(); return () => controller.current?.abort(); }, [refresh]);
   return { data, loading, error, refresh };

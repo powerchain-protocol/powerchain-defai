@@ -1,5 +1,5 @@
 import "server-only";
-import { prisma } from "@powerchain/database";
+import { prisma } from "@powerchain/database/prisma";
 import type { BridgeMetricsPayload } from "../../lib/data/data";
 
 const ACTIVE_STATUSES = [

@@ -30,3 +30,7 @@
 - Wormhole NTT remains the sole cross-chain PWRC/wPWRC principal-movement protocol.
 
 Stable exports should be added through the package export map instead of importing deep source paths from other workspaces.
+
+## Runtime topology
+
+This package is a server-side **library**, not a standalone HTTP process. The network runtime is `@powerchain/bridge` (Next.js API/UI), while asynchronous work runs in the bridge, claims, and fees worker apps. Use `pnpm dev:backend` only for backend TypeScript watch mode. See [`../../docs/SERVICE_TOPOLOGY.md`](../../docs/SERVICE_TOPOLOGY.md).

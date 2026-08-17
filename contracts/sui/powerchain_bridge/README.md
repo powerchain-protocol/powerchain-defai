@@ -40,3 +40,7 @@ pnpm protocol:check
 ## Intent validation upgrade
 
 Bridge intent validation is factored into reusable program functions and mirrored by `@powerchain/bridge-core`. Existing config layouts remain stable. The programs emit version-2 observability context while Wormhole NTT remains the sole cross-chain principal movement protocol.
+
+## Runtime deployment evidence
+
+The application runtime verifier requires the configured package to resolve as a package object and both canonical guard objects to match the expected Move types. Because the module creates `BridgeConfig` and `InformationCommitment` with `transfer::share_object`, runtime verification also requires both configured object IDs to resolve as shared objects. A matching object ID/type with an unexpected ownership mode remains gated.

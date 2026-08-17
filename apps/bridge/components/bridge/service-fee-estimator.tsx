@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/lib/api/browser-api";
 
 import { useMemo, useState } from "react";
 import { CopyAddress } from "./copy-address";
@@ -57,7 +58,7 @@ export function ServiceFeeEstimator() {
     setPlan(null);
     try {
       const qs = new URLSearchParams({ routeId: routeId.trim(), sourceChain: chain, principalBaseUnits: principal.toString() });
-      const response = await fetch(`/api/v1/fees/collection-plan?${qs.toString()}`, { cache: "no-store", headers: { accept: "application/json" } });
+      const response = await apiFetch(`/api/v1/fees/collection-plan?${qs.toString()}`, { cache: "no-store", headers: { accept: "application/json" } });
       const payload = (await response.json()) as ApiEnvelope<CollectionPlan>;
       if (!response.ok || !payload.data) throw new Error(payload.error?.message || payload.error?.code || "Unable to load fee plan");
       setPlan(payload.data);

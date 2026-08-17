@@ -13,6 +13,8 @@ import { suiscanTransactionUrl } from "@/lib/explorers/links";
 import { configuredSwapAssets, type SwapAsset, type SwapQuote } from "@/lib/swap/swap";
 import { useSlippageTolerance } from "@/hooks/use-slippage-tolerance";
 import { SwapSettings } from "./swap-settings";
+import { useUserSettings } from "@/context/user-settings-context";
+import { apiFetch } from "@/lib/api/browser-api";
 
 function toBaseUnits(value: string, decimals: number): string | null {
   const normalized = value.trim();
@@ -109,7 +111,9 @@ export function SwapInterface() {
   const [to, setTo] = useState<SwapAsset>(initialTo.id === initialFrom.id ? (assets.find((asset) => asset.id !== initialFrom.id) ?? initialTo) : initialTo);
   const [amount, setAmount] = useState("");
   const { slippageBps, setSlippageBps } = useSlippageTolerance();
-  const [protection, setProtection] = useState(true);
+  const { settings, updateSettings } = useUserSettings();
+  const protection = settings.swap.mevProtection;
+  const setProtection = (value: boolean) => updateSettings({ swap: { ...settings.swap, mevProtection: value } });
   const [quote, setQuote] = useState<SwapQuote | null>(null);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [status, setStatus] = useState<"idle" | "quoting" | "ready" | "signing" | "submitted" | "error">("idle");
@@ -178,7 +182,7 @@ export function SwapInterface() {
     setBalanceState("loading");
     try {
       const params = new URLSearchParams({ address: wallets.suiAddress, asset: from.id });
-      const response = await fetch(`/api/v1/swap/balance?${params.toString()}`, { cache: "no-store", signal: controller.signal });
+      const response = await apiFetch(`/api/v1/swap/balance?${params.toString()}`, { cache: "no-store", signal: controller.signal });
       const body: unknown = await response.json();
       const next = parseBalance(body);
       if (!response.ok || !next || next.asset !== from.id) throw new Error("SWAP_BALANCE_UNAVAILABLE");
@@ -206,7 +210,7 @@ export function SwapInterface() {
     setSubmittedDigest(null);
     try {
       const payer = requireConnectedPayer({ chain: "SUI", requestedPayer: wallets.suiAddress, connectedSuiAddress: wallets.suiAddress, connectedSolanaAddress: wallets.solanaAddress });
-      const response = await fetch("/api/v1/swap/quote", {
+      const response = await apiFetch("/api/v1/swap/quote", {
         method: "POST",
         headers: { "content-type": "application/json" },
         signal: controller.signal,
@@ -264,7 +268,7 @@ export function SwapInterface() {
     setMessage(null);
     try {
       const payer = requireConnectedPayer({ chain: "SUI", requestedPayer: quote.payer, connectedSuiAddress: wallets.suiAddress, connectedSolanaAddress: wallets.solanaAddress });
-      const response = await fetch("/api/v1/swap/transaction", {
+      const response = await apiFetch("/api/v1/swap/transaction", {
         method: "POST",
         headers: { "content-type": "application/json" },
         signal: controller.signal,
@@ -281,7 +285,7 @@ export function SwapInterface() {
       setReviewOpen(false);
       setStatus("submitted");
       setSubmittedDigest(result.Transaction.digest);
-      void fetch("/api/v1/swap/receipt",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({chain:"SUI",provider:"cetus",payer,inputAsset:from.coinType,outputAsset:to.coinType,inputBaseUnits:amountBaseUnits,quotedOutputBaseUnits:quote.amountOutBaseUnits,minimumOutputBaseUnits:quote.minimumOutBaseUnits,slippageBps:quote.slippageBps,transactionDigest:result.Transaction.digest})}).catch(()=>undefined);
+      void apiFetch("/api/v1/swap/receipt",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({chain:"SUI",provider:"cetus",payer,inputAsset:from.coinType,outputAsset:to.coinType,inputBaseUnits:amountBaseUnits,quotedOutputBaseUnits:quote.amountOutBaseUnits,minimumOutputBaseUnits:quote.minimumOutBaseUnits,slippageBps:quote.slippageBps,transactionDigest:result.Transaction.digest})}).catch(()=>undefined);
       setMessage("Swap transaction submitted. Verify execution status before treating the operation as final.");
       setQuote(null);
       setAmount("");

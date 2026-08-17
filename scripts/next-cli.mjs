@@ -1,7 +1,28 @@
 import { spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
+import path from "node:path";
 
-const executable = process.platform === "win32" ? "next.cmd" : "next";
-const result = spawnSync(executable, process.argv.slice(2), {
+/**
+ * Resolve Next from the calling workspace instead of relying on PATH/.bin.
+ * This is pnpm-safe and makes filtered/standalone app commands deterministic.
+ */
+function resolveNextBin() {
+  const appPackage = path.join(process.cwd(), "package.json");
+  const requireFromApp = createRequire(appPackage);
+  try {
+    return requireFromApp.resolve("next/dist/bin/next");
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : String(error);
+    console.error("Unable to resolve the Next.js CLI from the current workspace.");
+    console.error(`cwd: ${process.cwd()}`);
+    console.error("Run `source ./bootstrap.sh`, then `pnpm workspace:repair` from the monorepo root before starting the app.");
+    console.error(`resolver: ${reason}`);
+    process.exit(1);
+  }
+}
+
+const nextBin = resolveNextBin();
+const result = spawnSync(process.execPath, [nextBin, ...process.argv.slice(2)], {
   stdio: "inherit",
   env: { ...process.env, NEXT_TELEMETRY_DISABLED: "1" },
 });

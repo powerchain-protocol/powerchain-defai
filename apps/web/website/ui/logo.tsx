@@ -1,0 +1,3 @@
+export function Logo({ compact = false }: { compact?: boolean }) {
+  return <span className="inline-flex items-center gap-2.5"><span className="grid size-9 place-items-center rounded-xl bg-[#102b21] text-white shadow-sm"><svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M7 16.5 12 4l5 12.5-5-2.5-5 2.5Z"/><path d="m8.5 12 3.5 2 3.5-2"/></svg></span>{compact ? null : <span><span className="block text-sm font-extrabold tracking-tight">PowerChain</span><span className="block text-[10px] font-semibold uppercase tracking-[.18em] text-slate-500">DeFAI</span></span>}</span>;
+}

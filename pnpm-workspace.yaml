@@ -12,6 +12,10 @@ preferWorkspacePackages: true
 saveWorkspaceProtocol: true
 sharedWorkspaceLockfile: true
 
+# pnpm-managed project runtime. A shell on Node 24.0.0 is intentionally
+# upgraded to the exact project runtime before lifecycle scripts run.
+runtimeOnFail: download
+
 # Workspace integrity / deterministic recursive operations.
 recursiveInstall: true
 disallowWorkspaceCycles: true
@@ -36,6 +40,9 @@ optimisticRepeatInstall: true
 dedupeInjectedDeps: true
 
 # Dependency lifecycle scripts are allowlisted only.
+# Do not auto-install merely because a pnpm run/exec command sees stale node_modules;
+# setup/bootstrap commands must remain runnable so they can repair the workspace.
+verifyDepsBeforeRun: warn
 strictDepBuilds: true
 allowBuilds:
   # Source-controlled equivalent of interactive `pnpm approve-builds`.
@@ -48,3 +55,11 @@ allowBuilds:
   prisma: true
   esbuild: true
   sharp: true
+
+  "@stellar/stellar-sdk": true
+  "@tailwindcss/oxide": true
+  blake-hash: true
+  keccak: true
+  protobufjs: true
+  tiny-secp256k1: true
+  usb: true

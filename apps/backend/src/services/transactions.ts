@@ -1,5 +1,3 @@
-import "server-only";
-
 import { prisma } from "@powerchain/database/prisma";
 
 export type TransactionChain = "SOLANA" | "SUI";
@@ -43,6 +41,20 @@ export type BridgeHistoryQuery = {
 export type BridgeHistoryPage = {
   data: BridgeHistoryItem[];
   pagination: { nextCursor: string | null; hasNextPage: boolean };
+};
+
+type BridgeHistoryDbRow = {
+  id: string;
+  routeId: string;
+  direction: BridgeHistoryItem["direction"];
+  status: BridgeHistoryStatus;
+  principalBaseUnits: { toFixed(digits?: number): string };
+  sourceAddress: string;
+  destinationAddress: string;
+  sourceTx: string | null;
+  destinationTx: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 const SOLANA_SIGNATURE = /^[1-9A-HJ-NP-Za-km-z]{64,100}$/;
@@ -89,11 +101,11 @@ export async function listBridgeTransactions(query: BridgeHistoryQuery = {}): Pr
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     take: limit + 1,
     ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
-  });
+  }) as BridgeHistoryDbRow[];
   const hasNextPage = rows.length > limit;
   const page = hasNextPage ? rows.slice(0, limit) : rows;
   return {
-    data: page.map((row) => ({
+    data: page.map((row: BridgeHistoryDbRow) => ({
       id: row.id,
       routeId: row.routeId,
       direction: row.direction,

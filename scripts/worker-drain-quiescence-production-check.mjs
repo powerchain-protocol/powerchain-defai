@@ -1,0 +1,10 @@
+import fs from "node:fs";
+const read=(f)=>fs.readFileSync(f,"utf8");
+const ops=read("apps/backend/src/services/operations.ts");
+for (const marker of ["activeLeases", "quiescent", "getOperatorAttentionQueue", "authoritativeForSettlement: false"]) if (!ops.includes(marker)) throw new Error(`OPERATIONS_MARKER_MISSING:${marker}`);
+const route=read("apps/bridge/app/api/v1/operator/operations/attention/route.ts");
+for (const marker of ["requireServiceFeeOperator", "getOperatorAttentionQueue", 'enforceRateLimit(\"operator\"']) if (!route.includes(marker)) throw new Error(`ATTENTION_ROUTE_MARKER_MISSING:${marker}`);
+for (const forbidden of ["sourceAddress", "destinationAddress", "wallet:", "reconciliationEvidence", "LeaseOwner"]) if (route.includes(forbidden)) throw new Error(`ATTENTION_ROUTE_FORBIDDEN:${forbidden}`);
+const readiness=read("apps/bridge/types/system-readiness.ts");
+if (!readiness.includes("activeLeases") || !readiness.includes("quiescent")) throw new Error("READINESS_QUIESCENCE_MISSING");
+console.log("[worker-drain-quiescence] active leases, quiescence, and sanitized operator attention passed");

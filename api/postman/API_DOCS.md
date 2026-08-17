@@ -26,11 +26,15 @@ Runtime policy is controlled server-side by `POWERCHAIN_API_KEY_MODE=off|optiona
 
 ## Import into Postman
 
-1. Import `PowerChain-DeFAI.postman_collection.json`.
-2. Import `PowerChain-DeFAI.local.postman_environment.json` for local development or `PowerChain-DeFAI.production.postman_environment.json` for production hosts.
-3. Set the `apiKey` environment variable only when the selected environment requires one.
-4. Use the split collections under `../bridge/postman/` and `../swap/postman/` when you want domain-isolated testing.
-5. For schema-first workflows, import `../swagger.yaml`, `../bridge/openapi.yaml`, or `../swap/openapi.yaml` directly into Postman.
+1. Import `PowerChain-DeFAI.postman_collection.json` for domain-oriented navigation.
+2. Import `PowerChain-DeFAI.methods.postman_collection.json` when you want requests grouped explicitly under `GET`, `POST`, and `PUT` folders with saved response examples.
+3. Import `PowerChain-DeFAI.local.postman_environment.json` for local development or `PowerChain-DeFAI.production.postman_environment.json` for production hosts.
+4. Set the `apiKey` environment variable only when the selected environment requires one.
+5. Add test data from `datasets/PowerChain-DeFAI.dataset.csv` when creating a Postman dataset/data source.
+6. Use the split collections under `../bridge/postman/` and `../swap/postman/` when you want domain-isolated testing.
+7. For schema-first workflows, import `../swagger.yaml`, `../bridge/openapi.yaml`, or `../swap/openapi.yaml` directly into Postman.
+
+Workspace specification reference (requires access to the configured Postman workspace): https://crimson-crescent-8585.postman.co/workspace/55a50a8b-cdb7-46f5-807e-3494d0262565/specification/1afb4b8d-159d-4f42-8805-f1f1a5143539/file/04e6ee61-ea2e-4c44-83c6-51471951a035
 
 ## Postman Flow architecture
 
@@ -43,6 +47,8 @@ The visual workflow design for Platform Preflight, Sui Swap, Solana/Jupiter Swap
 | Specs | `api/postman/specs/PowerChain-DeFAI.postman_specs.json` | Machine-readable action/domain/auth/idempotency inventory |
 | Runner flows | `api/postman/flows/PowerChain-DeFAI.flows.postman_collection.json` | Ordered preflight, Swap and Bridge workflows for Collection Runner |
 | Flow manifest | `api/postman/flows/PowerChain-DeFAI.flows.json` | Declarative source describing flow steps and safety boundaries |
+| Method collection | `api/postman/PowerChain-DeFAI.methods.postman_collection.json` | Requests grouped by HTTP method with sanitized saved response examples |
+| Datasets | `api/postman/datasets/` | CSV input for Postman datasets/data-driven runs |
 | Mocks | `api/postman/mocks/PowerChain-DeFAI.mocks.postman_collection.json` | Saved examples for Postman mock servers |
 
 Mock fixtures always declare `mock: true` and `authoritativeForBridgeAccounting: false`. A mocked quote, transaction, balance or runtime response is never evidence that a wallet signed, a transaction executed, or Wormhole NTT settled principal.
@@ -136,6 +142,12 @@ Mock fixtures always declare `mock: true` and `authoritativeForBridgeAccounting:
 | `GET` | `/api/v1/data/solana` | `data.solana.get` |
 | `GET` | `/api/v1/data/sui` | `data.sui.get` |
 
+### Escrow
+
+| Method | Path | Action |
+| --- | --- | --- |
+| `GET` | `/api/v1/escrow/readiness` | `escrow.readiness.get` |
+
 ### Fees
 
 | Method | Path | Action |
@@ -210,11 +222,21 @@ Mock fixtures always declare `mock: true` and `authoritativeForBridgeAccounting:
 | `GET` | `/api/v1/operator/fees/reconciliation` | `operator.fees.reconciliation.get` |
 | `GET` | `/api/v1/operator/fees/revenue` | `operator.fees.revenue.get` |
 | `POST` | `/api/v1/operator/fees/settlements/:id/reverify` | `operator.fees.settlements.id.reverify.post` |
+| `GET` | `/api/v1/operator/maintenance` | `operator.maintenance.get` |
+| `PUT` | `/api/v1/operator/maintenance` | `operator.maintenance.put` |
+| `GET` | `/api/v1/operator/operations/attention` | `operator.operations.attention.get` |
+
+### Oracles
+
+| Method | Path | Action |
+| --- | --- | --- |
+| `POST` | `/api/v1/oracles/pyth/sui/updates` | `oracles.pyth.sui.updates.post` |
 
 ### Payments
 
 | Method | Path | Action |
 | --- | --- | --- |
+| `POST` | `/api/v1/payments/checkout` | `payments.checkout.post` |
 | `POST` | `/api/v1/payments/solana-pay` | `payments.solana-pay.post` |
 | `GET` | `/api/v1/payments/status` | `payments.status.get` |
 
@@ -229,6 +251,13 @@ Mock fixtures always declare `mock: true` and `authoritativeForBridgeAccounting:
 | Method | Path | Action |
 | --- | --- | --- |
 | `GET` | `/api/v1/portfolio` | `portfolio.get` |
+
+### Programs
+
+| Method | Path | Action |
+| --- | --- | --- |
+| `GET` | `/api/v1/programs/readiness` | `programs.readiness.get` |
+| `GET` | `/api/v1/programs/readiness/:programId` | `programs.readiness.programId.get` |
 
 ### Providers
 
@@ -266,7 +295,9 @@ Mock fixtures always declare `mock: true` and `authoritativeForBridgeAccounting:
 
 | Method | Path | Action |
 | --- | --- | --- |
+| `GET` | `/api/v1/staking/position` | `staking.position.get` |
 | `GET` | `/api/v1/staking/status` | `staking.status.get` |
+| `GET` | `/api/v1/staking/transactions/:signature` | `staking.transactions.signature.get` |
 
 ### Swap
 
@@ -278,7 +309,15 @@ Mock fixtures always declare `mock: true` and `authoritativeForBridgeAccounting:
 | `POST` | `/api/v1/swap/receipt` | `swap.receipt.post` |
 | `POST` | `/api/v1/swap/solana/execute` | `swap.solana.execute.post` |
 | `POST` | `/api/v1/swap/solana/order` | `swap.solana.order.post` |
+| `GET` | `/api/v1/swap/solana/provider` | `swap.solana.provider.get` |
 | `POST` | `/api/v1/swap/transaction` | `swap.transaction.post` |
+
+### System
+
+| Method | Path | Action |
+| --- | --- | --- |
+| `GET` | `/api/v1/system/readiness` | `system.readiness.get` |
+| `GET` | `/api/v1/system/route-policy` | `system.route-policy.get` |
 
 ### Token
 

@@ -2,81 +2,210 @@ openapi: 3.1.0
 info:
   title: PowerChain Bridge API
   version: 1.0.0
-  description: Bridge-only contract; Wormhole NTT remains the sole cross-chain principal-movement protocol.
+  description: "Bridge-only contract; Wormhole NTT remains the sole cross-chain principal-movement protocol."
 servers:
   - url: /
 security:
   - ApiKey: []
+x-powerchain-route-count: 11
+x-powerchain-action-count: 11
 paths:
   /api/v1/bridge/config:
     get:
+      operationId: bridge.config.get
+      tags: [Bridge]
       summary: Bridge Config Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
       responses:
-        "200":
-          description: Bridge API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/bridge/history:
     get:
+      operationId: bridge.history.get
+      tags: [Bridge]
       summary: Bridge History Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
       responses:
-        "200":
-          description: Bridge API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/bridge/openapi:
     get:
+      operationId: bridge.openapi.get
+      tags: [Bridge]
       summary: Bridge Openapi Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
       responses:
-        "200":
-          description: Bridge API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/bridge/quote:
     post:
+      operationId: bridge.quote.post
+      tags: [Bridge]
       summary: Bridge Quote Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
       responses:
-        "200":
-          description: Bridge API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/bridge/routes:
     get:
+      operationId: bridge.routes.get
+      tags: [Bridge]
       summary: Bridge Routes Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
       responses:
-        "200":
-          description: Bridge API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/bridge/runtime:
     get:
+      operationId: bridge.runtime.get
+      tags: [Bridge]
       summary: Bridge Runtime Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
       responses:
-        "200":
-          description: Bridge API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/bridge/transfers:
     post:
+      operationId: bridge.transfers.post
+      tags: [Bridge]
       summary: Bridge Transfers Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
       responses:
-        "200":
-          description: Bridge API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/bridge/transfers/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, minLength: 1, maxLength: 256 }
     get:
+      operationId: bridge.transfers.id.get
+      tags: [Bridge]
       summary: Bridge Transfers Id Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
       responses:
-        "200":
-          description: Bridge API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/bridge/transfers/{id}/events:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, minLength: 1, maxLength: 256 }
     get:
+      operationId: bridge.transfers.id.events.get
+      tags: [Bridge]
       summary: Bridge Transfers Id Events Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
       responses:
-        "200":
-          description: Bridge API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/bridge/transfers/{id}/events/stream:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, minLength: 1, maxLength: 256 }
     get:
+      operationId: bridge.transfers.id.events.stream.get
+      tags: [Bridge]
       summary: Bridge Transfers Id Events Stream Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
       responses:
-        "200":
-          description: Bridge API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/bridge/transfers/{id}/source:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, minLength: 1, maxLength: 256 }
     post:
+      operationId: bridge.transfers.id.source.post
+      tags: [Bridge]
       summary: Bridge Transfers Id Source Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
       responses:
-        "200":
-          description: Bridge API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
 components:
   securitySchemes:
     ApiKey:
       type: apiKey
       in: header
       name: X-Api-Key
+      description: Runtime enforcement is controlled by POWERCHAIN_API_KEY_MODE.
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+        code: { type: string }
+        requestId: { type: string }
+  responses:
+    BadRequest:
+      description: Request validation failed
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    Unauthorized:
+      description: API authentication failed
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    RateLimited:
+      description: Request rate limit exceeded
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    InternalError:
+      description: Internal request failure
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }

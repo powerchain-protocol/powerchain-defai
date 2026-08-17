@@ -9,6 +9,8 @@ Reusable first-party packages under `packages/` must not depend on application U
 | `@powerchain/runtime` | shared supervised-worker/runtime primitives |
 | `@powerchain/sdk` | typed public client, including separated Bridge and Swap clients |
 
+Application feature packages such as `@powerchain/staking` and `@powerchain/chat` live under `apps/` because they own product/runtime orchestration rather than generic protocol primitives.
+
 Additional first-party workspace foundations live outside `packages/`:
 
 | Workspace | Responsibility |

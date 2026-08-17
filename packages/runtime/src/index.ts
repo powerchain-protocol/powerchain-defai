@@ -109,3 +109,72 @@ export async function runSupervisedWorker(input: {
     }
   }
 }
+
+
+export async function runWithLeaseRenewal<T>(input: {
+  name: string;
+  leaseMs: number;
+  signal?: AbortSignal;
+  renew: () => Promise<boolean>;
+  run: () => Promise<T>;
+}): Promise<T> {
+  const leaseMs = Math.max(5_000, input.leaseMs);
+  const renewEveryMs = Math.max(1_000, Math.min(15_000, Math.floor(leaseMs / 3)));
+  let stopped = false;
+  let leaseLost = false;
+  let renewalError: Error | undefined;
+
+  const renewOnce = async () => {
+    try {
+      const owned = await input.renew();
+      if (!owned) leaseLost = true;
+    } catch (error) {
+      renewalError = error instanceof Error ? error : new Error(String(error));
+      console.error("POWERCHAIN_WORKER_LEASE_RENEWAL_FAILED", { name: input.name, error: renewalError.message });
+    }
+  };
+
+  await renewOnce();
+  if (leaseLost) throw new Error(`POWERCHAIN_WORKER_LEASE_LOST:${input.name}`);
+
+  // Keep renewing until the in-flight job actually exits. A process shutdown
+  // abort stops new work, but it must not create an ownership gap while the
+  // current RPC/database operation is still completing.
+  const renewalLoop = (async () => {
+    while (!stopped) {
+      await sleep(renewEveryMs);
+      if (stopped) break;
+      await renewOnce();
+      if (leaseLost) break;
+    }
+  })();
+
+  try {
+    const result = await input.run();
+    if (leaseLost) throw new Error(`POWERCHAIN_WORKER_LEASE_LOST:${input.name}`);
+    if (renewalError) console.warn("POWERCHAIN_WORKER_LEASE_RENEWAL_RECOVERABLE", { name: input.name, error: renewalError.message });
+    return result;
+  } finally {
+    stopped = true;
+    await renewalLoop.catch(() => undefined);
+  }
+}
+
+
+export async function drainClaimBudget<T>(input: {
+  budget: number;
+  signal?: AbortSignal;
+  claimOne: () => Promise<T | undefined>;
+  process: (job: T) => Promise<void>;
+}): Promise<number> {
+  const budget = Math.max(1, Math.min(250, Math.trunc(input.budget)));
+  let processed = 0;
+  for (let index = 0; index < budget; index += 1) {
+    throwIfAborted(input.signal);
+    const job = await input.claimOne();
+    if (job === undefined) break;
+    await input.process(job);
+    processed += 1;
+  }
+  return processed;
+}

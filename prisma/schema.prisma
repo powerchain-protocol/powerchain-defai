@@ -296,6 +296,19 @@ model ApiRateLimitWindow {
   @@map("api_rate_limit_windows")
 }
 
+model RuntimeMaintenanceState {
+  id        String   @id @db.Text
+  draining  Boolean  @default(false)
+  revision  Int      @default(0)
+  reason    String?  @db.Text
+  updatedBy String   @map("updated_by") @db.Text
+  requestId String   @map("request_id") @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("runtime_maintenance_state")
+}
+
 enum ProtocolDeploymentChain {
   SOLANA
   SUI

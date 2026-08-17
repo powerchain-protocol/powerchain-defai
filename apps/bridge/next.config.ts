@@ -1,5 +1,7 @@
 import path from "node:path";
 import type { NextConfig } from "next";
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+import { APP_REDIRECTS } from "./config/app-routes";
 
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -23,26 +25,10 @@ const config: NextConfig = {
   productionBrowserSourceMaps: false,
   transpilePackages: ["@powerchain/backend", "@powerchain/database", "@powerchain/runtime", "@powerchain/protocol", "@powerchain/blockchain", "@powerchain/clusters", "@powerchain/chat", "@powerchain/staking", "@powerchain/bridge-core", "@powerchain/swap-core"],
   serverExternalPackages: ["@prisma/adapter-pg", "@prisma/client", "pg"],
-  experimental: { optimizePackageImports: ["@mysten/sui", "@solana/web3.js", "@wormhole-foundation/wormhole-connect"] },
   images: { formats: ["image/avif", "image/webp"] },
   async headers() { return [{ source: "/:path*", headers: securityHeaders }]; },
-  async redirects() {
-    return [
-      { source: "/", destination: "/chat", permanent: false },
-      { source: "/home", destination: "/chat", permanent: true },
-      { source: "/app", destination: "/chat", permanent: true },
-      { source: "/defai", destination: "/chat", permanent: true },
-      { source: "/assistant", destination: "/chat", permanent: true },
-      { source: "/stake", destination: "/staking", permanent: true },
-      { source: "/trade", destination: "/swap", permanent: true },
-      { source: "/transactions", destination: "/history", permanent: true },
-      { source: "/api/bridge", destination: "/api/v1/bridge/openapi", permanent: false },
-      { source: "/api/swap", destination: "/api/v1/swap/openapi", permanent: false },
-      { source: "/api", destination: "/api/v1/openapi", permanent: false },
-      { source: "/api/openapi", destination: "/api/v1/openapi", permanent: true },
-      { source: "/openapi", destination: "/api/v1/openapi", permanent: true },
-      { source: "/swagger", destination: "/api/v1/openapi", permanent: true },
-    ];
-  },
+  async redirects() { return [...APP_REDIRECTS]; },
 };
+initOpenNextCloudflareForDev();
+
 export default config;

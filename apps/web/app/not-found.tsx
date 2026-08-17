@@ -1,0 +1,3 @@
+import Link from "next/link";
+import { MarketingShell } from "@/website/ui/shell";
+export default function NotFound(){return <MarketingShell><section className="web-container grid min-h-[65vh] place-items-center py-20 text-center"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-[#294a3b]">404</p><h1 className="mt-3 text-4xl font-semibold tracking-tight">Page not found</h1><p className="mt-3 text-sm text-slate-600">The marketing page you requested does not exist.</p><Link href="/" className="web-button web-button-primary mt-6">Back home</Link></div></section></MarketingShell>}

@@ -26,11 +26,11 @@ for (const rel of [
   "apps/bridge/app/api/v1/fees/token-2022/route.ts",
 ]) requireFile(rel);
 
-requireText("apps/backend/package.json", '"@cetusprotocol/aggregator-sdk": "1.6.1"');
+requireText("apps/backend/package.json", '"axios": "1.19.0"');
 requireText("apps/backend/src/swap/cetus.ts", "overlayFeeRate: SWAP_FEE_RATE");
 requireText("apps/backend/src/swap/cetus.ts", "overlayFeeReceiver: feeReceiver()");
 requireText("apps/backend/src/swap/cetus.ts", "sponsored: false");
-requireText("apps/backend/src/swap/cetus.ts", "transaction.setSender(result.quote.payer)");
+requireText("apps/backend/src/swap/cetus.ts", "buildRemoteTransaction");
 requireText("apps/backend/src/swap/cetus.ts", "assertMinimumOutput");
 requireText("packages/swap-core/src/swap.ts", "SWAP_PRICE_PROTECTION_TRIGGERED");
 requireText("apps/backend/src/swap/cetus.ts", "SWAP_INSUFFICIENT_BALANCE");
@@ -57,13 +57,12 @@ requireText("apps/bridge/components/trade/swap-settings.tsx", "does not claim pr
 requireText("apps/bridge/components/trade/trade-workspace.tsx", '["swap", "bridge"]');
 requireText("apps/backend/src/payments/payer.ts", "PAYER_CONNECTED_WALLET_MISMATCH");
 requireText("apps/bridge/lib/payments/payer.ts", "PAYER_CONNECTED_WALLET_MISMATCH");
-requireText("apps/backend/src/fees/token2022-transfer-fee.ts", "REQUIRED_PWRC_TRANSFER_FEE_BPS = 250");
+requireText("apps/backend/src/fees/token2022-transfer-fee.ts", "REQUIRED_PWRC_TRANSFER_FEE_BPS = 0");
 requireText("apps/backend/src/fees/token2022-transfer-fee.ts", "getTransferFeeConfig");
-requireText("apps/backend/src/fees/token2022-harvest.ts", "createHarvestWithheldTokensToMintInstruction");
-requireText("apps/backend/src/fees/token2022-harvest.ts", "createWithdrawWithheldTokensFromMintInstruction");
+requireText("apps/backend/src/fees/token2022-harvest.ts", "PWRC_NATIVE_TRANSFER_FEE_DISABLED");
 requireText(".env.example", "POWERCHAIN_PWRC_FEE_RECEIVER_TOKEN_ACCOUNT=");
 requireText(".env.example", "POWERCHAIN_PWRC_WITHDRAW_WITHHELD_AUTHORITY=");
-requireText(".env.example", "POWERCHAIN_SOLANA_PWRC_FEE_MODE=token-2022-native");
+requireText(".env.example", "POWERCHAIN_SOLANA_PWRC_FEE_MODE=service-fee-separate");
 requireText(".env.example", "POWERCHAIN_SWAP_FEE_SUI_WALLET=");
 
 const pkg = JSON.parse(read("package.json"));
@@ -82,12 +81,12 @@ console.log(JSON.stringify({ ok: true, version: "1.0.0", checks: [
   "server-backed source-balance preflight and gas-reserve safety",
   "exact Max action for non-gas swap assets",
   "non-dismissible active wallet prompt and explorer-linked submission receipt",
-  "Cetus quote + wallet transaction build",
+  "Cetus remote-adapter quote + wallet transaction build",
   "1-500 bps slippage bounds",
   "MEV-aware minimum-output protection without private-relay claims",
   "2.5% Sui swap overlay fee receiver",
-  "PWRC Token-2022 250 bps fee configuration inspection",
-  "Token-2022 withheld-fee harvest/withdraw plan",
+  "PWRC Token-2022 no-transfer-fee policy inspection",
+  "canonical PWRC withheld-fee path disabled",
   "connected-wallet payer validation",
   "wallet-owned signature and network fee policy",
 ] }, null, 2));

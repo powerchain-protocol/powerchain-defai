@@ -25,6 +25,14 @@ export async function claimClaimPayoutBatch(input: { workerId: string; limit: nu
   return claimed;
 }
 
+export async function renewClaimLease(id: string, workerId: string, leaseMs: number): Promise<boolean> {
+  const result = await prisma.claim.updateMany({
+    where: { id, workerLeaseOwner: workerId },
+    data: { workerLeaseUntil: new Date(Date.now() + Math.max(10_000, Math.min(300_000, leaseMs))) },
+  });
+  return result.count === 1;
+}
+
 export async function releaseClaimLease(id: string, workerId: string) {
   await prisma.claim.updateMany({ where: { id, workerLeaseOwner: workerId }, data: { workerLeaseOwner: null, workerLeaseUntil: null } });
 }

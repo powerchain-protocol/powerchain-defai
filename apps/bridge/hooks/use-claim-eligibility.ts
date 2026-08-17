@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/lib/api/browser-api";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { isClaimEligibility, type ClaimEligibility } from "@/lib/claim/claim-contract";
@@ -17,7 +18,7 @@ export function useClaimEligibility(walletAddress: string | null | undefined) {
     const timer = window.setTimeout(() => controller.abort(), 8_000);
     setLoading(true);
     try {
-      const response = await fetch(`/api/v1/claims/eligibility?wallet=${encodeURIComponent(wallet)}`, { cache: "no-store", signal: controller.signal });
+      const response = await apiFetch(`/api/v1/claims/eligibility?wallet=${encodeURIComponent(wallet)}`, { cache: "no-store", signal: controller.signal });
       const payload: unknown = await response.json();
       if (!response.ok || !isClaimEligibility(payload)) throw new Error(response.status === 404 ? "Claim eligibility endpoint is not available" : "Claim eligibility could not be verified");
       if (current !== generation.current) return;

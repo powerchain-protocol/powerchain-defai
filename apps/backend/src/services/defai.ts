@@ -1,5 +1,5 @@
-import "server-only";
 import { featureFlags } from "../config/runtime-features";
+import { googleGenAiReply, openAiCompatibleReply } from "./ai/provider-clients";
 
 export interface DefaiAssistantInput {
   message: string;
@@ -13,7 +13,13 @@ export interface DefaiAssistantOutput {
   requiresWalletSignatureForActions: true;
 }
 
-type ProviderConfig = { id:string; url:string; key?:string; model?:string; kind:"powerchain"|"openai-compatible"|"anthropic"|"google" };
+type ProviderConfig = {
+  id: "powerchain" | "openai" | "deepseek" | "anthropic" | "google" | "openrouter";
+  url?: string;
+  key?: string;
+  model: string;
+  kind: "powerchain" | "openai" | "deepseek" | "anthropic" | "google" | "openai-compatible";
+};
 
 const SYSTEM_POLICY = [
   "You are the PowerChain DeFAI assistant.",
@@ -21,7 +27,7 @@ const SYSTEM_POLICY = [
   "Never claim to have signed, submitted, finalized or settled a transaction.",
   "Never request or expose private keys, seed phrases or provider secrets.",
   "Any executable action must be rebuilt by the typed application flow and explicitly signed by the connected wallet.",
-  "Wormhole NTT is the sole PWRC/wPWRC cross-chain principal movement protocol."
+  "Wormhole NTT is the sole PWRC/wPWRC cross-chain principal movement protocol.",
 ].join(" ");
 
 function localReply(message: string): string {
@@ -34,39 +40,93 @@ function localReply(message: string): string {
 }
 
 function providerConfig(): ProviderConfig | null {
-  const custom=process.env.POWERCHAIN_AI_API_URL?.trim();
-  if(custom)return{id:"powerchain",url:custom,key:process.env.POWERCHAIN_AI_API_KEY?.trim()||undefined,model:process.env.POWERCHAIN_AI_MODEL?.trim()||undefined,kind:"powerchain"};
-  if(process.env.OPENROUTER_API_KEY?.trim())return{id:"openrouter",url:"https://openrouter.ai/api/v1/chat/completions",key:process.env.OPENROUTER_API_KEY.trim(),model:process.env.POWERCHAIN_AI_MODEL?.trim()||"openai/gpt-4.1-mini",kind:"openai-compatible"};
-  if(process.env.OPENAI_API_KEY?.trim())return{id:"openai",url:"https://api.openai.com/v1/chat/completions",key:process.env.OPENAI_API_KEY.trim(),model:process.env.POWERCHAIN_AI_MODEL?.trim()||"gpt-4.1-mini",kind:"openai-compatible"};
-  if(process.env.DEEPSEEK_API_KEY?.trim())return{id:"deepseek",url:"https://api.deepseek.com/chat/completions",key:process.env.DEEPSEEK_API_KEY.trim(),model:process.env.POWERCHAIN_AI_MODEL?.trim()||"deepseek-chat",kind:"openai-compatible"};
-  if(process.env.ANTHROPIC_API_KEY?.trim())return{id:"anthropic",url:"https://api.anthropic.com/v1/messages",key:process.env.ANTHROPIC_API_KEY.trim(),model:process.env.POWERCHAIN_AI_MODEL?.trim()||"claude-sonnet-4-20250514",kind:"anthropic"};
-  if(process.env.GOOGLE_API_KEY?.trim())return{id:"google",url:"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",key:process.env.GOOGLE_API_KEY.trim(),model:"gemini-2.5-flash",kind:"google"};
-  return null;
+  const requested = process.env.POWERCHAIN_AI_PROVIDER?.trim().toLowerCase() || "auto";
+  const custom = process.env.POWERCHAIN_AI_API_URL?.trim();
+  const modelOverride = process.env.POWERCHAIN_AI_MODEL?.trim();
+
+  const powerchain = (): ProviderConfig | null => custom ? {
+    id: "powerchain",
+    url: custom,
+    ...(process.env.POWERCHAIN_AI_API_KEY?.trim() ? { key: process.env.POWERCHAIN_AI_API_KEY.trim() } : {}),
+    model: modelOverride || "powerchain-default",
+    kind: "powerchain",
+  } : null;
+  const openai = (): ProviderConfig | null => process.env.OPENAI_API_KEY?.trim() ? {
+    id: "openai", model: modelOverride || process.env.OPENAI_MODEL?.trim() || "gpt-5-mini", kind: "openai",
+  } : null;
+  const deepseek = (): ProviderConfig | null => process.env.DEEPSEEK_API_KEY?.trim() ? {
+    id: "deepseek", model: modelOverride || process.env.DEEPSEEK_MODEL?.trim() || "deepseek-chat", kind: "deepseek",
+  } : null;
+  const google = (): ProviderConfig | null => (process.env.GOOGLE_GENAI_API_KEY?.trim() || process.env.GOOGLE_API_KEY?.trim()) ? {
+    id: "google", model: modelOverride || process.env.GOOGLE_GENAI_MODEL?.trim() || "gemini-2.5-flash", kind: "google",
+  } : null;
+  const openrouter = (): ProviderConfig | null => process.env.OPENROUTER_API_KEY?.trim() ? {
+    id: "openrouter", url: process.env.OPENROUTER_BASE_URL?.trim() || "https://openrouter.ai/api/v1/chat/completions", key: process.env.OPENROUTER_API_KEY.trim(), model: modelOverride || "openai/gpt-5-mini", kind: "openai-compatible",
+  } : null;
+  const anthropic = (): ProviderConfig | null => process.env.ANTHROPIC_API_KEY?.trim() ? {
+    id: "anthropic", url: "https://api.anthropic.com/v1/messages", key: process.env.ANTHROPIC_API_KEY.trim(), model: modelOverride || "claude-sonnet-4-20250514", kind: "anthropic",
+  } : null;
+
+  const byId: Record<string, () => ProviderConfig | null> = { powerchain, openai, deepseek, google, anthropic, openrouter };
+  if (requested !== "auto") return byId[requested]?.() ?? null;
+  return powerchain() ?? openai() ?? deepseek() ?? google() ?? anthropic() ?? openrouter();
 }
 
-function extractContent(kind:ProviderConfig["kind"],payload:unknown):string{
-  if(!payload||typeof payload!=="object")return"";const p=payload as Record<string,unknown>;
-  if(kind==="powerchain")return typeof p.content==="string"?p.content.trim():"";
-  if(kind==="openai-compatible"){const choices=Array.isArray(p.choices)?p.choices:[];const first=choices[0] as Record<string,unknown>|undefined;const msg=first?.message as Record<string,unknown>|undefined;return typeof msg?.content==="string"?msg.content.trim():"";}
-  if(kind==="anthropic"){const content=Array.isArray(p.content)?p.content:[];const first=content.find(x=>x&&typeof x==="object"&&(x as Record<string,unknown>).type==="text") as Record<string,unknown>|undefined;return typeof first?.text==="string"?first.text.trim():"";}
-  const candidates=Array.isArray(p.candidates)?p.candidates:[];const first=candidates[0] as Record<string,unknown>|undefined;const content=first?.content as Record<string,unknown>|undefined;const parts=Array.isArray(content?.parts)?content.parts:[];const part=parts[0] as Record<string,unknown>|undefined;return typeof part?.text==="string"?part.text.trim():"";
+function contextualMessage(input: DefaiAssistantInput): string {
+  const context = input.context && Object.keys(input.context).length ? `\n\nApplication context: ${JSON.stringify(input.context)}` : "";
+  return `${input.message}${context}`;
 }
 
-async function providerRequest(config:ProviderConfig,input:DefaiAssistantInput,signal:AbortSignal){
-  let headers:Record<string,string>={"content-type":"application/json"};let body:unknown;
-  if(config.kind==="powerchain"){if(config.key)headers.Authorization=`Bearer ${config.key}`;body={model:config.model,system:SYSTEM_POLICY,message:input.message,context:input.context??{}};}
-  else if(config.kind==="openai-compatible"){headers.Authorization=`Bearer ${config.key}`;body={model:config.model,messages:[{role:"system",content:SYSTEM_POLICY},{role:"user",content:input.message}],temperature:0.2};}
-  else if(config.kind==="anthropic"){headers["x-api-key"]=config.key!;headers["anthropic-version"]="2023-06-01";body={model:config.model,max_tokens:800,system:SYSTEM_POLICY,messages:[{role:"user",content:input.message}]};}
-  else {const url=new URL(config.url);url.searchParams.set("key",config.key!);config={...config,url:url.toString()};body={systemInstruction:{parts:[{text:SYSTEM_POLICY}]},contents:[{role:"user",parts:[{text:input.message}]}]};}
-  const response=await fetch(config.url,{method:"POST",headers,body:JSON.stringify(body),signal,cache:"no-store"});if(!response.ok)throw new Error(`DEFAI_PROVIDER_${response.status}`);return extractContent(config.kind,await response.json());
+async function fetchProvider(config: ProviderConfig, input: DefaiAssistantInput, signal: AbortSignal): Promise<string> {
+  const headers: Record<string, string> = { "content-type": "application/json" };
+  let body: unknown;
+  if (config.kind === "powerchain") {
+    if (config.key) headers.Authorization = `Bearer ${config.key}`;
+    body = { model: config.model, system: SYSTEM_POLICY, message: input.message, context: input.context ?? {} };
+  } else if (config.kind === "anthropic") {
+    headers["x-api-key"] = config.key!;
+    headers["anthropic-version"] = "2023-06-01";
+    body = { model: config.model, max_tokens: 800, system: SYSTEM_POLICY, messages: [{ role: "user", content: contextualMessage(input) }] };
+  } else {
+    headers.Authorization = `Bearer ${config.key}`;
+    body = { model: config.model, messages: [{ role: "developer", content: SYSTEM_POLICY }, { role: "user", content: contextualMessage(input) }], temperature: 0.2 };
+  }
+  const response = await fetch(config.url!, { method: "POST", headers, body: JSON.stringify(body), signal, cache: "no-store", redirect: "error" });
+  if (!response.ok) throw new Error(`DEFAI_PROVIDER_${response.status}`);
+  const payload = await response.json() as Record<string, unknown>;
+  if (config.kind === "powerchain") return typeof payload.content === "string" ? payload.content.trim() : "";
+  if (config.kind === "anthropic") {
+    const parts = Array.isArray(payload.content) ? payload.content : [];
+    const text = parts.find((part) => part && typeof part === "object" && (part as Record<string, unknown>).type === "text") as Record<string, unknown> | undefined;
+    return typeof text?.text === "string" ? text.text.trim() : "";
+  }
+  const choices = Array.isArray(payload.choices) ? payload.choices : [];
+  const first = choices[0] as Record<string, unknown> | undefined;
+  const message = first?.message as Record<string, unknown> | undefined;
+  return typeof message?.content === "string" ? message.content.trim() : "";
+}
+
+async function providerReply(config: ProviderConfig, input: DefaiAssistantInput, signal: AbortSignal): Promise<string> {
+  const message = contextualMessage(input);
+  if (config.kind === "openai") return openAiCompatibleReply("openai", { system: SYSTEM_POLICY, message, model: config.model, signal });
+  if (config.kind === "deepseek") return openAiCompatibleReply("deepseek", { system: SYSTEM_POLICY, message, model: config.model, signal });
+  if (config.kind === "google") return googleGenAiReply({ system: SYSTEM_POLICY, message, model: config.model, signal });
+  return fetchProvider(config, input, signal);
 }
 
 export async function defaiAssistantReply(input: DefaiAssistantInput): Promise<DefaiAssistantOutput> {
   if (!featureFlags().ai) return { content: "PowerChain DeFAI assistant is disabled by runtime policy.", mode: "local-advisory", advisoryOnly: true, requiresWalletSignatureForActions: true };
   const config = providerConfig();
   if (!config) return { content: localReply(input.message), mode: "local-advisory", advisoryOnly: true, requiresWalletSignatureForActions: true };
-  const controller = new AbortController(); const timeout = setTimeout(() => controller.abort(), 15_000);
-  try { const content=await providerRequest(config,input,controller.signal); if(!content)throw new Error("DEFAI_PROVIDER_EMPTY"); return { content, mode: "provider", advisoryOnly: true, requiresWalletSignatureForActions: true }; }
-  catch { return { content: localReply(input.message), mode: "local-advisory", advisoryOnly: true, requiresWalletSignatureForActions: true }; }
-  finally { clearTimeout(timeout); }
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15_000);
+  try {
+    const content = await providerReply(config, input, controller.signal);
+    if (!content) throw new Error("DEFAI_PROVIDER_EMPTY");
+    return { content, mode: "provider", advisoryOnly: true, requiresWalletSignatureForActions: true };
+  } catch {
+    return { content: localReply(input.message), mode: "local-advisory", advisoryOnly: true, requiresWalletSignatureForActions: true };
+  } finally {
+    clearTimeout(timeout);
+  }
 }

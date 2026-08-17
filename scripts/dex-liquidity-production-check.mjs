@@ -7,7 +7,8 @@ const required=[
 ];
 const errors=[];for(const file of required)if(!existsSync(file))errors.push(`missing ${file}`);
 function must(file,...terms){const text=readFileSync(file,"utf8");for(const term of terms)if(!text.includes(term))errors.push(`${file} missing ${term}`)}
-must("apps/backend/src/swap/solana.ts","/order","/execute","JUPITER_API_KEY","trustedToken","persistSwapRouteSnapshot","userPaysNetworkFees");
+must("apps/backend/src/swap/solana.ts","/order","/execute","resolveJupiterRequestConfig","trustedToken","persistSwapRouteSnapshot","userPaysNetworkFees");
+must("apps/backend/src/integrations/dex/jupiter.ts","JUPITER_API_KEY","POWERCHAIN_JUPITER_API_KEY","JUPITER_CUSTOM_API_HOST_NOT_ALLOWED","resolveJupiterRequestConfig");
 must("apps/backend/src/data/pools.ts","raydium-api-v3","meteora-dlmm-data-api","orca-public-api-v2","persistPoolSnapshots");
 must("apps/backend/src/data/trusted-token-list.ts","SOLANA","SUI","token-2022","POWERCHAIN_SOLANA_USDC_MINT");
 must("apps/bridge/components/trade/multichain-swap-interface.tsx","SOLANA","SUI","SolanaSwapInterface","SwapInterface");

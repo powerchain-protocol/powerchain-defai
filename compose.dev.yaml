@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: powerchain
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d powerchain"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+      start_period: 3s
+    volumes:
+      - powerchain_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  powerchain_postgres_data:

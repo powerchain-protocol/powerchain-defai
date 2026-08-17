@@ -9,7 +9,7 @@ The UI and public route configuration default to **Sui wPWRC → Solana PWRC**. 
 ## Lifecycle
 
 1. Server issues a quote bound to direction, principal, fee, wallets, runtime snapshot and expiry.
-2. The user signs the configured NTT Executor/Connect source-chain transaction.
+2. The user signs the reviewed NTT execution surface source-chain transaction.
 3. The source transaction hash is attached to the persisted transfer.
 4. `@powerchain/worker-bridge` independently verifies source-chain finality, expected NTT manager invocation, source signer and PWRC/wPWRC debit.
 5. The worker finds the matching Wormholescan NTT operation and validates source/destination Wormhole chain IDs, exact normalized principal and destination wallet.

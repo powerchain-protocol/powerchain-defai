@@ -41,8 +41,8 @@ export function calculateTransactionAmounts(input: {
   const feeBaseUnits = calculateServiceFeeBaseUnits({
     principalBaseUnits: principal.toString(),
     feeBps,
-    minFeeBaseUnits: input.minFeeBaseUnits,
-    maxFeeBaseUnits: input.maxFeeBaseUnits,
+    ...(input.minFeeBaseUnits === undefined ? {} : { minFeeBaseUnits: input.minFeeBaseUnits }),
+    ...(input.maxFeeBaseUnits === undefined ? {} : { maxFeeBaseUnits: input.maxFeeBaseUnits }),
   });
   const totalDebitBaseUnits = (principal + BigInt(feeBaseUnits)).toString();
   const minimumReceivedBaseUnits = calculateMinimumReceivedBaseUnits(input.quotedOutputBaseUnits, slippageBps);

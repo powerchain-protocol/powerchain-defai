@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/lib/api/browser-api";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -58,7 +59,7 @@ export function RecentTransfersCard() {
     activeController.current = controller;
     const timeout = window.setTimeout(() => controller.abort(), 6_000);
     try {
-      const response = await fetch("/api/v1/bridge/history?limit=5", { cache: "no-store", signal: controller.signal });
+      const response = await apiFetch("/api/v1/bridge/history?limit=5", { cache: "no-store", signal: controller.signal });
       const body: unknown = await response.json();
       if (!response.ok || !valid(body)) throw new Error("History unavailable");
       setRows(body.data);

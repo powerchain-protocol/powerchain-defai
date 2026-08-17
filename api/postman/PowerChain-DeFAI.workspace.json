@@ -1,0 +1,9 @@
+{
+  "schema": "powerchain-postman-workspace/v1",
+  "team": "crimson-crescent-8585",
+  "workspaceId": "55a50a8b-cdb7-46f5-807e-3494d0262565",
+  "specificationId": "1afb4b8d-159d-4f42-8805-f1f1a5143539",
+  "fileId": "04e6ee61-ea2e-4c44-83c6-51471951a035",
+  "specificationUrl": "https://crimson-crescent-8585.postman.co/workspace/55a50a8b-cdb7-46f5-807e-3494d0262565/specification/1afb4b8d-159d-4f42-8805-f1f1a5143539/file/04e6ee61-ea2e-4c44-83c6-51471951a035",
+  "syncPolicy": "Checked-in OpenAPI, route registry, collections, environments, response examples, and datasets are the reproducible release source. Remote Postman synchronization requires authenticated workspace access."
+}

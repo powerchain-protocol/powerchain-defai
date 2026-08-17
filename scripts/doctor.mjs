@@ -14,8 +14,10 @@ const exists = (relativePath) => fs.existsSync(path.join(root, relativePath));
 const readJson = (relativePath) => JSON.parse(fs.readFileSync(path.join(root, relativePath), "utf8"));
 const semver = (input) => input.replace(/^v/, "").split(".").map((part) => Number(part));
 const nodeVersion = semver(process.version);
-if (nodeVersion[0] === 24) pass(`Node ${process.version} satisfies Node 24.x LTS`);
-else fail(`Node ${process.version} is unsupported; use .nvmrc Node 24.x`);
+if (nodeVersion[0] >= 24 && nodeVersion[0] < 26) {
+  pass(`Node ${process.version} satisfies package engine >=24 <26`);
+  if (nodeVersion[0] === 24 && nodeVersion[1] < 3) warn(`Node ${process.version} is below React Native's 24.3 floor; pnpm install must use the managed Node 24.19.0 runtime. Run source ./bootstrap.sh if runtime download is unavailable.`);
+} else fail(`Node ${process.version} is unsupported; use Node >=24 <26 (pinned project runtime: 24.19.0)`);
 
 const manifest = readJson("package.json");
 if (manifest.packageManager === "pnpm@11.22.0") pass("packageManager is pnpm@11.22.0");
@@ -24,10 +26,11 @@ else fail(`packageManager mismatch: ${manifest.packageManager ?? "missing"}`);
 const pnpm = spawnSync("pnpm", ["--version"], { cwd: root, encoding: "utf8" });
 if (pnpm.status === 0) {
   const version = pnpm.stdout.trim();
-  if (version === "11.22.0") pass(`pnpm ${version}`);
-  else fail(`pnpm ${version || "unknown"}; expected 11.22.0`);
+  const [major = 0, minor = 0] = version.split(".").map(Number);
+  if (major === 11 && minor >= 22) pass(`pnpm ${version} satisfies >=11.22.0 <12`);
+  else fail(`pnpm ${version || "unknown"}; expected >=11.22.0 <12`);
 } else {
-  fail("pnpm is unavailable; run: corepack enable && corepack prepare pnpm@11.22.0 --activate");
+  fail("pnpm is unavailable; run: source ./bootstrap.sh or rebuild the repository Dev Container");
 }
 
 for (const lockfile of ["package-lock.json", "npm-shrinkwrap.json", "yarn.lock"]) {
@@ -36,7 +39,7 @@ for (const lockfile of ["package-lock.json", "npm-shrinkwrap.json", "yarn.lock"]
 if (exists("node_modules/.ignored")) fail("node_modules/.ignored exists from mixed package-manager installs; clean and reinstall with pnpm");
 
 if (exists("pnpm-lock.yaml")) pass("pnpm-lock.yaml exists");
-else warn("pnpm-lock.yaml is missing; run pnpm install to create/refresh the lockfile");
+else fail("pnpm-lock.yaml is missing; run a reviewed root pnpm install and commit it before CI/release");
 
 if (exists("node_modules")) pass("root node_modules exists");
 else fail("node_modules missing; run pnpm install");
@@ -58,7 +61,6 @@ const bridgeRequired = [
   "apps/bridge/node_modules/react-dom",
   "apps/bridge/node_modules/@types/react",
   "apps/bridge/node_modules/@types/react-dom",
-  "apps/bridge/node_modules/@wormhole-foundation/wormhole-connect",
   "apps/bridge/node_modules/@mysten/sui",
 ];
 for (const rel of bridgeRequired) {
@@ -91,7 +93,7 @@ if (/"baseUrl"\s*:/.test(baseTsconfig)) fail("tsconfig.base.json still contains 
 else pass("TypeScript config has no deprecated baseUrl");
 
 const vercel = fs.readFileSync(path.join(root, "vercel.json"), "utf8");
-if (vercel.includes("openapi.vercel.sh")) warn("vercel.json has a remote $schema that some editors mark untrusted");
+if (/"\$schema"\s*:/.test(vercel)) warn("vercel.json should not depend on a remote $schema; workspace trust can block schema downloads");
 else pass("vercel.json has no remote schema dependency");
 
 console.log(`\nPowerChain doctor: ${failures} failure(s), ${warnings} warning(s)`);

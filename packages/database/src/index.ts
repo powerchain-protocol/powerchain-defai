@@ -1,8 +1,11 @@
 export * from "./audit";
-export { prisma } from "./prisma";
+
+import { writeBridgeAuditEvent } from "./audit";
+import type { PrismaTransactionClient } from "./prisma";
 
 export async function heartbeatWorker(input: { workerId: string; workerType: string; version: string; startedAt: Date }) {
-  const { prisma } = await import("./prisma");
+  const { getPrismaClient } = await import("./prisma");
+  const prisma = getPrismaClient();
   return prisma.workerHeartbeat.upsert({
     where: { workerId: input.workerId },
     create: { workerId: input.workerId, workerType: input.workerType, version: input.version, startedAt: input.startedAt, heartbeatAt: new Date() },
@@ -11,24 +14,28 @@ export async function heartbeatWorker(input: { workerId: string; workerType: str
 }
 
 export async function removeWorkerHeartbeat(workerId: string) {
-  const { prisma } = await import("./prisma");
+  const { getPrismaClient } = await import("./prisma");
+  const prisma = getPrismaClient();
   await prisma.workerHeartbeat.deleteMany({ where: { workerId } });
 }
 
 export async function checkDatabaseReady() {
-  const { prisma } = await import("./prisma");
+  const { getPrismaClient } = await import("./prisma");
+  const prisma = getPrismaClient();
   await prisma.$queryRaw`SELECT 1`;
   return true;
 }
 
 export async function closeDatabase() {
-  const { prisma } = await import("./prisma");
+  const { getPrismaClient } = await import("./prisma");
+  const prisma = getPrismaClient();
   await prisma.$disconnect();
 }
 
 
 export async function getWorkerReadiness(input: { requiredTypes?: string[]; maxAgeMs?: number } = {}) {
-  const { prisma } = await import("./prisma");
+  const { getPrismaClient } = await import("./prisma");
+  const prisma = getPrismaClient();
   const requiredTypes = input.requiredTypes ?? ["claims", "fees", "bridge"];
   const maxAgeMs = Math.max(5_000, Math.min(300_000, input.maxAgeMs ?? 60_000));
   const rows = await prisma.workerHeartbeat.findMany({
@@ -82,3 +89,64 @@ export async function retrySerializableTransaction<T>(
 
 export * from "./queries";
 export * from "./types/db";
+
+export type RuntimeMaintenanceSnapshot = Readonly<{
+  draining: boolean;
+  revision: number;
+  reason: string | null;
+  updatedBy: string | null;
+  requestId: string | null;
+  updatedAt: string | null;
+}>;
+
+export async function getRuntimeMaintenanceState(): Promise<RuntimeMaintenanceSnapshot> {
+  const { getPrismaClient } = await import("./prisma");
+  const prisma = getPrismaClient();
+  const row = await prisma.runtimeMaintenanceState.findUnique({ where: { id: "global" } });
+  return row
+    ? { draining: row.draining, revision: row.revision, reason: row.reason, updatedBy: row.updatedBy, requestId: row.requestId, updatedAt: row.updatedAt.toISOString() }
+    : { draining: false, revision: 0, reason: null, updatedBy: null, requestId: null, updatedAt: null };
+}
+
+export async function setRuntimeMaintenanceState(input: {
+  draining: boolean;
+  expectedRevision: number;
+  reason?: string | null;
+  actor: string;
+  requestId: string;
+}): Promise<RuntimeMaintenanceSnapshot> {
+  const { getPrismaClient } = await import("./prisma");
+  const prisma = getPrismaClient();
+  return prisma.$transaction(async (tx: PrismaTransactionClient) => {
+    const current = await tx.runtimeMaintenanceState.findUnique({ where: { id: "global" } });
+    const currentRevision = current?.revision ?? 0;
+    if (currentRevision !== input.expectedRevision) throw new Error("MAINTENANCE_REVISION_CONFLICT");
+    const reason = input.reason?.trim().slice(0, 240) || null;
+    if (current && current.draining === input.draining && current.reason === reason) {
+      return { draining: current.draining, revision: current.revision, reason: current.reason, updatedBy: current.updatedBy, requestId: current.requestId, updatedAt: current.updatedAt.toISOString() };
+    }
+    const nextRevision = currentRevision + 1;
+    const row = current
+      ? await tx.runtimeMaintenanceState.update({
+          where: { id: "global" },
+          data: { draining: input.draining, revision: nextRevision, reason, updatedBy: input.actor, requestId: input.requestId },
+        })
+      : await tx.runtimeMaintenanceState.create({
+          data: { id: "global", draining: input.draining, revision: nextRevision, reason, updatedBy: input.actor, requestId: input.requestId },
+        });
+    await writeBridgeAuditEvent(tx, {
+      event: input.draining ? "runtime.maintenance.drain-enabled" : "runtime.maintenance.drain-disabled",
+      actor: input.actor,
+      target: "runtime-maintenance:global",
+      payload: {
+        requestId: input.requestId,
+        reason,
+        previous: { draining: current?.draining ?? false, revision: currentRevision },
+        next: { draining: row.draining, revision: row.revision },
+      },
+    });
+    return { draining: row.draining, revision: row.revision, reason: row.reason, updatedBy: row.updatedBy, requestId: row.requestId, updatedAt: row.updatedAt.toISOString() };
+  }, { isolationLevel: "Serializable" });
+}
+
+export * from "./supabase";

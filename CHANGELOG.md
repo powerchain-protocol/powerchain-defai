@@ -1,7 +1,198 @@
-
 # Changelog
 
+## 2026-08-17 — Self-healing local development install
+
+- Added `workspace:install:ensure` for local development. It probes critical workspace modules and performs one root `pnpm install --no-frozen-lockfile` when a fresh/stale checkout is missing dependencies.
+- `pnpm dev`, direct Bridge/backend/worker dev commands and `dev:stack` now use the local ensure step instead of failing immediately on a missing `node_modules`.
+- Build, typecheck, CI and release flows remain strict and non-mutating through `workspace:install:check`.
+- Automatic local installation can be disabled with `POWERCHAIN_AUTO_INSTALL=0`; explicit `workspace:repair` remains the clean lockfile/module re-resolution path.
+- Removed duplicated install/env/database preflight text from root command bodies; lifecycle hooks remain the canonical preflight entry points, while package-level hooks still protect direct workspace commands.
+
+## 2026-08-17 — Sui wallet lifecycle + dashboard navigation UX
+
+- Fixed the React render-phase update error by removing `createDAppKit()` from `SuiWalletRuntime` render/useMemo; custom Sui RPC kit instances are now created after commit in an effect while the canonical kit stays module-scoped.
+- Promoted `/dashboard` from a compatibility redirect to a canonical command-center page.
+- Added a dedicated dashboard shell with its own sidebar, header, simple footer, wallet/runtime connectivity overview, and quick operational shortcuts.
+- Reorganized the main application sidebar into Overview, Intelligence, Markets, Portfolio, Network, and Account sections, with the same grouped structure in the mobile drawer.
+- Added a Sui wallet React lifecycle production guard and updated routing/UI checks for the separated workspace/dashboard shells.
+
+## 2026-08-17 — Node 24/25 engine + complete API contract upgrade
+
+- Standardized all 19 package manifests on `node >=24 <26` and `pnpm >=11.22.0 <12`; reproducible development now pins Node `24.19.0`.
+- Updated bootstrap, CI, Dev Container, doctor/release guards, and runtime documentation to the same engine contract.
+- Reworked the root README so `pnpm install` and the bootstrap-based Quick Install are the first workflows shown.
+- Restored fail-fast `dev:stack` sequencing so workspace dependencies, environment, Prisma, and PostgreSQL are validated before worker fan-out.
+- Upgraded `/api` generation: the combined OpenAPI contract now covers all filesystem routes/actions, includes operation IDs, path parameters, standard error responses, and Bridge/Swap subsets generated from the same registry.
+- Runtime `/api/v1/openapi` now fills undocumented routes from the generated filesystem route registry instead of silently omitting new handlers.
+- Added `api:check` and `api:production:check` and wired API contract completeness into the production verification chain.
+- Fixed the local PostgreSQL production guard typo so it validates the actual `127.0.0.1:5432` Compose binding.
+
+## 1.0.0 — Database and Cetus adapter compatibility
+
+- Removed the Node-26-incompatible Cetus Aggregator SDK dependency from the backend workspace and replaced it with a trusted remote Cetus quote/unsigned-transaction adapter boundary.
+- Upgraded `axios` to `1.19.0` and `@mysten/dapp-kit-react` to `2.1.19`.
+- Upgraded PostgreSQL client ownership to `pg@8.23.0` / `@types/pg@8.20.0` and added explicit `@prisma/client@7.9.1`, `@prisma/adapter-pg@7.9.1`, and `@supabase/supabase-js@2.110.8` dependencies.
+- Added a server-only Supabase client boundary and a non-hidden `config/env.defaults` bootstrap fallback for checkouts that omit `.env.example`.
+
+## 1.0.0 — React, AI and shared UI modernization
+
+- Upgraded React/React DOM to `19.2.8` with `@types/react@19.2.18` and `@types/react-dom@19.2.4`.
+- Added `ai@7.0.66` to `@powerchain/chat`, `openai@7.4.0` and `@google/genai@2.17.0` to the server backend, with DeepSeek using the official OpenAI-compatible client.
+- Added Radix Icons `1.3.2` and centralized icon exports for the application/chat UI.
+- Expanded the root AI environment schema while keeping provider credentials server-only and generated `.env` files ignored.
+- Strengthened `@powerchain/staking` with shared blockchain/runtime dependencies and aligned Solana Kit/Sui SDK versions.
+- Consolidated setup and recovery into the root README and removed the separate root installation document.
+
+## 1.0.0 — backend dependency modernization
+
+- Upgraded the backend Sui/Cetus stack to `@cetusprotocol/aggregator-sdk@1.7.0` and `@mysten/sui@2.26.1`.
+- Upgraded Solana Kit to `@solana/kit@7.1.0` and wired backend RPC health probes through the canonical Kit `createSolanaRpc` primitive.
+- Upgraded workspace tooling to TypeScript `7.0.2`, `tsx@4.23.12`, and `@types/node@26.2.0`.
+- Upgraded environment/WebSocket dependencies to `dotenv@17.4.2` and `ws@8.21.3`.
+- Restored the runtime contract to Node `>=26 <27` with the reproducible Node `26.7.0` pin and aligned CI, Dev Container, bootstrap, package metadata, and release guards.
+- Added a backend-stack production gate that rejects stale Cetus 1.6.1, Sui 2.24.0, Solana Kit 7.0.0, and the Node-24-only Hermes 3.1.0 lockfile surface.
+- Kept Pyth data retrieval behind the authenticated Hermes REST boundary; `@pythnetwork/pyth-sui-js` remains excluded from the canonical Sui runtime.
+
+## 2026-08-17 — zero-assumption toolchain and Compose recovery
+
+- Added `source ./bootstrap.sh` / `scripts/bootstrap-toolchain.sh` to install a checksum-verified Node 26.7.0 user-local runtime and pnpm 11.22.0 without requiring nvm, Corepack, or administrator access.
+- Added `./pnpmw` so pnpm workspace commands can run from a shell where `pnpm` is initially missing.
+- Added a Compose command wrapper that prefers `docker compose` and emits a clear no-Docker fallback instead of assuming the legacy `docker-compose` executable exists.
+- Replaced VS Code Docker Compose startup tasks with PowerChain bootstrap/dev tasks; Dev Containers continues to own its Compose lifecycle.
+- Renamed the runtime production marker away from nvm-specific terminology and updated installation/recovery documentation accordingly.
+
+## 2026-08-17 — PowerChain DeFAI rename and Node 24 pnpm bootstrap
+
+- Normalized the repository identity to `powerchain-defai` for workspace mounts, database application identity, documentation, and repository-level development paths while retaining Bridge as an application/domain module.
+- Consolidated setup, runtime, environment and recovery guidance into the root `README.md`.
+- Added a Dev Container Dockerfile that provisions pnpm `11.22.0` on Node 24 before post-create setup, eliminating the `pnpm: command not found` failure.
+- Removed active Corepack dependencies from Node 24 setup, CI, and deployment tooling; nvm is now optional rather than required.
+- Updated the Dev Container mount to `/workspaces/powerchain-defai`, retained internal-only PostgreSQL credentials/ports, and preserved the generated ignored database environment.
+- Migrated GitHub CI to `pnpm/setup@v1` with pinned pnpm `11.22.0` and Node `26.7.0`.
+
+- Added a safe local full-stack bootstrap (`scripts/dev-stack-bootstrap.sh`) that activates Node 26.7.0/pnpm 11.22.0, repairs the workspace, provisions localhost PostgreSQL through `compose.dev.yaml`, applies checked-in Prisma migrations, and starts the Bridge plus workers.
+- Added `db:local:*` pnpm commands with localhost-only infrastructure mutation guards and clearer database/workspace preflight recovery guidance.
+
+## 2026-08-17 — Node 26 / pnpm engine + CSV-only dataset recovery
+
+- Added a sourceable `scripts/activate-runtime.sh` recovery path that recreates missing `.nvmrc` / `.node-version`, activates Node 26.7.0 in the current shell, and pins pnpm 11.22.0.
+- Added `scripts/recover-workspace.sh` / `pnpm workspace:recover` so stale installs can be repaired without relying on hidden runtime files.
+- Updated workspace install errors to avoid bare `nvm use` instructions when the runtime marker files may be missing.
+
+- Hardened dev-stack startup with a critical workspace dependency preflight, canonical pnpm repair instructions, schema-hash Prisma generation freshness, and source fixes for route PUT typing, CrossChainPair field drift, exact optional properties, DEX persistence typing, price/rate result narrowing, and backend barrel collisions.
+- Added full-stack startup preflight for workspace dependency resolution, environment bootstrap, Prisma freshness, and PostgreSQL reachability so `pnpm dev:stack` fails once before spawning watchers/workers when the checkout is incomplete.
+- Added first-party TypeScript path coverage for bridge-core/chat/staking/SDK packages and hardened backend types around Prisma transaction delegates, Sui wait results, operator queues, bridge history, and fee reconciliation.
+
+- Raised every workspace engine contract to `node >=26 <27` and `pnpm >=11.22.0 <12`; root `.nvmrc` and `.node-version` now pin Node `26.7.0`.
+- Kept MIT licensing across all 19 package manifests and the canonical root `LICENSE`.
+- Hardened `pnpm workspace:repair` to delete a stale lockfile before dependency resolution so removed transitive surfaces such as deprecated `aptos@1.22.1` cannot survive only because of an old lock graph.
+- Converted the source-controlled Postman dataset surface to CSV-only and removed JSON/XLSX dataset duplicates.
+- Retained deterministic Next.js CLI resolution; a missing Next binary now indicates an incomplete workspace install rather than a PATH lookup defect.
+
+## Runtime/install recovery and Sui oracle dependency hardening
+
+- Changed every workspace package license to MIT and added the canonical root `LICENSE`.
+- Raised the Node 24 engine floor to `>=24 <26` and pinned `.nvmrc` / `.node-version` to `26.7.0`, avoiding React Native 0.87 rejection on Node 24.0.0.
+- Added `pnpm workspace:repair` for stale or partially installed pnpm workspaces; it refreshes dependencies/lockfile and Prisma Client without running migrations.
+- Made the Bridge Next.js launcher resolve `next/dist/bin/next` from the app workspace instead of requiring a global or incidental `next` binary on `PATH`.
+- Added a database connectivity preflight before deploy migrations so an unavailable local PostgreSQL server fails with an actionable boundary before Prisma migration execution.
+- Removed the broad Wormhole Connect dependency surface that introduced deprecated Aptos packages; the Bridge uses PowerChain quote/persist/status lifecycle plus an optional reviewed NTT execution URL.
+- Standardized Sui primitives on `@mysten/sui` and added reviewed `@pythnetwork/pyth-sui-js` Hermes signed-update support through `@powerchain/blockchain`.
+- Added filtered standalone Bridge lifecycle documentation and an install/runtime production regression gate.
+
+## 2026-08-17 — Node / MIT / Sui-Pyth install recovery
+
+- Changed every workspace package license to `MIT` and replaced the proprietary notice with the canonical MIT `LICENSE`.
+- Pinned `.nvmrc` / `.node-version` to Node `26.7.0` and raised `engines.node` to `>=24 <26` so `react-native@0.87.0` no longer rejects Node 24.0.0.
+- Reworked the Next CLI wrapper to resolve `next/dist/bin/next` from the filtered app workspace instead of depending on a `.bin` PATH entry, fixing `spawnSync next ENOENT` after a valid pnpm install.
+- Removed the broad `@wormhole-foundation/wormhole-connect` browser dependency that brought deprecated Aptos packages into the Solana/Sui-only app.
+- Upgraded `@mysten/sui` to `2.26.1`, added `@pythnetwork/pyth-sui-js`, and isolated Pyth Hermes signed-update retrieval from the canonical Mysten Sui v2 RPC/transaction layer.
+- Added `pnpm db:preflight` so an offline PostgreSQL target fails with an actionable message before Prisma migration execution.
+- Added filtered `dev:standalone`, `build:standalone`, and `start:standalone` bridge-app lifecycle commands while keeping pnpm workspace ownership.
+
 All notable changes to PowerChain DeFAI are documented here. The project remains at version **1.0.0**.
+
+## 2026-08-17 — Postman datasets, method collections, and README cleanup
+
+- Added a generated Postman HTTP-method collection with canonical `GET`, `POST`, and `PUT` folders plus sanitized saved response examples for all registered API actions.
+- Expanded local and production Postman environments to expose the complete collection-variable surface; local `baseUrl`, `swapUrl`, and `bridgeUrl` now all resolve to `http://localhost:3000` to prevent accidental production fallback.
+- Added source-controlled Postman dataset inputs in CSV, JSON, and XLSX formats plus dataset metadata and pnpm generation/check commands.
+- Recorded the configured Postman workspace/specification identifiers without making remote Postman state a release-time dependency.
+- Reworked the README worker lease/heartbeat section, documented the Postman release surface, reinforced pnpm-only workflows, and retained the root `.nvmrc` / `.node-version` Node 24 contract.
+
+## 2026-08-17 — runtime trust and deploy smoke hardening
+
+- Fixed production smoke authentication for `POWERCHAIN_API_KEY_MODE=required` with `POWERCHAIN_SMOKE_API_KEY` support.
+- Production smoke now requires HTTPS outside localhost and rejects credential/path/query-bearing base URLs.
+- Aligned runtime API-key validation with the actual 24-256 character authorization bounds and duplicate-key rejection.
+- Added explicit Cloudflare runtime identity and canonical `CF-Connecting-IP` handling through pseudonymous IP security.
+- Removed raw `CF-Connecting-IP` / `X-Real-IP` reads from the durable database-backed rate limiter.
+- Added `/api/v1/version` to the canonical route-policy registry and extended production gates for these invariants.
+
+## 2026-08-17 — protocol runtime isolation
+
+- Improved Protocol runtime isolation with per-program verification endpoints, independent card refresh, checked-at/latency evidence, core/optional filtering, and failure isolation so one optional verifier cannot take down aggregate program readiness.
+
+## Runtime environment and deployment hardening
+
+- Split environment-template validation (`env:schema:check`) from live production configuration validation (`env:runtime:check`).
+- Production preflight now rejects localhost database/RPC endpoints, weak API-key mode, non-mainnet network selection, and incomplete Wormhole NTT deployment identifiers when cross-chain execution is enabled.
+- Hardened deployment smoke tests with bounded retry/backoff and required security-header validation.
+- Clarified `@powerchain/backend` as a server-side domain/integration library rather than a standalone HTTP process.
+- Added environment schema validation to the source-only CI repository-contract job.
+
+## 2026-08-17 — workspace metadata and governance hardening
+
+- Added an explicit proprietary `LICENSE` matching the private `UNLICENSED` package policy.
+- Added `docs/SECURITY.md` with wallet-signing, secret-management, runtime-verification, lockfile, and production-promotion boundaries.
+- Added `docs/CONTRIBUTING.md` with the canonical Node 26 / pnpm workflow and repository hygiene rules.
+- Added `engines.node: ">=24 <25"` to every workspace package so package-level tooling sees the same runtime contract as the root.
+- Extended package metadata validation to enforce the Node engine and proprietary license notice.
+- Normalized package manifest ordering and removed empty/dead source directories.
+
+## 2026-08-17 — package metadata and repository cleanup
+
+- Added production-grade `description`, `license`, and `author` metadata to all 19 root/workspace `package.json` manifests.
+- Standardized private package licensing on `UNLICENSED` so the repository does not accidentally grant an open-source license.
+- Added `metadata:production:check` and wired it into the production verification chain.
+- Expanded `pnpm clean` to recursively remove generated build output, caches, logs, editor/OS debris, temporary files, and TypeScript build info across the monorepo.
+- Expanded `.gitignore` coverage for generated/tooling debris and regenerated release integrity metadata.
+
+## 2026-08-17 — pnpm monorepo production hardening
+
+- Fixed strict-workspace dependency ownership for `@powerchain/runtime` and `@powerchain/bridge-core` imports so clean pnpm installs do not rely on accidental root dependency visibility.
+- Fixed Prisma/Supabase migration drift for runtime maintenance state and restored byte-identical mirrored migrations.
+- Moved `tsx` into each worker's runtime dependencies because production `start` commands load TypeScript through `node --import tsx`.
+- Added a workspace dependency-boundary production gate that rejects undeclared source imports and production start commands backed only by dev dependencies.
+- Added a fail-closed pnpm lockfile production gate to release/deploy preflight; frozen-install deployments can no longer proceed without a reviewed `pnpm-lock.yaml`.
+- Added pnpm-managed Node 24 runtime metadata while retaining `.nvmrc`, `.node-version`, `engines`, and the pinned pnpm 11.22.0 package-manager contract.
+
+## 2026-08-17 — worker drain mode
+
+- Added fail-closed worker drain mode for controlled deployments: workers keep heartbeats, claim no new jobs, and aggregate readiness blocks new operations/async settlement while draining.
+
+## 2026-08-17 — worker queue backpressure and shutdown ownership
+
+- Hardened worker batching/backpressure: just-in-time claims, shutdown-safe lease renewal, queue pressure readiness, and async-settlement gating under high backlog.
+
+## 2026-08-17 — staking runtime UX and transaction recovery
+
+- Harden worker execution with periodic background heartbeats and owner-qualified lease renewal for bridge, claims, and service-fee jobs; long RPC operations no longer become reclaimable solely because the initial lease window elapsed.
+
+- Added abort-safe, focus/online-aware 30-second staking runtime refresh while retaining the server-verified initial snapshot.
+- Distinguished a missing Token-2022 ATA (`0 PWRC`) from RPC/balance-read failures (`Unavailable`) instead of silently converting provider failures into zero balances.
+- Added verified minimum-stake, wallet-balance and active-position amount guards before wallet invocation plus 25%/50%/75%/Max amount shortcuts.
+- Added single-flight transaction submission protection and explicit ambiguous-confirmation recovery that preserves the transaction signature and warns against blind retry.
+- Added blockheight-aware confirmation error handling and refreshes wallet position/runtime evidence after confirmed or ambiguous submissions.
+- Added lifecycle cancellation to staking status/position fetches and a dedicated staking runtime UX production gate.
+
+## 2026-08-16 — light-first staking workspace upgrade
+
+- Rebuilt `/staking` around the supplied PowerChain staking reference while keeping light theme as the default and dark as the alternate theme.
+- Replaced synthetic APY/validator/earnings displays with RPC-verified total staked, reward-vault funding, reward policy, minimum stake, cooldown, wallet balance and wallet-position state.
+- Added read-only `/api/v1/staking/position` verification with PDA, discriminator, program-owner and wallet-owner checks.
+- Added verified pool metrics to `@powerchain/staking` and a staking UI production gate.
+- Kept all stake/unstake/withdraw/claim actions wallet-signed and deployment-revalidated immediately before submission.
 
 - Added canonical backend routing policy, request-security helpers, validated price/rate services, exact base-unit calculators, and versioned rates/calculator/security APIs; market data remains non-authoritative for Bridge accounting.
 
@@ -16,7 +207,34 @@ All notable changes to PowerChain DeFAI are documented here. The project remains
 - Added version-2 observability events with chain context while preserving existing config layouts.
 - Hardened information-commitment version checks and kept Wormhole NTT as the sole principal movement protocol.
 
+### Runtime evidence and operational diagnostics
+
+- Added RPC-evidence-driven Solana escrow readiness; configuration alone can no longer make the escrow rail executable.
+- Added per-checkout verification for the escrow PDA, allowlisted-mint PDA, extensions PDA, vault PDA, program ownership, account versions, allowlist state, SPL/Token-2022 mint ownership, and receipt PDA derivation on one consistent RPC endpoint.
+- Added canonical typed provider diagnostics to the endpoint registry, backend client, runtime validators, API route, and Integrations UI. Diagnostics are explicitly process-local and non-authoritative for accounting/settlement.
+- Standardized the staking status route on the common API envelope while preserving compatibility in wallet consumers.
+- Extended Solana staking deployment verification across the configured RPC fallback pool while requiring the full program/config/vault/reward proof to succeed on a single endpoint.
+- Improved realtime liveness so valid application traffic acknowledges socket activity without fabricating protocol-level pong observations.
+
+### Runtime/lifecycle hardening
+
+- Added schema-aware, concurrency-safe `prisma:ensure`; root and filtered workspace lifecycles no longer perform redundant unconditional Prisma generation.
+- Added `dev:all`, `build:monorepo`, workspace TypeScript coverage checks, and typecheck scripts for `@powerchain/database` / `@powerchain/runtime`.
+- Made the database module boundary lazy so Next.js route analysis does not require `DATABASE_URL` until actual database access.
+- Added generation-safe WebSocket event handling to ignore stale socket events after restart/failover.
+- Removed signer privilege forwarding from configurable Solana escrow hook CPIs.
+- Updated staking documentation to reflect the wallet-signed, deployment-reverified Solana action path.
+
 ## 1.0.0
+
+### Verified staking runtime and Solana program
+
+- Added `programs/solana/powerchain_staking` with canonical PWRC Token-2022 stake/reward vaults, wallet-owned positions, funded fixed-pool rewards, cooldown withdrawals, reward claims, pause/authority controls, and no minting/inflation path.
+- Moved the staking reward allocation cap and live reward-rate truth to verified on-chain config; source code no longer invents an allocation amount or APR/APY.
+- Added runtime RPC verification for the executable Solana program, program-owned config, canonical stake/reward vaults, reward funding/distribution invariants, and on-chain rate/epoch values.
+- Added `types/staking.ts` verification/reward models, `config/staking.json`, the staking program-ID synchronization helper, updated Staking UI/API status, and dedicated production checks.
+- Kept Sui staking fail-closed until real package/pool/reward object identifiers and a runtime verifier exist; no convincing placeholder deployment identifiers are introduced.
+- Fixed `packages/protocol/src/integrations.ts` so optional integration fields are omitted rather than explicitly set to `undefined` under `exactOptionalPropertyTypes`.
 
 ### Hooks, exact optional types, and realtime resilience
 
@@ -64,7 +282,7 @@ All notable changes to PowerChain DeFAI are documented here. The project remains
 
 - Added generated **PowerChain | DeFAI API Docs** under `api/postman/API_DOCS.md`, including production hosts, `X-Api-Key` authentication, transaction-safety boundaries, OpenAPI imports, and the canonical endpoint inventory generated from `shared/actions.json`.
 
-- Fixed pnpm bootstrap on Node 24.x by relaxing the engine from a minor-pinned `>=24.18.1 <25` range to the supported `>=24 <25` LTS line.
+- Fixed pnpm bootstrap on Node 26.x by relaxing the engine from a minor-pinned `>=24.18.1 <25` range to the supported `>=24 <25` LTS line.
 - Changed `.nvmrc` and `.node-version` to `24`, added `pnpm env:bootstrap`, and made local setup create `.env` from a checked-in template without overwriting an existing environment.
 - Expanded pnpm 11 `allowBuilds` for reviewed Prisma/native build dependencies required by the workspace, while keeping pnpm as the only supported package manager.
 
@@ -140,7 +358,7 @@ All notable changes to PowerChain DeFAI are documented here. The project remains
 
 ### Release tooling, Postman, Vercel, and routing
 
-- Pinned local runtime files to Node 24.x (latest LTS / Vercel Functions-compatible Node 24.x) and package-manager metadata to pnpm 11.22.0.
+- Pinned local runtime files to Node 26.x (latest LTS / Vercel Functions-compatible Node 26.x) and package-manager metadata to pnpm 11.22.0.
 - Added a telemetry-disabled Next.js CLI wrapper used by dev, build, and start commands.
 - Added generated Postman collection/environment artifacts sourced from the canonical API action registry while keeping OpenAPI/Swagger as the schema-rich contract.
 - Added route-contract and release-tooling production gates for API registry drift, redirects, Node/pnpm pins, Vercel config, Postman artifacts, and telemetry policy.
@@ -342,3 +560,211 @@ The OpenAPI contracts define `X-Api-Key` through the global `ApiKey` security sc
 - Centralized base-unit validation, slippage bounds, 2.5% fee math, quote freshness, minimum-output protection, payer/asset normalization, and swap state transitions.
 - Jupiter and Cetus execution adapters now consume the shared canonical intent rather than maintaining separate amount/slippage rules.
 - Browser Swap helpers and SDK request types now consume Swap Core, and Next transpiles the source workspace explicitly.
+
+## 2026-08-16 — hooks, wallet SSR, staking, escrow and monorepo resilience
+
+- Fixed zero-argument provider-health/readiness hooks and exact-optional operation-journal clear messages.
+- Added typed provider endpoints/client/config/context/error boundaries with timeout, cancellation and fail-closed readiness behavior.
+- Preserved WebSocket → SSE → polling fallback with bounded reconnect behavior and no synthetic chain events.
+- Isolated Mysten Sui wallet runtime/UI into `ssr: false` browser islands to prevent Next.js `window` / `document` server-evaluation failures.
+- Added optional Reown WalletConnect Solana adapter while retaining Wallet Standard discovery.
+- Upgraded Next.js to 16.3.1 and hardened root Vercel/pnpm/Node 24 configuration.
+- Made `env:bootstrap` repository-root aware and restored root environment templates; postinstall skips Prisma generation when `DATABASE_URL` is absent.
+- Added deployment/RPC-gated fixed-pool PWRC staking verification and `types/staking.ts` boundaries without fabricated APR/APY or reward amounts.
+- Added the deployment-gated `powerchain_escrow` Anchor program, receipt PDAs, mint allowlisting, timelocks, Token-2022 extension policy and four custom hook points.
+- Added non-custodial Solana Pay / escrow checkout planning and escrow readiness API endpoints.
+- Added escrow and staking source-level regression gates and updated generated API/Postman contracts.
+
+### Canonical PWRC policy hardening
+
+- Canonical supply is `18,446,000,000 PWRC` (`18,446,000,000,000,000,000` base units at 9 decimals).
+- Canonical PWRC does **not** use Token-2022 `TransferFeeConfig`; native transfer-fee policy is `0` bps.
+- PowerChain service fees remain governed and settled separately from bridge principal and network gas.
+- `pnpm token-policy:production:check` prevents mint, decimals, supply, or transfer-fee policy drift.
+- `pnpm workspace:bootstrap` now verifies that no dependency build scripts remain ignored after installation.
+
+### Prisma install/build hardening
+
+Prisma Client generation no longer requires `DATABASE_URL`. `prisma.config.ts` uses the optional environment value so `prisma generate` can run during install, typecheck, and build; database/migration commands still require a real configured URL. Root postinstall resolves the installed local Prisma CLI directly and generates the client without nested package-manager execution. Production build/typecheck no longer create `.env` files as a side effect.
+
+- Staking transaction recovery now persists wallet-submitted signatures locally, synchronizes them across tabs, reconciles Solana confirmation state through RPC, and never auto-retries an ambiguous staking instruction.
+
+## 2026-08-17 — monorepo routing and redirect hardening
+
+- Added a canonical application route/redirect registry consumed by Next.js and shared navigation.
+- Added a real `/status` page for provider health, redundancy and fail-closed execution readiness.
+- Added compatibility redirects for dashboard/staking/rewards/validators/history/portfolio/docs aliases without redirect loops.
+- Consolidated sidebar, primary, mobile-drawer, mobile-bottom and footer navigation around one route definition set.
+- Expanded backend core routing for provider, staking, escrow, payment and wallet APIs.
+- Added parameter-aware backend route matching and encoded path traversal rejection.
+- Added frontend/backend routing production gates and routing documentation.
+- Hardened monorepo routing runtime with bounded dynamic route builders, single-hop redirect validation, primary route loading boundaries, global error recovery, robots metadata, and canonical claim result navigation.
+
+## Routing observability hardening — 2026-08-17
+
+- Added static critical-route identity, risk, rate-class, and Server-Timing response labels without exposing dynamic route values.
+- Added parameter-aware core route matching and registered-path method discovery.
+- Added shared `RecoveryActions` backed by `APP_ROUTES`; removed the remaining hard-coded Bridge history recovery link.
+- Added route-observability documentation and production validation.
+
+## Route policy and limiter hardening — 2026-08-17
+
+- Centralized lightweight feature/rate enforcement for registered critical routes at the Next.js proxy boundary.
+- Added `405 Method Not Allowed` + `Allow` handling for registered paths with unsupported methods.
+- Added request-ID preservation and rate-limit metadata to proxy-generated failures.
+- Prevented route handlers from double-consuming rate buckets after proxy enforcement while preserving direct invocation safety.
+- Replaced the unbounded process-local rate-limit map with a configurable bounded/pruned store.
+- Documented the local limiter as best-effort instance protection rather than distributed quota, billing, settlement, or abuse-accounting authority.
+
+- Added sanitized process-local route-policy diagnostics with limiter pressure, typed client/hook wiring, and Runtime Status visibility; no client or wallet identifiers are exposed.
+
+## Production readiness hardening — 2026-08-17
+
+- Added aggregate `/api/v1/system/readiness` with explicit read/new-operation/async-settlement capabilities.
+- Added abortable client polling and Runtime Status production-readiness UI.
+- Added `deploy:preflight` and non-custodial `deploy:smoke` commands.
+- Added production-readiness source validation and documentation.
+
+### Runtime topology and worker-readiness hardening
+
+- Corrected system readiness so required worker kinds are not incorrectly counted as observed when heartbeat rows are missing.
+- Added shared `WORKER_KINDS` / `REQUIRED_WORKER_KINDS` topology and explicit observed, ready, missing, and stale worker evidence.
+- Removed `@powerchain/backend` from `dev:stack`; it is a business-logic library, not a standalone daemon.
+- Converted backend `dev` into TypeScript watch mode and moved worker `tsx`/`typescript` tooling to development dependencies.
+- Added service-topology documentation and a production regression gate.
+
+## Worker retry and queue-age hardening — 2026-08-17
+
+- Stopped automatic reclaim of `RECONCILIATION_REQUIRED` bridge transfers.
+- Added bounded bridge retry attempts and manual-reconciliation escalation.
+- Added oldest-pending queue age to operational pressure/readiness.
+- Added queue-age and bridge retry environment controls plus production gate.
+
+## Worker drain quiescence hardening — 2026-08-17
+
+- Added worker drain quiescence evidence (active leases) and a sanitized authenticated operator attention queue.
+
+## Operator maintenance workflow hardening — 2026-08-17
+
+- Added fail-closed drain-wait tooling that requires database-backed zero active leases plus quiescence.
+- Added post-maintenance resume verification for drain-off, database/provider/worker readiness, new operations, and async settlement.
+- Added server/CLI-only operator attention inspection with bounded queue filtering and timestamp pagination.
+- Corrected the blocked system-readiness fallback so it always satisfies the strict maintenance payload contract and never claims quiescence without database evidence.
+
+### Runtime maintenance control
+
+- Added persisted, audited, revision-checked worker drain/resume state.
+- Workers dynamically consume maintenance state and fail closed when it is unavailable.
+- Preserved `POWERCHAIN_WORKER_DRAIN_MODE` as a one-way emergency override.
+- Added authenticated operator maintenance API and CLI.
+
+### Runtime maintenance freshness hardening
+
+- Added bounded persisted-maintenance reads with `POWERCHAIN_WORKER_MAINTENANCE_TIMEOUT_MS`.
+- Maintenance database timeout/failure now remains fail-closed while preserving source/revision/read-health diagnostics.
+- System and operations readiness distinguish operator drain, environment override, and maintenance-store failure.
+- Blocked readiness fallbacks now carry the full maintenance control-plane contract.
+- Repeated identical drain/resume mutations are idempotent no-ops instead of creating meaningless revisions.
+- Added a dedicated runtime-maintenance freshness production gate and validation documentation.
+
+### Programs, contracts and protocol UI
+
+- Added the light-first `/protocol` workspace and runtime program-readiness API.
+- Added source-controlled program inventory in `@powerchain/protocol/programs`.
+- Wired Solana Bridge, Staking, Escrow and Sui Bridge runtime evidence without promoting configured identifiers as deployed truth.
+- Added bridge config-version enforcement to privileged Solana and Sui guard operations.
+- Added canonical `/programs` and `/contracts` redirects to `/protocol`.
+
+- Tightened Protocol readiness so both core Bridge Guard deployments must be fresh, executable and RPC-verified; optional staking/escrow source presence cannot make core readiness green.
+- Strengthened Sui Bridge runtime evidence with package/object Move-type validation in addition to object-ID matching.
+
+### Program runtime freshness hardening — 2026-08-17
+
+- Added bounded per-program verifier deadlines with explicit timeout evidence.
+- Added client-side evidence freshness aging and core bridge stale-state warnings.
+- Added Protocol UI timeout/stale badges and production validation coverage.
+
+### Program runtime evidence cache — 2026-08-17
+
+- Added bounded server-side program evidence caching and in-flight verifier coalescing.
+- Manual Protocol verification now forces fresh evidence while background refreshes remain cache-eligible.
+- Program runtime payloads expose live/cache provenance and cache age without changing settlement authority.
+
+## 1.0.0 — Protocol verifier cancellation and cache invalidation — 2026-08-17
+
+- Propagated verifier deadline cancellation into Solana/Sui, staking, and escrow runtime verification.
+- Bound process-local program evidence cache entries to deployment-configuration fingerprints.
+- Prevented stale in-flight verification results from repopulating cache after configuration changes.
+- Added production validation and documentation for the new invariants.
+
+### Program deployment evidence hardening — 2026-08-17
+
+- Solana Bridge runtime readiness now requires executable-account ownership by a recognized Solana program loader, including Loader v4 support.
+- Sui Bridge runtime readiness now verifies BridgeConfig and InformationCommitment are shared objects as required by the Move source lifecycle.
+- Added strict typed deployment-evidence payloads and Protocol UI diagnostics for loader/shared-object evidence.
+- Added production validation and release-manifest coverage for these invariants.
+
+## Swap dependency surface hardening — 2026-08-17
+
+- Added pinned Axios, bs58 and `@jup-ag/api` dependencies to the `/swap` application workspace.
+- Added pinned Anchor, Solana Kit, SPL Token/SPL Token Metadata, node-fetch, uuid, ws and Zod dependencies at the private monorepo root.
+- Kept `node:fs` as the Node 24 built-in instead of installing an npm `fs` package.
+- Added a production gate that prevents dependency-surface drift or use of the incorrect `@solana/token-metadata` package name.
+
+### Cloudflare and application integration hardening
+
+- Added Cloudflare Workers production target through `@opennextjs/cloudflare` and Wrangler while preserving standalone Node deployment.
+- Added workerd preview/upload/deploy commands, compatibility configuration, static asset caching, observability, and a production gate.
+- Reworked the Integrations UI into application surfaces, edge runtime, operational readiness, diagnostics, and provider catalog sections.
+- Added shared responsive form-control primitives and improved provider cards for clearer mobile/desktop hierarchy.
+
+### Production CI and repository normalization
+
+- Added a least-privilege GitHub Actions production workflow for Node 24 and pinned pnpm 11.22.0.
+- Added a source-controlled CI production gate that forbids npm/Yarn/Bun installs and requires frozen pnpm installs.
+- CI now fails closed when the reviewed `pnpm-lock.yaml` is missing rather than silently regenerating dependencies.
+- Added `.editorconfig`, `.gitattributes`, and `.dockerignore` for deterministic line endings, generated-artifact handling, and smaller deployment contexts.
+
+### User settings, custom RPC/API and generated SDK client — 2026-08-17
+
+- Added browser-local user profile and versioned application settings for PowerChain API, Solana RPC, Sui gRPC, swap and bridge preferences.
+- Added session-only PowerChain and Jupiter API credentials; secrets are excluded from local settings exports and persistent local storage.
+- Added custom PowerChain API routing with explicit production CORS origin allowlisting.
+- Added user-supplied Jupiter Swap V2 credentials and custom-host protection that never forwards the server Jupiter key to user-selected hosts.
+- Added custom Solana/Sui wallet endpoint wiring, endpoint diagnostics and safe fallback to canonical endpoints.
+- Added saved bridge direction/polling/realtime preferences and saved swap network/slippage/routing preferences.
+- Extended the API registry generator to emit a typed SDK route registry and added a generic generated API client.
+- Extended `PowerChainClient` with shared dynamic headers and explicit Jupiter override helpers for Solana swap order/execute calls.
+- Added `user-settings:production:check` and production validation for CORS origins/Jupiter host allowlists.
+- Added endpoint-bound session credential clearing so PowerChain/Jupiter keys cannot silently follow a changed host.
+- Upgraded Sui custom-endpoint diagnostics to use the same `SuiGrpcClient` transport and Core API chain-identifier probe used by the application runtime.
+- Added generated dynamic-path construction with encoded required route parameters and strengthened custom Jupiter SSRF protections against local/IP-literal production targets.
+- Added a sanitized `/api/v1/swap/solana/provider` policy-validation endpoint plus Settings and SDK helpers so user Jupiter host/key configuration can be checked before requesting a quote or transaction.
+- Moved transient Jupiter override parsing into one server helper shared by provider/order/execute routes and documented the override headers in the Swap OpenAPI contract.
+
+## 2026-08-17 — Dev Container hardening
+
+- Added `.devcontainer/devcontainer.json` and Compose override with a dedicated Node 24 workspace service.
+- VS Code no longer attaches to the PostgreSQL container.
+- Devcontainer PostgreSQL runs on the internal Compose network; the base `5432` host publication is reset in the override.
+- Added host-side generation of an ignored, mode-0600 local database credential without printing the secret.
+- Added deterministic post-create pnpm/Prisma/workspace setup without automatic migrations.
+- Added explicit devcontainer-aware local database lifecycle behavior and a production regression check.
+
+### Toolchain bootstrap hotfix
+
+- Fixed zero-assumption bootstrap ordering so the downloaded Node 26.7.0 `bin/` directory is exported before npm is invoked to install pnpm.
+- Fixed sourced bootstrap failure propagation; a failed Node validation no longer falls through into pnpm installation.
+- Partial/stale user-local Node installations are now removed and reinstalled after a failed executable/version self-check.
+- Added an offline bootstrap self-test that starts with no visible node/npm/pnpm and verifies Node is available before npm runs.
+
+## 2026-08-17 — Marketing frontend, dashboard shell, and runtime-boundary fix
+
+- Added `apps/web` as a modular marketing Next.js frontend on port 3001.
+- Added professional marketing header, hero, products, features, partnerships, FAQ, CTA, logo, footer and shell modules.
+- Made `/dashboard` the canonical application entry route and upgraded the command-center dashboard hierarchy.
+- Added collapsible dashboard navigation and fixed viewport scroll ownership; only page content and overflowing sidebar navigation scroll.
+- Kept dashboard footer navigation-free and separate from workspace content.
+- Added richer AI chat identity, assistant/user avatars, suggestion cards and a dedicated `components/chat/chat-interface.tsx`.
+- Removed Next.js `server-only` markers from the shared backend runtime package so direct Node/tsx workers can execute backend modules.
+- Routed browser-safe explorer URL helpers through `@powerchain/protocol/explorers` and added a client/backend boundary production check.

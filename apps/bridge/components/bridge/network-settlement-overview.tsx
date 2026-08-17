@@ -1,10 +1,11 @@
 "use client";
 
-import { useProviderHealth } from "@/hooks/use-provider-health";
+import { useProviderRuntime } from "@/context/provider-runtime-context";
+import type { ProviderHealthPayload } from "@/types/providers";
 import { BrandLogo } from "@/components/navigation/brand-logo";
 import { BRIDGE_DIRECTIONS } from "@/lib/data/data";
 
-type Provider = NonNullable<ReturnType<typeof useProviderHealth>["data"]>["providers"][number];
+type Provider = ProviderHealthPayload["providers"][number];
 
 function statusLabel(provider: Provider | undefined) {
   if (!provider) return "Checking";
@@ -58,7 +59,7 @@ function ChainPanel({ name, network, provider, accent }: { name: string; network
 }
 
 export function NetworkSettlementOverview() {
-  const { data, loading, refreshing, stale, online, refresh } = useProviderHealth();
+  const { health: { data, loading, refreshing, stale, online, refresh } } = useProviderRuntime();
   const solana = data?.providers.find((provider) => provider.provider === "solana");
   const sui = data?.providers.find((provider) => provider.provider === "sui");
   const operational = online && data?.status === "healthy" && !stale;

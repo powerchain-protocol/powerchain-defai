@@ -1,21 +1,18 @@
-# Build Recovery
+# Build recovery
 
-Use pnpm only. If npm was run in the workspace, remove its lockfile and mixed
-installation before running pnpm again.
+Use pnpm for project dependency and workspace operations. Node must satisfy `>=24 <26` before workspace repair can run.
+
+From the repository root:
 
 ```bash
-nvm use
-corepack enable
-corepack prepare pnpm@11.22.0 --activate
-pnpm clean:package-manager
-rm -rf node_modules apps/*/node_modules packages/*/node_modules
-pnpm install
+source ./bootstrap.sh
+pnpm workspace:repair
+pnpm workspace:install:check
 ```
 
-Node `24.14.0` is accepted by the repository engine range. `.nvmrc` targets the Node 24 LTS line and `nvm use` may use any supported Node 24.x installation.
+The repository pins Node `24.19.0` in `.nvmrc` and `.node-version`, but nvm is not required. `source ./bootstrap.sh` can install the verified pinned runtime user-locally; the Dev Container remains the preferred reproducible path.
 
-`pnpm install` runs `prisma generate` in `postinstall`, so the generated Prisma
-client exists before editor/typecheck/build work begins.
+`postinstall` delegates to the canonical `prisma:ensure` path and does not require a live `DATABASE_URL`. `pnpm workspace:repair` is for failed, partial, stale, or branch-switched installs: it removes stale workspace modules and lockfile state, performs a fresh pnpm resolution, applies the reviewed dependency-build policy, regenerates Prisma from the current schema/config, and validates the schema. It does not run database migrations.
 
 Then run:
 
@@ -27,23 +24,42 @@ pnpm test:protocol
 pnpm build:production
 ```
 
-The repository intentionally does not use TypeScript `baseUrl`. If an editor
-still reports that deprecation, reload the workspace TypeScript server and make
-sure VS Code is using `node_modules/typescript/lib` from this repository.
+## Development stack preflight
+
+`pnpm dev:stack` is the database-backed development topology. Before worker fan-out, the root lifecycle validates the workspace install, bootstraps missing development env files, verifies Prisma Client, and checks PostgreSQL reachability.
+
+Use `pnpm dev` when only the Next.js app/API shell is needed.
 
 ## Workspace doctor
 
-After a clean pnpm install, run:
+After a clean pnpm install:
 
 ```bash
 pnpm doctor
 ```
 
-The doctor detects unsupported Node/pnpm versions, npm/yarn lockfile contamination,
-`node_modules/.ignored`, missing workspace links, a missing generated Prisma client,
-missing environment templates, deprecated TypeScript `baseUrl`, and the remote Vercel
-schema configuration that can trigger editor trust diagnostics.
+The doctor checks Node/pnpm versions, mixed package-manager artifacts, missing workspace links, generated Prisma Client, environment templates, and TypeScript configuration.
 
-Direct Bridge and worker `dev`, `start`, `build`, and typecheck entry points regenerate
-the Prisma client before loading database code. This keeps a clean clone and an IDE
-workspace from depending on a stale generated client.
+## Ignored build-script recovery
+
+PowerChain source-controls the reviewed dependency build set in `pnpm-workspace.yaml`.
+
+```bash
+pnpm deps:builds:approve:reviewed
+pnpm install
+pnpm deps:builds:check
+```
+
+Do not enable an unrestricted dependency-build policy. New packages must be reviewed before entering the checked-in allowlist.
+
+## Missing hidden runtime files
+
+If a copied checkout omitted `.nvmrc` or `.node-version`:
+
+```bash
+source ./bootstrap.sh
+```
+
+The bootstrap recreates both marker files, accepts the pinned runtime when already active, and otherwise installs the verified pinned Node binary and pnpm user-locally.
+
+See [`../README.md`](../README.md) for the complete recovery sequence.

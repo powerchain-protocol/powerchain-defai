@@ -15,6 +15,7 @@ module powerchain_bridge::powerchain_bridge {
     const E_NONCE_OVERFLOW: u64 = 7;
     const E_INVALID_INFORMATION_COMMITMENT: u64 = 8;
     const E_INVALID_DESTINATION: u64 = 9;
+    const E_CONFIG_VERSION_MISMATCH: u64 = 10;
 
     const BRIDGE_CONFIG_VERSION: u16 = 1;
     const DIRECTION_SOLANA_TO_SUI: u8 = 0;
@@ -101,6 +102,7 @@ module powerchain_bridge::powerchain_bridge {
         config: &BridgeConfig,
         ctx: &mut TxContext,
     ) {
+        assert_config_version(config);
         assert_authority(config, ctx);
         let digest = INFORMATION_COMMITMENT;
         assert!(vector::length(&digest) == 32, E_INVALID_INFORMATION_COMMITMENT);
@@ -124,6 +126,7 @@ module powerchain_bridge::powerchain_bridge {
         new_authority: address,
         ctx: &mut TxContext,
     ) {
+        assert_config_version(config);
         assert_authority(config, ctx);
         assert!(new_authority != @0x0, E_INVALID_AUTHORITY);
         let previous_authority = config.authority;
@@ -136,6 +139,7 @@ module powerchain_bridge::powerchain_bridge {
         paused: bool,
         ctx: &mut TxContext,
     ) {
+        assert_config_version(config);
         assert_authority(config, ctx);
         config.paused = paused;
         event::emit(BridgePauseUpdated { authority: config.authority, paused });
@@ -149,6 +153,7 @@ module powerchain_bridge::powerchain_bridge {
         destination: String,
         ctx: &mut TxContext,
     ) {
+        assert_config_version(config);
         assert_authority(config, ctx);
         assert!(!config.paused, E_PAUSED);
         assert_valid_intent(&quote_hash, direction, amount_base_units, &destination);
@@ -201,6 +206,10 @@ module powerchain_bridge::powerchain_bridge {
             i = i + 1;
         };
         true
+    }
+
+    fun assert_config_version(config: &BridgeConfig) {
+        assert!(config.version == BRIDGE_CONFIG_VERSION, E_CONFIG_VERSION_MISMATCH);
     }
 
     fun assert_authority(config: &BridgeConfig, ctx: &TxContext) {

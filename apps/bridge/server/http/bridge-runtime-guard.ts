@@ -21,7 +21,7 @@ export async function enforceBridgeRuntimeRequest(capability: BridgeRuntimeCapab
       headers: {
         "cache-control": "no-store, max-age=0",
         "retry-after": "5",
-        "x-powerchain-bridge-runtime": decision.runtime.status,
+        "x-powerchain-defai-runtime": decision.runtime.status,
         "x-powerchain-runtime-snapshot": decision.runtime.snapshotId,
       },
     });
@@ -37,7 +37,7 @@ export async function enforceBridgeRuntimeRequest(capability: BridgeRuntimeCapab
       headers: {
         "cache-control": "no-store, max-age=0",
         "retry-after": "5",
-        "x-powerchain-bridge-runtime": "blocked",
+        "x-powerchain-defai-runtime": "blocked",
       },
     });
   }

@@ -4,6 +4,7 @@ import { writeBridgeAuditEvent } from "@powerchain/database";
 import { assertServiceFeeVerified } from "../fees/settlement";
 import { verifyBridgeChainTransaction } from "./rpc";
 import { findNttOperationForTransfer, vaaHash } from "./wormholescan";
+import { bridgeMaxAttempts, bridgeRetryDisposition } from "../workers/retry-policy";
 
 const activeStatuses = [
   "SOURCE_SUBMITTED",
@@ -11,10 +12,10 @@ const activeStatuses = [
   "MESSAGE_OBSERVED",
   "DESTINATION_SUBMITTED",
   "DESTINATION_FINALIZED",
-  "RECONCILIATION_REQUIRED",
+
 ] as const;
 
-type BridgeTransitionStatus = typeof activeStatuses[number] | "COMPLETED";
+type BridgeTransitionStatus = typeof activeStatuses[number] | "RECONCILIATION_REQUIRED" | "COMPLETED";
 
 async function transitionBridgeTransfer(
   id: string,
@@ -59,6 +60,14 @@ export async function claimBridgeTransferBatch(input: { workerId: string; limit:
   return claimed;
 }
 
+export async function renewBridgeTransferLease(id: string, workerId: string, leaseMs: number): Promise<boolean> {
+  const result = await prisma.bridgeTransfer.updateMany({
+    where: { id, bridgeWorkerLeaseOwner: workerId },
+    data: { bridgeWorkerLeaseUntil: new Date(Date.now() + Math.max(20_000, Math.min(300_000, leaseMs))) },
+  });
+  return result.count === 1;
+}
+
 export async function releaseBridgeTransferLease(id: string, workerId: string) {
   await prisma.bridgeTransfer.updateMany({
     where: { id, bridgeWorkerLeaseOwner: workerId },
@@ -70,26 +79,40 @@ function retryDelay(attempt: number) {
   return Math.min(300_000, 5_000 * 2 ** Math.min(6, attempt));
 }
 
-export async function recordBridgeTransferRetry(id: string, workerId: string, error: string) {
+export async function recordBridgeTransferRetry(id: string, workerId: string, error: string, env: NodeJS.ProcessEnv = process.env) {
   await prisma.$transaction(async (tx: PrismaTransactionClient) => {
-    const row = await tx.bridgeTransfer.findUnique({ where: { id }, select: { bridgeAttemptCount: true } });
-    const attempt = (row?.bridgeAttemptCount ?? 0) + 1;
+    const row = await tx.bridgeTransfer.findUnique({ where: { id }, select: { bridgeAttemptCount: true, status: true } });
+    if (!row) return;
+    const attempt = row.bridgeAttemptCount + 1;
+    const disposition = bridgeRetryDisposition(error);
+    const exhausted = attempt >= bridgeMaxAttempts(env);
+    const manualReview = disposition === "manual-review" || exhausted;
+    const failureCode = `${manualReview ? exhausted ? "RETRY_EXHAUSTED" : "MANUAL_REVIEW" : "RETRY"}:${error}`.slice(0, 160);
     const result = await tx.bridgeTransfer.updateMany({
       where: { id, bridgeWorkerLeaseOwner: workerId },
-      data: {
-        bridgeAttemptCount: attempt,
-        bridgeNextRetryAt: new Date(Date.now() + retryDelay(attempt)),
-        bridgeWorkerLeaseOwner: null,
-        bridgeWorkerLeaseUntil: null,
-        failureCode: error.slice(0, 160),
-      },
+      data: manualReview
+        ? {
+            status: "RECONCILIATION_REQUIRED",
+            bridgeAttemptCount: attempt,
+            bridgeNextRetryAt: null,
+            bridgeWorkerLeaseOwner: null,
+            bridgeWorkerLeaseUntil: null,
+            failureCode,
+          }
+        : {
+            bridgeAttemptCount: attempt,
+            bridgeNextRetryAt: new Date(Date.now() + retryDelay(attempt)),
+            bridgeWorkerLeaseOwner: null,
+            bridgeWorkerLeaseUntil: null,
+            failureCode,
+          },
     });
     if (result.count === 1) {
       await writeBridgeAuditEvent(tx, {
-        event: "bridge.retry-scheduled",
+        event: manualReview ? "bridge.manual-review" : "bridge.retry-scheduled",
         actor: workerId,
         target: id,
-        payload: { attempt, error: error.slice(0, 160) },
+        payload: { attempt, error: error.slice(0, 160), disposition, exhausted, previousStatus: row.status },
       });
     }
   });

@@ -29,6 +29,7 @@ const requiredTrue = [
 ];
 
 const errors = [];
+if (!/^verifyDepsBeforeRun:\s*warn\s*$/m.test(text)) errors.push("verifyDepsBeforeRun must be warn so bootstrap/repair scripts cannot recursively trigger pnpm install");
 for (const key of requiredTrue) {
   if (!new RegExp(`^${key}:\\s*true\\s*$`, "m").test(text)) {
     errors.push(`${key} must be explicitly true in pnpm-workspace.yaml`);
@@ -39,33 +40,31 @@ if (/^injectWorkspacePackages:\s*true\s*$/m.test(text)) {
   errors.push("injectWorkspacePackages must not be enabled for this live-source workspace");
 }
 
-for (const rel of ["apps", "packages"]) {
-  const parent = path.join(root, rel);
+const workspacePackageJsonFiles = [];
+const collectPackageJson = (relativeRoot) => {
+  const parent = path.join(root, relativeRoot);
+  if (!fs.existsSync(parent)) return;
   for (const entry of fs.readdirSync(parent, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
+    if (!entry.isDirectory() || entry.name === "node_modules") continue;
     const packagePath = path.join(parent, entry.name, "package.json");
-    if (!fs.existsSync(packagePath)) continue;
-    const pkg = JSON.parse(fs.readFileSync(packagePath, "utf8"));
-    if (pkg.version !== "1.0.0") {
-      errors.push(`${path.relative(root, packagePath)} version must remain 1.0.0`);
-    }
-    for (const section of ["dependencies", "devDependencies", "optionalDependencies", "peerDependencies"]) {
-      for (const [name, spec] of Object.entries(pkg[section] ?? {})) {
-        if (name.startsWith("@powerchain/") && !String(spec).startsWith("workspace:")) {
-          errors.push(`${path.relative(root, packagePath)} ${section}.${name} must use workspace:`);
-        }
-      }
-    }
+    if (fs.existsSync(packagePath)) workspacePackageJsonFiles.push(packagePath);
   }
-}
-
+};
+for (const rel of ["apps", "packages", "api"]) collectPackageJson(rel);
 for (const rel of ["shared/blockchain/package.json", "clusters/package.json", "api/package.json"]) {
   const packagePath = path.join(root, rel);
+  if (fs.existsSync(packagePath)) workspacePackageJsonFiles.push(packagePath);
+}
+
+for (const packagePath of [...new Set(workspacePackageJsonFiles)]) {
+  const rel = path.relative(root, packagePath);
   const pkg = JSON.parse(fs.readFileSync(packagePath, "utf8"));
   if (pkg.version !== "1.0.0") errors.push(`${rel} version must remain 1.0.0`);
   for (const section of ["dependencies", "devDependencies", "optionalDependencies", "peerDependencies"]) {
     for (const [name, spec] of Object.entries(pkg[section] ?? {})) {
-      if (name.startsWith("@powerchain/") && !String(spec).startsWith("workspace:")) errors.push(`${rel} ${section}.${name} must use workspace:`);
+      if (name.startsWith("@powerchain/") && !String(spec).startsWith("workspace:")) {
+        errors.push(`${rel} ${section}.${name} must use workspace:`);
+      }
     }
   }
 }
@@ -80,4 +79,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`Workspace configuration check PASS (${requiredTrue.length} explicit true settings, canonical workspace protocol, version 1.0.0).`);
+console.log(`Workspace configuration check PASS (${requiredTrue.length} explicit true settings, ${new Set(workspacePackageJsonFiles).size} workspace manifests, canonical workspace protocol, version 1.0.0).`);

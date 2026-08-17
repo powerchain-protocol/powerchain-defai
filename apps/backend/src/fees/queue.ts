@@ -45,6 +45,14 @@ export async function claimServiceFeeVerificationBatch(input: {
   }, { isolationLevel: "ReadCommitted" });
 }
 
+export async function renewServiceFeeVerificationLease(input: { transferId: string; workerId: string; leaseMs: number }): Promise<boolean> {
+  const result = await prisma.bridgeServiceFeeSettlement.updateMany({
+    where: { transferId: input.transferId, verificationLeaseOwner: input.workerId },
+    data: { verificationLeaseUntil: new Date(Date.now() + Math.max(10_000, Math.min(300_000, input.leaseMs))) },
+  });
+  return result.count > 0;
+}
+
 export async function releaseServiceFeeVerificationLease(input: { transferId: string; workerId: string }) {
   await prisma.bridgeServiceFeeSettlement.updateMany({
     where: { transferId: input.transferId, verificationLeaseOwner: input.workerId },

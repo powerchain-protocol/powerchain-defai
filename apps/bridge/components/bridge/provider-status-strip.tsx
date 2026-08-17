@@ -1,9 +1,10 @@
 "use client";
 
-import { useProviderHealth } from "@/hooks/use-provider-health";
+import { useProviderRuntime } from "@/context/provider-runtime-context";
+import type { ProviderHealthPayload } from "@/types/providers";
 
 export function ProviderStatusStrip() {
-  const { data, error, loading, refreshing, stale, payloadAgeMs, online, lastSuccessfulAt, refresh } = useProviderHealth();
+  const { health: { data, error, loading, refreshing, stale, payloadAgeMs, online, lastSuccessfulAt, refresh } } = useProviderRuntime();
   if (loading && !data) return <div className="h-10 w-48 animate-pulse rounded-xl border border-slate-200 bg-slate-100 dark:border-slate-800 dark:bg-slate-900" aria-label="Checking network providers" />;
 
   const unavailable = data?.status === "unavailable" || (!data && Boolean(error));

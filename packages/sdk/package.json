@@ -2,7 +2,16 @@
   "name": "@powerchain/sdk",
   "version": "1.0.0",
   "private": true,
+  "description": "PowerChain TypeScript SDK for integrating protocol, swap, bridge, staking, wallet, and API capabilities.",
+  "license": "MIT",
+  "author": {
+    "name": "PowerChain"
+  },
   "type": "module",
+  "engines": {
+    "node": ">=24 <26",
+    "pnpm": ">=11.22.0 <12"
+  },
   "exports": {
     ".": "./src/index.ts",
     "./client": "./src/client.ts",
@@ -11,13 +20,13 @@
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
-  "devDependencies": {
-    "typescript": "5.9.3"
-  },
   "dependencies": {
     "@powerchain/protocol": "workspace:*",
     "@powerchain/blockchain": "workspace:*",
     "@powerchain/clusters": "workspace:*",
     "@powerchain/swap-core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2"
   }
 }

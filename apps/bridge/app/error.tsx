@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { APP_ROUTES } from "@/config/app-routes";
 
 export default function AppError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
@@ -10,8 +11,9 @@ export default function AppError({ reset }: { error: Error & { digest?: string }
         <h1 id="app-error-title" className="mt-2 text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">The workspace could not finish loading</h1>
         <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">No bridge completion is inferred from this screen. Check an existing operation in History before signing or submitting anything again.</p>
         <div className="mt-5 flex flex-wrap gap-2">
-          <button type="button" onClick={reset} className="min-h-11 rounded-xl bg-[#0b1511] px-4 text-sm font-semibold text-white transition hover:bg-[#102019] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] dark:bg-[#dfe7e3] dark:hover:bg-white">Try again</button>
-          <Link href="/history" className="inline-flex min-h-11 items-center rounded-xl border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition hover:border-[#9eafa7] hover:text-[#264b3b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] dark:border-slate-700 dark:text-slate-200 dark:hover:border-[#46685a] dark:hover:text-[#d9e3de]">View history</Link>
+          <button type="button" onClick={reset} className="min-h-11 rounded-xl bg-[#0b1511] px-4 text-sm font-semibold text-white transition hover:bg-[#102019] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] dark:bg-[#dfe7e3] dark:text-[#07100d] dark:hover:bg-white">Try again</button>
+          <Link href={APP_ROUTES.history} className="inline-flex min-h-11 items-center rounded-xl border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition hover:border-[#9eafa7] hover:text-[#264b3b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] dark:border-slate-700 dark:text-slate-200">View history</Link>
+          <Link href={APP_ROUTES.status} className="inline-flex min-h-11 items-center rounded-xl border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition hover:border-[#9eafa7] hover:text-[#264b3b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] dark:border-slate-700 dark:text-slate-200">Runtime status</Link>
         </div>
       </section>
     </main>

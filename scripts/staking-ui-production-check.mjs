@@ -1,0 +1,13 @@
+import fs from "node:fs";
+const read=(path)=>fs.readFileSync(path,"utf8"); const must=(ok,msg)=>{if(!ok)throw new Error(msg)};
+const page=read("apps/bridge/app/staking/page.tsx"); const dashboard=read("apps/bridge/components/staking/staking-dashboard.tsx"); const actions=read("apps/bridge/components/staking/solana-staking-actions.tsx"); const position=read("apps/bridge/server/staking/position.ts"); const route=read("apps/bridge/app/api/v1/staking/position/route.ts"); const css=read("apps/bridge/app/globals.css"); const theme=read("apps/bridge/components/providers/theme-provider.tsx"); const verification=read("apps/staking/src/verification.ts");
+for(const token of ["StakingDashboard","stakingStatus"] ) must(page.includes(token),`staking page missing ${token}`);
+for(const token of ["Total staked","Reward vault available","No synthetic APY","Fixed reward pool","How staking works","Deployment verification","Recorded rewards"] ) must(dashboard.includes(token),`staking dashboard missing ${token}`);
+must(!dashboard.includes("12.48")&&!dashboard.includes("APY  ")&&!dashboard.includes("Estimated Rewards"),"staking dashboard must not fabricate APY/reward estimates");
+for(const token of ["revalidateConfiguration","sendTransaction","Initialize position","Request unstake","Claim recorded rewards"] ) must(actions.includes(token),`staking actions missing ${token}`);
+for(const token of ["PublicKey.findProgramAddressSync","decodeSolanaStakePosition","STAKING_POSITION_WALLET_MISMATCH","getSlot"] ) must(position.includes(token),`staking position verification missing ${token}`);
+for(const token of ["WALLET_REQUIRED","stakingPositionStatus","fail("] ) must(route.includes(token),`staking position route missing ${token}`);
+for(const token of [".staking-hero",".dark .staking-hero","staking-grid-pattern"] ) must(css.includes(token),`staking theme CSS missing ${token}`);
+must(theme.includes('useState<PowerChainTheme>("light")'),"light theme must remain the default");
+must(verification.includes("poolMetrics:{totalStakedBaseUnits"),"verified staking pool metrics must come from decoded on-chain config");
+console.log("POWERCHAIN_STAKING_UI_PRODUCTION_CHECK_PASS version=1.0.0");

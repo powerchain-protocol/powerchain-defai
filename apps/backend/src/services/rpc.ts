@@ -2,7 +2,7 @@ import { solanaRpcPool, solanaWsPool, suiGrpcPool } from "../config/endpoints";
 import { withPowerChainSuiClient } from "../sui/client";
 import { solanaConfig } from "../config/solana";
 import { suiConfig } from "../config/sui";
-import type { BlockchainChain } from "@powerchain/blockchain";
+import { createSolanaRpc, type BlockchainChain } from "@powerchain/blockchain";
 
 export type RpcChain = BlockchainChain;
 export type RpcEndpointHealth = { id: string; chain: RpcChain; role: "primary" | "fallback"; ok: boolean; latencyMs: number; error?: string };
@@ -54,14 +54,18 @@ export async function solanaRpcRequest<T>(method: string, params: readonly unkno
 }
 
 async function probeSolanaEndpoint(id: string, role: "primary" | "fallback", url: string): Promise<RpcEndpointHealth> {
-  const started = Date.now(); const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), Math.min(timeoutMs(), 6_000));
+  const started = Date.now();
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), Math.min(timeoutMs(), 6_000));
   try {
-    const response = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "getHealth", params: [] }), signal: controller.signal, cache: "no-store" });
-    const body = await response.json() as { result?: string; error?: unknown };
-    const ok = response.ok && body.result === "ok" && !body.error;
-    return { id, chain: "SOLANA", role, ok, latencyMs: Date.now() - started, ...(ok ? {} : { error: `RPC_HEALTH_${response.status}` }) };
-  } catch (error) { return { id, chain: "SOLANA", role, ok: false, latencyMs: Date.now() - started, error: safeError(error) }; }
-  finally { clearTimeout(timer); }
+    const result = await createSolanaRpc(url).getHealth().send({ abortSignal: controller.signal });
+    const ok = result === "ok";
+    return { id, chain: "SOLANA", role, ok, latencyMs: Date.now() - started, ...(ok ? {} : { error: "RPC_HEALTH_NOT_OK" }) };
+  } catch (error) {
+    return { id, chain: "SOLANA", role, ok: false, latencyMs: Date.now() - started, error: safeError(error) };
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 export async function rpcRuntimeStatus(): Promise<RpcRuntimeStatus> {

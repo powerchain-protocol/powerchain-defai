@@ -2,8 +2,35 @@
   "name": "@powerchain/staking",
   "version": "1.0.0",
   "private": true,
+  "description": "PowerChain staking application package with deployment-gated Solana and Sui staking workflows.",
+  "license": "MIT",
+  "author": {
+    "name": "PowerChain"
+  },
   "type": "module",
-  "exports": { ".": "./src/index.ts", "./services/staking": "./src/services/staking.ts", "./types/staking": "./src/types/staking.ts" },
-  "scripts": { "typecheck": "tsc --noEmit" },
-  "devDependencies": { "typescript": "5.9.3" }
+  "engines": {
+    "node": ">=24 <26",
+    "pnpm": ">=11.22.0 <12"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./config": "./src/config.ts",
+    "./verification": "./src/verification.ts",
+    "./services/staking": "./src/services/staking.ts",
+    "./types/staking": "./src/types/staking.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@powerchain/protocol": "workspace:*",
+    "@powerchain/blockchain": "workspace:*",
+    "@powerchain/runtime": "workspace:*",
+    "@mysten/sui": "2.26.1",
+    "@solana/kit": "7.1.0"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "@types/node": "26.2.0"
+  }
 }

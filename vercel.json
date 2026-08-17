@@ -1,7 +1,6 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "installCommand": "corepack enable && corepack prepare pnpm@11.22.0 --activate && pnpm install --no-frozen-lockfile",
+  "installCommand": "npm install --global pnpm@11.22.0 && pnpm install --frozen-lockfile",
   "buildCommand": "NEXT_TELEMETRY_DISABLED=1 pnpm build:production",
   "cleanUrls": true,
   "trailingSlash": false

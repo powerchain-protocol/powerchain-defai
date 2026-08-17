@@ -2,5 +2,18 @@
   "name": "@powerchain/swap-api-contracts",
   "version": "1.0.0",
   "private": true,
-  "type": "module"
+  "description": "PowerChain swap API contracts for quote, review, execution, and transaction lifecycle flows.",
+  "license": "MIT",
+  "author": {
+    "name": "PowerChain"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=24 <26",
+    "pnpm": ">=11.22.0 <12"
+  },
+  "scripts": {
+    "generate": "cd ../.. && pnpm api:contracts:generate",
+    "check": "cd ../.. && pnpm api:check"
+  }
 }

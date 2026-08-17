@@ -3,7 +3,7 @@ export type SecurityRuntimePolicy = {
   maxQueryValueLength: number;
   requireHttpsInProduction: boolean;
   trustForwardedHeaders: false;
-  trustedPlatformIpHeader: "x-vercel-forwarded-for";
+  trustedPlatformIpHeaders: readonly ["x-vercel-forwarded-for", "cf-connecting-ip"];
   authoritativeForWalletIdentity: false;
   authoritativeForBridgeAccounting: false;
 };
@@ -13,7 +13,7 @@ export const SECURITY_RUNTIME_POLICY: SecurityRuntimePolicy = {
   maxQueryValueLength: 512,
   requireHttpsInProduction: true,
   trustForwardedHeaders: false,
-  trustedPlatformIpHeader: "x-vercel-forwarded-for",
+  trustedPlatformIpHeaders: ["x-vercel-forwarded-for", "cf-connecting-ip"],
   authoritativeForWalletIdentity: false,
   authoritativeForBridgeAccounting: false,
 };
@@ -22,11 +22,13 @@ export function safeRequestId(value: string | null | undefined): string | null {
 export function assertBoundedText(value: string, field: string, maxLength = SECURITY_RUNTIME_POLICY.maxQueryValueLength): string { const trimmed = value.trim(); if (!trimmed || trimmed.length > maxLength || /[\u0000-\u001F\u007F]/.test(trimmed)) throw new Error(`${field.toUpperCase()}_INVALID`); return trimmed; }
 export function assertJsonContentLength(value: string | null): void { if (!value) return; if (!/^\d+$/.test(value)) throw new Error("CONTENT_LENGTH_INVALID"); if (Number(value) > SECURITY_RUNTIME_POLICY.maxJsonBodyBytes) throw new Error("REQUEST_BODY_TOO_LARGE"); }
 export function sanitizePublicErrorCode(value: unknown): string { const code = value instanceof Error ? value.message : typeof value === "string" ? value : "UNKNOWN_ERROR"; return /^[A-Z0-9_:-]{2,96}$/.test(code) ? code : "REQUEST_FAILED"; }
-export function publicSecurityPolicy() { return { maxJsonBodyBytes: SECURITY_RUNTIME_POLICY.maxJsonBodyBytes, maxQueryValueLength: SECURITY_RUNTIME_POLICY.maxQueryValueLength, requireHttpsInProduction: SECURITY_RUNTIME_POLICY.requireHttpsInProduction, trustForwardedHeaders: false as const, trustedPlatformIpHeader: SECURITY_RUNTIME_POLICY.trustedPlatformIpHeader, authoritativeForWalletIdentity: false as const, authoritativeForBridgeAccounting: false as const, apiKey: apiKeyPolicy() }; }
+export function publicSecurityPolicy() { return { maxJsonBodyBytes: SECURITY_RUNTIME_POLICY.maxJsonBodyBytes, maxQueryValueLength: SECURITY_RUNTIME_POLICY.maxQueryValueLength, requireHttpsInProduction: SECURITY_RUNTIME_POLICY.requireHttpsInProduction, trustForwardedHeaders: false as const, trustedPlatformIpHeaders: SECURITY_RUNTIME_POLICY.trustedPlatformIpHeaders, authoritativeForWalletIdentity: false as const, authoritativeForBridgeAccounting: false as const, apiKey: apiKeyPolicy() }; }
 
 
 export type ApiKeyMode = "off" | "optional" | "required";
 export const API_KEY_HEADER = "X-Api-Key" as const;
+export const API_KEY_MIN_LENGTH = 24;
+export const API_KEY_MAX_LENGTH = 256;
 
 function parseApiKeyMode(value: string | undefined): ApiKeyMode {
   const normalized = value?.trim().toLowerCase();
@@ -34,7 +36,7 @@ function parseApiKeyMode(value: string | undefined): ApiKeyMode {
 }
 
 function configuredApiKeys(env: NodeJS.ProcessEnv = process.env): readonly string[] {
-  return [env.POWERCHAIN_API_KEYS ?? "", env.SWAGGER_API_KEY ?? ""].join(",").split(",").map((value) => value.trim()).filter((value) => value.length >= 24);
+  return [env.POWERCHAIN_API_KEYS ?? "", env.SWAGGER_API_KEY ?? ""].join(",").split(",").map((value) => value.trim()).filter((value) => value.length >= API_KEY_MIN_LENGTH && value.length <= API_KEY_MAX_LENGTH);
 }
 
 function fixedWorkEqual(left: string, right: string): boolean {
@@ -55,6 +57,7 @@ export function authorizeApiKey(value: string | null | undefined, env: NodeJS.Pr
   if (mode === "off") return { ok: true };
   const keys = configuredApiKeys(env);
   const provided = value?.trim() ?? "";
+  if (provided.length > API_KEY_MAX_LENGTH) return { ok: false, code: "API_KEY_INVALID" };
   if (mode === "required" && keys.length === 0) return { ok: false, code: "API_KEY_NOT_CONFIGURED" };
   if (!provided) return mode === "required" ? { ok: false, code: "API_KEY_REQUIRED" } : { ok: true };
   return keys.some((key) => fixedWorkEqual(key, provided)) ? { ok: true } : { ok: false, code: "API_KEY_INVALID" };

@@ -1,5 +1,6 @@
 import "server-only";
 import { createHash } from "node:crypto";
+import { clientIpSecurityContext } from "@powerchain/backend/services/ip-security";
 import { prisma } from "@powerchain/database/prisma";
 import type { PrismaTransactionClient } from "@powerchain/database/prisma";
 
@@ -14,8 +15,9 @@ function hashKey(scope: Scope, actor: string) {
   return `${scope}:${createHash("sha256").update(actor).digest("hex")}`;
 }
 function clientIdentity(headers: Headers): string {
-  // Forwarded headers are only a fallback signal; authenticated actor IDs should be supplied when available.
-  return headers.get("cf-connecting-ip")?.trim() || headers.get("x-real-ip")?.trim() || "anonymous";
+  // Authenticated actor IDs are preferred. Anonymous traffic receives only a
+  // platform-validated pseudonymous key; raw client IPs never enter storage.
+  return clientIpSecurityContext(headers).pseudonymousKey ?? "anonymous";
 }
 export async function enforceRateLimit(scope: Scope, headers: Headers, actor?: string | null) {
   const policy = DEFAULTS[scope];

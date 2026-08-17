@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/lib/api/browser-api";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -46,7 +47,7 @@ export function useBridgedAssets() {
     const timer = window.setTimeout(() => controller.abort(), 8_000);
     setLoading(true);
     try {
-      const response = await fetch("/api/v1/assets/bridge", { cache: "no-store", signal: controller.signal });
+      const response = await apiFetch("/api/v1/assets/bridge", { cache: "no-store", signal: controller.signal });
       const payload: unknown = await response.json();
       if (!response.ok || !validRegistry(payload)) throw new Error("Bridge asset registry unavailable");
       if (current !== generation.current) return;

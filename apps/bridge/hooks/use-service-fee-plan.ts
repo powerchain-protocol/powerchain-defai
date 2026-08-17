@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/lib/api/browser-api";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -56,7 +57,7 @@ export function useServiceFeePlan(input: {
 
     try {
       const qs = new URLSearchParams({ routeId, sourceChain: chain, principalBaseUnits: principal.toString() });
-      const response = await fetch(`/api/v1/fees/collection-plan?${qs.toString()}`, {
+      const response = await apiFetch(`/api/v1/fees/collection-plan?${qs.toString()}`, {
         cache: "no-store",
         headers: { accept: "application/json" },
         signal: abort.signal,

@@ -9,21 +9,21 @@ const fail = (message) => { failed = true; console.error(`FAIL ${message}`); };
 const check = (condition, message) => condition ? pass(message) : fail(message);
 const readJson = (file) => JSON.parse(fs.readFileSync(file, "utf8"));
 
-const packageFiles = [
-  "package.json",
-  "apps/bridge/package.json",
-  "apps/worker-bridge/package.json",
-  "apps/worker-claims/package.json",
-  "apps/worker-fees/package.json",
-  "apps/backend/package.json",
-  "packages/database/package.json",
-  "packages/protocol/package.json",
-  "packages/runtime/package.json",
-  "shared/blockchain/package.json",
-  "clusters/package.json",
-  "api/package.json",
-];
-for (const rel of packageFiles) {
+const packageFiles = [];
+const collectPackageJson = (relativeRoot) => {
+  const parent = path.join(root, relativeRoot);
+  if (!fs.existsSync(parent)) return;
+  for (const entry of fs.readdirSync(parent, { withFileTypes: true })) {
+    if (!entry.isDirectory() || entry.name === "node_modules") continue;
+    const packageFile = path.join(relativeRoot, entry.name, "package.json");
+    if (fs.existsSync(path.join(root, packageFile))) packageFiles.push(packageFile);
+  }
+};
+for (const rel of ["apps", "packages", "api"]) collectPackageJson(rel);
+for (const rel of ["shared/blockchain/package.json", "clusters/package.json", "api/package.json"]) {
+  if (fs.existsSync(path.join(root, rel))) packageFiles.push(rel);
+}
+for (const rel of [...new Set(packageFiles)]) {
   const file = path.join(root, rel);
   check(fs.existsSync(file), `${rel} exists`);
   if (fs.existsSync(file)) check(readJson(file).version === "1.0.0", `${rel} stays version 1.0.0`);

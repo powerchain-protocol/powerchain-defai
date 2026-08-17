@@ -244,7 +244,8 @@ for (const rel of [
   "apps/bridge/app/integrations/error.tsx",
   "apps/bridge/components/navigation/app-footer.tsx",
 ]) mustExist(rel);
-mustContain("apps/bridge/app/layout.tsx", "<AppFooter />");
+mustContain("apps/bridge/components/navigation/workspace-shell.tsx", "<AppFooter />");
+mustContain("apps/bridge/app/layout.tsx", "<ApplicationShell>");
 mustContain("apps/bridge/app/layout.tsx", 'href="#main-content"');
 mustContain("apps/bridge/app/not-found.tsx", "No wallet action or transfer was submitted");
 mustContain("apps/bridge/app/globals.css", "prefers-reduced-motion: reduce");
@@ -267,8 +268,12 @@ for (const rel of [
   "apps/bridge/public/tokens/wpwrc.png",
   "apps/bridge/app/icon.png",
 ]) mustExist(rel);
-mustContain("apps/bridge/app/layout.tsx", "<AppSidebar />");
-mustContain("apps/bridge/app/layout.tsx", "<MobileBottomNavigation />");
+mustContain("apps/bridge/components/navigation/workspace-shell.tsx", "<AppSidebar />");
+mustContain("apps/bridge/components/navigation/workspace-shell.tsx", "<MobileBottomNavigation />");
+mustContain("apps/bridge/components/dashboard/dashboard-shell.tsx", "<DashboardSidebar />");
+mustContain("apps/bridge/components/dashboard/dashboard-shell.tsx", "<DashboardHeader />");
+mustContain("apps/bridge/components/dashboard/dashboard-shell.tsx", "<DashboardFooter />");
+mustContain("apps/bridge/components/navigation/app-sidebar.tsx", "APPLICATION_NAVIGATION_SECTIONS");
 mustContain("apps/bridge/app/bridge/page.tsx", "<NetworkSettlementOverview />");
 mustContain("apps/bridge/app/bridge/page.tsx", "<RecentTransfersCard />");
 mustContain("apps/bridge/components/bridge/wormhole-ntt-panel.tsx", "/tokens/wpwrc.png");
@@ -297,8 +302,9 @@ mustContain("apps/bridge/components/bridge/provider-status-strip.tsx", "Checked 
 console.log("POWERCHAIN_UIUX_NAVIGATION_REFRESH_CHECK_PASS version=1.0.0");
 
 // Provider/fallback truthfulness and bridge refresh ergonomics.
-mustContain("apps/bridge/lib/wormhole/connect-config.ts", "Parameters<typeof nttExecutorRoute>[0]");
-if (read("apps/bridge/lib/wormhole/connect-config.ts").includes("as never")) fail("Wormhole NTT config must not use as never escape hatches");
+mustContain("apps/bridge/lib/wormhole/connect-config.ts", "POWERCHAIN_NTT_TRANSFER_URL_HTTPS_REQUIRED");
+mustContain("apps/bridge/components/bridge/wormhole-ntt-panel.tsx", "Track transfer");
+if (JSON.parse(read("apps/bridge/package.json")).dependencies?.["@wormhole-foundation/wormhole-connect"]) fail("Broad Wormhole Connect package must not return to the Solana/Sui-only browser dependency surface");
 mustContain("apps/bridge/hooks/use-provider-health.ts", "refreshing");
 mustContain("apps/bridge/components/bridge/provider-status-strip.tsx", 'aria-busy={refreshing}');
 mustContain("apps/bridge/components/bridge/provider-status-strip.tsx", 'disabled={refreshing}');

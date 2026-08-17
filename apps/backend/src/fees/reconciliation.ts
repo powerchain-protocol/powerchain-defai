@@ -1,6 +1,12 @@
 import { prisma } from "@powerchain/database/prisma";
 import { serviceFeeCommitment } from "./commitment";
 
+type ServiceFeeSettlementRow = {
+  id: string; transferId: string; policyId: string; quoteId: string; policyVersion: number; recipient: string; routeId: string; sourceChain: "SOLANA" | "SUI"; assetId: string; principalBaseUnits: unknown; feeBps: number; feeBaseUnits: unknown; collectedBaseUnits: unknown | null; commitment: string; status: string; verifiedAt: Date | null; sourceTx: string | null; nextRetryAt: Date | null; manualReviewAt: Date | null;
+};
+type ServiceFeePolicyRow = { id: string; version: number; recipient: string };
+type BridgeQuoteRow = { id: string; feeBaseUnits: unknown; serviceFeeRecipient?: string | null; routeId: string };
+
 function dec(value: unknown): string {
   if (typeof value === "string" || typeof value === "number" || typeof value === "bigint") return String(value);
   if (value && typeof value === "object" && "toFixed" in value && typeof (value as { toFixed?: unknown }).toFixed === "function") {
@@ -22,12 +28,12 @@ export async function serviceFeeIntegrityReport(input: { since: Date; limit?: nu
     where: { createdAt: { gte: input.since } },
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     take: limit,
-  });
+  }) as ServiceFeeSettlementRow[];
   const policyIds = [...new Set(settlements.map((row) => row.policyId))];
   const quoteIds = [...new Set(settlements.map((row) => row.quoteId))];
   const [policies, quotes] = await Promise.all([
-    prisma.bridgeServiceFeePolicy.findMany({ where: { id: { in: policyIds } } }),
-    prisma.bridgeQuote.findMany({ where: { id: { in: quoteIds } } }),
+    prisma.bridgeServiceFeePolicy.findMany({ where: { id: { in: policyIds } } }) as Promise<ServiceFeePolicyRow[]>,
+    prisma.bridgeQuote.findMany({ where: { id: { in: quoteIds } } }) as Promise<BridgeQuoteRow[]>,
   ]);
   const policyById = new Map(policies.map((row) => [row.id, row]));
   const quoteById = new Map(quotes.map((row) => [row.id, row]));
@@ -61,7 +67,7 @@ export async function serviceFeeIntegrityReport(input: { since: Date; limit?: nu
     if (!quote) push(row, "QUOTE_MISSING");
     else {
       if (dec(quote.feeBaseUnits) !== fee) push(row, "QUOTE_FEE_MISMATCH");
-      if ((quote as { serviceFeeRecipient?: string | null }).serviceFeeRecipient !== row.recipient) push(row, "QUOTE_RECIPIENT_MISMATCH");
+      if (quote.serviceFeeRecipient !== row.recipient) push(row, "QUOTE_RECIPIENT_MISMATCH");
       if (quote.routeId !== row.routeId) push(row, "QUOTE_ROUTE_MISMATCH");
     }
     if (row.status === "VERIFIED") {

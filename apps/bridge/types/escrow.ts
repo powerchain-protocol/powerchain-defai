@@ -1,0 +1,9 @@
+export type EscrowHookPoint = "PreDeposit" | "PostDeposit" | "PreWithdraw" | "PostWithdraw";
+export type BlockedToken2022Extension = "PermanentDelegate" | "NonTransferable" | "Pausable" | "TransferHook";
+export type EscrowVerificationStatus = "verified" | "unverified" | "unavailable" | "invalid";
+export interface EscrowVerificationEvidence { readonly status: EscrowVerificationStatus; readonly source: "operator-config" | "solana-rpc" | "repository"; readonly detail: string; readonly checkedAt?: string; readonly endpointIndex?: number; }
+export interface EscrowDeploymentStatus { readonly configured: boolean; readonly verified: boolean; readonly executable: boolean; readonly programId?: string; readonly reason?: string; readonly evidence: EscrowVerificationEvidence; readonly connectedWalletSigns: true; readonly backendCustody: false; }
+export interface EscrowPolicy { readonly timelockSlots: string; readonly hookProgram?: string; readonly immutable: boolean; readonly blockedExtensions: readonly BlockedToken2022Extension[]; }
+export interface EscrowDepositIntent { readonly escrow: string; readonly mint: string; readonly amountBaseUnits: string; readonly receiptSeed: string; readonly connectedWalletSigns: true; }
+export interface EscrowCheckoutPlan { readonly programId: string; readonly escrow: string; readonly depositor: string; readonly mint: string; readonly tokenProgramId: string; readonly allowedMint: string; readonly extensions: string; readonly vault: string; readonly receipt: string; readonly receiptSeed: string; readonly amountBaseUnits: string; readonly verifiedAt: string; readonly timelockSlots: string; readonly hookProgram?: string; }
+export interface EscrowReceipt { readonly address: string; readonly escrow: string; readonly depositor: string; readonly mint: string; readonly depositedBaseUnits: string; readonly depositedSlot: string; readonly unlockSlot: string; readonly redeemed: boolean; }

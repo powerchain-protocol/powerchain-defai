@@ -1,6 +1,8 @@
 export type BlockchainChain = "SOLANA" | "SUI";
 export type NetworkEnvironment = "mainnet" | "testnet" | "devnet" | "localnet";
 export type SolanaClusterName = "mainnet-beta" | "testnet" | "devnet" | "localnet";
+/** @deprecated Prefer SolanaClusterName; retained for workspace API compatibility. */
+export type SolanaNetworkName = SolanaClusterName;
 export type SuiNetworkName = "mainnet" | "testnet" | "devnet" | "localnet";
 export type ClusterName = SolanaClusterName | SuiNetworkName;
 export type ClusterId =

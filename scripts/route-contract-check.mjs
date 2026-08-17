@@ -4,7 +4,7 @@ import path from "node:path";
 const root = process.cwd();
 const apiRoot = path.join(root, "apps/bridge/app/api/v1");
 const actions = JSON.parse(fs.readFileSync(path.join(root,"shared/actions.json"),"utf8")).actions;
-const configSource = fs.readFileSync(path.join(root,"apps/bridge/next.config.ts"),"utf8");
+const routeSource = fs.readFileSync(path.join(root,"apps/bridge/config/app-routes.ts"),"utf8");
 const errors = [];
 
 const routeFiles = [];
@@ -14,7 +14,11 @@ for (const file of routeFiles) {
   const route = "/" + path.relative(path.join(root,"apps/bridge/app"),path.dirname(file)).split(path.sep).map((part)=>/^\[(.+)\]$/.test(part)?`:${part.slice(1,-1)}`:part).join("/");
   if (!actions.some((action)=>action.path===route)) errors.push(`API route missing from generated actions: ${route}`);
 }
-const redirects = [...configSource.matchAll(/\{\s*source:\s*"([^"]+)",\s*destination:\s*"([^"]+)"/g)].map((m)=>({source:m[1],destination:m[2]}));
+const routeValues = Object.fromEntries([...routeSource.matchAll(/\s+([A-Za-z0-9_]+): "([^"]+)"/g)].map((m) => [m[1], m[2]]));
+const redirects = [...routeSource.matchAll(/\{\s*source:\s*"([^"]+)",\s*destination:\s*(APP_ROUTES\.[A-Za-z0-9_]+|"[^"]+")/g)].map((m)=>({
+  source:m[1],
+  destination:m[2].startsWith("APP_ROUTES.") ? routeValues[m[2].slice("APP_ROUTES.".length)] : m[2].slice(1,-1),
+}));
 for (const redirect of redirects) {
   if (redirect.source === redirect.destination) errors.push(`Self redirect: ${redirect.source}`);
   if (!redirect.destination.startsWith("/")) errors.push(`Redirect must stay framework-relative: ${redirect.source}`);

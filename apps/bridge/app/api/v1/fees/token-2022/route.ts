@@ -14,6 +14,6 @@ export async function GET(req: Request) {
     const config = await inspectPwrcToken2022FeeConfig({ rpcUrl: rpc, mint });
     return ok(config, 200, id, { "Cache-Control": "no-store" });
   } catch {
-    return fail("PWRC_TRANSFER_FEE_INSPECTION_FAILED", "Unable to verify the PWRC Token-2022 transfer fee configuration", 503, id, true);
+    return fail("PWRC_TOKEN_POLICY_INSPECTION_FAILED", "Unable to verify the canonical PWRC Token-2022 extension policy", 503, id, true);
   }
 }

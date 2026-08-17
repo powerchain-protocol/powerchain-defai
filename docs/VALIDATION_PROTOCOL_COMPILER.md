@@ -21,8 +21,7 @@ Prisma 7.9.1, wallet provider, integrations, and package-manager recovery change
 A complete environment with the pinned package manager should run:
 
 ```bash
-corepack enable
-corepack prepare pnpm@11.22.0 --activate
+source ./bootstrap.sh
 pnpm clean:package-manager
 pnpm install
 pnpm doctor

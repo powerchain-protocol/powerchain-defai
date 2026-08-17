@@ -17,12 +17,12 @@ export * from "./swap/solana";
 
 export * from "./config/endpoints";
 export * from "./config/providers";
-export * from "./config/fees";
+export { POWERCHAIN_SWAP_FEE_BPS as CONFIG_POWERCHAIN_SWAP_FEE_BPS, BPS_DENOMINATOR as CONFIG_BPS_DENOMINATOR, calculateServiceFee } from "./config/fees";
 export * from "./types/actions";
 export * from "./types/mev";
 export * from "./types/pools";
 export * from "./types/tokens";
-export * from "./types/bridge";
+export type { BridgeSettlementProtocol, BridgeContractBoundary } from "./types/bridge";
 export * from "./types/swap";
 export * from "./types/endpoints";
 export * from "./utils/errors";
@@ -72,3 +72,9 @@ export * from "./types/portfolio";
 export * from "./types/balances";
 export * from "./types/assets";
 export * from "./types/wallets";
+
+export * from "./payments/checkout";
+export * from "./escrow/config";
+
+export * from "./services/pyth-sui";
+export * from "./services/staking";

@@ -1,2 +1,4 @@
 import { redirect } from "next/navigation";
-export default function HomePage() { redirect("/chat"); }
+import { APP_ROUTES } from "@/config/app-routes";
+
+export default function HomePage() { redirect(APP_ROUTES.home); }

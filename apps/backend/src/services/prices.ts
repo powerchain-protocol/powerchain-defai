@@ -53,4 +53,14 @@ async function fetchBirdeyePwrc(): Promise<PricePoint> {
 }
 
 export async function getPrice(asset: PriceAsset): Promise<PricePoint> { return cached(`price:${asset}`, cachePolicy().pricesMs, async () => { try { return await fetchPyth(asset); } catch (primary) { if (asset !== "PWRC") throw primary; return fetchBirdeyePwrc(); } }); }
-export async function getPrices(assets: readonly PriceAsset[]) { const unique = [...new Set(assets)].slice(0, 5); const settled = await Promise.allSettled(unique.map((asset) => getPrice(asset))); return unique.map((asset, index) => { const result = settled[index]; return result.status === "fulfilled" ? { asset, ok: true as const, data: result.value } : { asset, ok: false as const, error: result.reason instanceof Error ? result.reason.message : "PRICE_UNAVAILABLE" }; }); }
+export async function getPrices(assets: readonly PriceAsset[]) {
+  const unique = [...new Set(assets)].slice(0, 5);
+  const settled = await Promise.allSettled(unique.map((asset) => getPrice(asset)));
+  return settled.map((result, index) => {
+    const asset = unique[index];
+    if (!asset) throw new Error("PRICE_RESULT_INDEX_MISMATCH");
+    return result.status === "fulfilled"
+      ? { asset, ok: true as const, data: result.value }
+      : { asset, ok: false as const, error: result.reason instanceof Error ? result.reason.message : "PRICE_UNAVAILABLE" };
+  });
+}

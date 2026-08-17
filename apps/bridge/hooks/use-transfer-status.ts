@@ -1,4 +1,6 @@
 "use client";
+import { apiFetch } from "@/lib/api/browser-api";
+import { useUserSettings } from "@/context/user-settings-context";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { isTerminalTransferStatus, normalizeTransferStatus } from "../lib/bridge/transfer-status";
@@ -40,6 +42,9 @@ function normalizeSnapshot(value: unknown, expectedTransferId: string): Transfer
 
 export function useTransferStatus(transferId: string | null | undefined) {
   const online = useNetworkOnline();
+  const { settings } = useUserSettings();
+  const pollIntervalMs = settings.bridge.statusPollMs;
+  const realtimeAllowed = settings.bridge.preferRealtime && !(settings.connectivity.useCustomApi && settings.connectivity.apiBaseUrl.trim());
   const [snapshot, setSnapshot] = useState<TransferStatusSnapshot | null>(null);
   const [connection, setConnection] = useState<"idle" | "live" | "polling" | "offline" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -113,7 +118,7 @@ export function useTransferStatus(transferId: string | null | undefined) {
     const schedule = () => {
       if (stopped || terminalRef.current || !navigator.onLine) return;
       if (timer) clearTimeout(timer);
-      const delay = document.visibilityState === "hidden" ? 15_000 : 5_000;
+      const delay = document.visibilityState === "hidden" ? Math.max(15_000, pollIntervalMs) : pollIntervalMs;
       timer = setTimeout(() => void poll(), delay);
     };
 
@@ -129,7 +134,7 @@ export function useTransferStatus(transferId: string | null | undefined) {
       const timeout = window.setTimeout(() => abort.abort("timeout"), POLL_TIMEOUT_MS);
       try {
         const qs = cursor.current ? `?cursor=${encodeURIComponent(cursor.current)}&limit=50` : "?limit=50";
-        const response = await fetch(`/api/v1/bridge/transfers/${encodeURIComponent(transferId)}/events${qs}`, {
+        const response = await apiFetch(`/api/v1/bridge/transfers/${encodeURIComponent(transferId)}/events${qs}`, {
           cache: "no-store",
           headers: { accept: "application/json" },
           signal: abort.signal,
@@ -224,7 +229,7 @@ export function useTransferStatus(transferId: string | null | undefined) {
         startPolling();
       }
     };
-    if (!startWebSocket()) startStream();
+    if (realtimeAllowed) { if (!startWebSocket()) startStream(); } else startPolling();
 
     const visibility = () => {
       if (document.visibilityState === "visible" && connectionRef.current !== "live" && !terminalRef.current && navigator.onLine) void poll();
@@ -232,7 +237,7 @@ export function useTransferStatus(transferId: string | null | undefined) {
     const cameOnline = () => {
       setError(null);
       if (!terminalRef.current && connectionRef.current !== "live") {
-        if (!startWebSocket()) startStream();
+        if (realtimeAllowed) { if (!startWebSocket()) startStream(); } else startPolling();
       }
     };
     const wentOffline = () => {
@@ -258,7 +263,7 @@ export function useTransferStatus(transferId: string | null | undefined) {
       window.removeEventListener("online", cameOnline);
       window.removeEventListener("offline", wentOffline);
     };
-  }, [transferId]);
+  }, [transferId, pollIntervalMs, realtimeAllowed]);
 
   useEffect(() => {
     if (!online && !isTerminalTransferStatus(snapshot?.status)) {

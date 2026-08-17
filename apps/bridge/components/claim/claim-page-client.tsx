@@ -8,6 +8,7 @@ import { OperationRecoveryCenter } from "@/components/bridge/operation-recovery-
 import { createIdempotencyKey, postBridgeAction } from "@/lib/actions/bridge-fetch";
 import { useConnectedWallets } from "@/lib/wallet/connected-wallets";
 import { useOperationJournal } from "@/hooks/use-operation-journal";
+import { claimStatusRoute } from "@/config/app-routes";
 
 type Challenge = { data: { challengeId: string; wallet: string; message: string; expiresAt: string } };
 type Reserve = { data: { id: string; wallet: string; status: string; amountBaseUnits: string; reservationExpiresAt: string } };
@@ -43,7 +44,7 @@ export function ClaimPageClient() {
         claimId: reserved.data.id,
       }, { idempotencyKey: createIdempotencyKey("claim-submit") });
       journal.updateStatus(submitted.data.status === "FINALIZED" ? "FINALIZED" : submitted.data.status === "SUBMITTED" ? "SUBMITTED" : "SIGNING");
-      window.location.assign(`/claims/status/${submitted.data.id}`);
+      window.location.assign(claimStatusRoute(submitted.data.id));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Claim request failed");
     } finally { setBusy(false); }

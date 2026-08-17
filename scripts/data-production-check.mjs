@@ -99,9 +99,11 @@ if (!rpc.includes("POWERCHAIN_RPC_MAX_CACHE_ENTRIES") || !rpc.includes("MAX_CACH
 
 
 const providerHealthHook = read("apps/bridge/hooks/use-provider-health.ts");
+const providerClient = read("apps/bridge/backend/provider-client.ts");
 const runtimeValidation = read("apps/bridge/lib/data/runtime-validation.ts");
 const transportPolicy = read("apps/bridge/lib/realtime/transport-policy.ts");
-if (!providerHealthHook.includes("requestGeneration") || !providerHealthHook.includes("activeController") || !providerHealthHook.includes("isProviderHealthPayload")) fail("provider health stale-request/runtime validation hardening missing");
+if (!providerHealthHook.includes("requestGeneration") || !providerHealthHook.includes("activeController") || !providerHealthHook.includes("providerClient.health")) fail("provider health stale-request/runtime validation hardening missing");
+if (!providerClient.includes("isProviderHealthPayload") || !providerClient.includes("isProviderReadinessPayload") || !providerClient.includes("timeoutMs: PROVIDER_RUNTIME_CONFIG.timeoutMs")) fail("central provider client runtime validation/timeout hardening missing");
 if (!runtimeValidation.includes("isProviderReadinessPayload") || !runtimeValidation.includes("ageMs")) fail("provider payload validation/freshness helpers missing");
 if (!transportPolicy.includes("RealtimeFallbackReason") || !transportPolicy.includes("websocket-exhausted")) fail("realtime fallback reason semantics missing");
 if (!transportPolicy.includes("url.username || url.password")) fail("realtime URL credential rejection missing");

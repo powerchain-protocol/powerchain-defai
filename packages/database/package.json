@@ -2,22 +2,37 @@
   "name": "@powerchain/database",
   "version": "1.0.0",
   "private": true,
+  "description": "PowerChain database package containing Prisma schema, generated client boundaries, persistence utilities, and migration contracts.",
+  "license": "MIT",
+  "author": {
+    "name": "PowerChain"
+  },
   "type": "module",
+  "engines": {
+    "node": ">=24 <26",
+    "pnpm": ">=11.22.0 <12"
+  },
   "exports": {
     ".": "./src/index.ts",
     "./prisma": "./src/prisma.ts",
     "./queries": "./src/queries.ts",
-    "./types/db": "./src/types/db.ts"
+    "./types/db": "./src/types/db.ts",
+    "./supabase": "./src/supabase.ts"
+  },
+  "scripts": {
+    "pretypecheck": "pnpm -w prisma:ensure",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.9.1",
     "@prisma/client": "7.9.1",
-    "pg": "8.16.3",
-    "@powerchain/runtime": "workspace:*"
+    "pg": "8.23.0",
+    "@powerchain/runtime": "workspace:*",
+    "@supabase/supabase-js": "2.110.8"
   },
   "devDependencies": {
-    "@types/node": "26.1.2",
-    "@types/pg": "8.15.5",
-    "typescript": "5.9.3"
+    "@types/node": "26.2.0",
+    "@types/pg": "8.20.0",
+    "typescript": "7.0.2"
   }
 }

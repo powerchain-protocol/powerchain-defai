@@ -2,134 +2,1348 @@ openapi: 3.1.0
 info:
   title: PowerChain DeFAI API
   version: 1.0.0
-  description: Browser-safe PowerChain DeFAI API. Wormhole NTT is the sole PWRC/wPWRC cross-chain principal-movement protocol.
+  description: "Generated complete API contract from the canonical filesystem route registry. AI is advisory-only; wallet signatures remain user-authorized and Wormhole NTT remains the cross-chain principal-movement protocol."
 servers:
   - url: https://powerchain.app
 security:
   - ApiKey: []
+x-powerchain-route-count: 94
+x-powerchain-action-count: 96
 paths:
-  /api/v1/openapi:
+  /api/v1/assets/bridge:
     get:
-      summary: OpenAPI document
-      responses: { "200": { description: OpenAPI JSON } }
+      operationId: assets.bridge.get
+      tags: [DeFAI]
+      summary: Assets Bridge Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/blockchains:
     get:
-      summary: Active Solana and Sui blockchain runtime contexts
-      responses: { "200": { description: Browser-safe chain and active-cluster metadata } }
-  /api/v1/clusters:
-    get:
-      summary: Supported Solana/Sui clusters and cross-chain pairs
-      responses: { "200": { description: Cluster registry; non-authoritative for settlement } }
-  /api/v1/currencies:
-    get:
-      summary: Supported currencies and stablecoins
-      responses: { "200": { description: Browser-safe currency registry } }
-  /api/v1/rpc/status:
-    get:
-      summary: Solana RPC and Sui gRPC endpoint readiness
+      operationId: blockchains.get
+      tags: [DeFAI]
+      summary: Blockchains Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
       responses:
-        "200": { description: Non-authoritative RPC readiness }
-        "503": { description: RPC provider unavailable }
-  /api/v1/market/prices:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/bridge/config:
     get:
-      summary: Validated SOL/SUI/PWRC/USDC/EURC USD prices
-      responses: { "200": { description: Non-authoritative price observations } }
-  /api/v1/market/rates:
-    get:
-      summary: Derived cross-asset rates
-      responses: { "200": { description: Non-authoritative cross rate } }
-  /api/v1/calculators/transaction:
-    post:
-      summary: Exact base-unit transaction calculator
-      responses: { "200": { description: Deterministic fee and slippage amounts } }
-  /api/v1/security/policy:
-    get:
-      summary: Browser-safe request security policy
-      responses: { "200": { description: Public request limits without secrets } }
-  /api/v1/token/information:
-    get:
-      summary: Canonical PWRC/wPWRC information commitment
+      operationId: bridge.config.get
+      tags: [DeFAI]
+      summary: Bridge Config Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
       responses:
-        "200": { description: Token information commitment verified }
-        "503": { description: Runtime verification failed }
-  /api/v1/bridge/runtime:
-    get:
-      summary: Bridge runtime readiness
-      responses: { "200": { description: Bridge readiness snapshot } }
-  /api/v1/bridge/quote:
-    post:
-      summary: Wormhole NTT bridge quote
-      responses: { "200": { description: Validated bridge quote } }
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/bridge/history:
     get:
-      summary: Persisted bridge transaction history
-      responses: { "200": { description: Cursor-paginated bridge transactions } }
-  /api/v1/swap/quote:
+      operationId: bridge.history.get
+      tags: [DeFAI]
+      summary: Bridge History Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/bridge/openapi:
+    get:
+      operationId: bridge.openapi.get
+      tags: [DeFAI]
+      summary: Bridge Openapi Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/bridge/quote:
     post:
-      summary: Sui Cetus swap quote
-      responses: { "200": { description: Validated Sui swap quote } }
-  /api/v1/swap/solana/order:
+      operationId: bridge.quote.post
+      tags: [DeFAI]
+      summary: Bridge Quote Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/bridge/routes:
+    get:
+      operationId: bridge.routes.get
+      tags: [DeFAI]
+      summary: Bridge Routes Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/bridge/runtime:
+    get:
+      operationId: bridge.runtime.get
+      tags: [DeFAI]
+      summary: Bridge Runtime Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/bridge/transfers:
     post:
-      summary: Solana Jupiter Swap V2 order
-      responses: { "200": { description: Unsigned wallet-owned swap transaction } }
-  /api/v1/swap/solana/execute:
+      operationId: bridge.transfers.post
+      tags: [DeFAI]
+      summary: Bridge Transfers Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/bridge/transfers/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, minLength: 1, maxLength: 256 }
+    get:
+      operationId: bridge.transfers.id.get
+      tags: [DeFAI]
+      summary: Bridge Transfers Id Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/bridge/transfers/{id}/events:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, minLength: 1, maxLength: 256 }
+    get:
+      operationId: bridge.transfers.id.events.get
+      tags: [DeFAI]
+      summary: Bridge Transfers Id Events Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/bridge/transfers/{id}/events/stream:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, minLength: 1, maxLength: 256 }
+    get:
+      operationId: bridge.transfers.id.events.stream.get
+      tags: [DeFAI]
+      summary: Bridge Transfers Id Events Stream Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/bridge/transfers/{id}/source:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, minLength: 1, maxLength: 256 }
     post:
-      summary: Submit signed Jupiter Swap V2 transaction
-      responses: { "200": { description: Execution result } }
-  /api/v1/tokens/trusted:
-    get:
-      summary: Trusted token registry
-      responses: { "200": { description: Trusted token list } }
-  /api/v1/pools:
-    get:
-      summary: Normalized DEX pools
-      responses: { "200": { description: Pool observations } }
-  /api/v1/portfolio:
-    get:
-      summary: Connected-wallet portfolio
-      responses: { "200": { description: Portfolio balances } }
-  /api/v1/operations/status:
-    get:
-      summary: Database, worker and queue readiness
-      responses: { "200": { description: Operational status } }
+      operationId: bridge.transfers.id.source.post
+      tags: [DeFAI]
+      summary: Bridge Transfers Id Source Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/calculators/transaction:
+    post:
+      operationId: calculators.transaction.post
+      tags: [DeFAI]
+      summary: Calculators Transaction Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/chat:
     post:
-      summary: Advisory-only DeFAI assistant
-      responses: { "200": { description: Read-only assistant response } }
-  /api/v1/staking/status:
+      operationId: chat.post
+      tags: [DeFAI]
+      summary: Chat Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/claims/challenge:
+    post:
+      operationId: claims.challenge.post
+      tags: [DeFAI]
+      summary: Claims Challenge Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/claims/eligibility:
     get:
-      summary: Deployment-gated staking readiness
-      responses: { "200": { description: Staking runtime status without fabricated APR } }
+      operationId: claims.eligibility.get
+      tags: [DeFAI]
+      summary: Claims Eligibility Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/claims/reserve:
+    post:
+      operationId: claims.reserve.post
+      tags: [DeFAI]
+      summary: Claims Reserve Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/claims/status/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, minLength: 1, maxLength: 256 }
+    get:
+      operationId: claims.status.id.get
+      tags: [DeFAI]
+      summary: Claims Status Id Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/claims/submit:
+    post:
+      operationId: claims.submit.post
+      tags: [DeFAI]
+      summary: Claims Submit Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/clusters:
+    get:
+      operationId: clusters.get
+      tags: [DeFAI]
+      summary: Clusters Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/currencies:
+    get:
+      operationId: currencies.get
+      tags: [DeFAI]
+      summary: Currencies Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/data/pwrc:
+    get:
+      operationId: data.pwrc.get
+      tags: [DeFAI]
+      summary: Data Pwrc Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/data/pwrc/integrity:
+    get:
+      operationId: data.pwrc.integrity.get
+      tags: [DeFAI]
+      summary: Data Pwrc Integrity Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/data/pwrc/snapshot:
+    get:
+      operationId: data.pwrc.snapshot.get
+      tags: [DeFAI]
+      summary: Data Pwrc Snapshot Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/data/solana:
+    get:
+      operationId: data.solana.get
+      tags: [DeFAI]
+      summary: Data Solana Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/data/sui:
+    get:
+      operationId: data.sui.get
+      tags: [DeFAI]
+      summary: Data Sui Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/escrow/readiness:
+    get:
+      operationId: escrow.readiness.get
+      tags: [DeFAI]
+      summary: Escrow Readiness Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/fees/collection-plan:
+    get:
+      operationId: fees.collection-plan.get
+      tags: [DeFAI]
+      summary: Fees Collection Plan Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/fees/policy:
+    get:
+      operationId: fees.policy.get
+      tags: [DeFAI]
+      summary: Fees Policy Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/fees/token-2022:
+    get:
+      operationId: fees.token-2022.get
+      tags: [DeFAI]
+      summary: Fees Token 2022 Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/health:
+    get:
+      operationId: health.get
+      tags: [DeFAI]
+      summary: Health Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/integrations:
     get:
-      summary: Provider integration readiness
-      responses: { "200": { description: Provider readiness without secrets } }
+      operationId: integrations.get
+      tags: [DeFAI]
+      summary: Integrations Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/integrations/cetus:
+    get:
+      operationId: integrations.cetus.get
+      tags: [DeFAI]
+      summary: Integrations Cetus Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/integrations/market:
+    get:
+      operationId: integrations.market.get
+      tags: [DeFAI]
+      summary: Integrations Market Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/liquidity/positions:
+    get:
+      operationId: liquidity.positions.get
+      tags: [DeFAI]
+      summary: Liquidity Positions Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/liquidity/status:
+    get:
+      operationId: liquidity.status.get
+      tags: [DeFAI]
+      summary: Liquidity Status Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/market/prices:
+    get:
+      operationId: market.prices.get
+      tags: [DeFAI]
+      summary: Market Prices Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/market/rates:
+    get:
+      operationId: market.rates.get
+      tags: [DeFAI]
+      summary: Market Rates Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/market/token:
+    get:
+      operationId: market.token.get
+      tags: [DeFAI]
+      summary: Market Token Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/metadata/solana:
     get:
-      summary: Solana asset metadata
-      responses: { "200": { description: Helius DAS and Metaplex metadata context } }
+      operationId: metadata.solana.get
+      tags: [DeFAI]
+      summary: Metadata Solana Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/metrics/bridge:
+    get:
+      operationId: metrics.bridge.get
+      tags: [DeFAI]
+      summary: Metrics Bridge Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/openapi:
+    get:
+      operationId: openapi.get
+      tags: [DeFAI]
+      summary: Openapi Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/operations/status:
+    get:
+      operationId: operations.status.get
+      tags: [DeFAI]
+      summary: Operations Status Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/operator/fees:
+    get:
+      operationId: operator.fees.get
+      tags: [DeFAI]
+      summary: Operator Fees Get
+      x-powerchain-auth: operator
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+    post:
+      operationId: operator.fees.post
+      tags: [DeFAI]
+      summary: Operator Fees Post
+      x-powerchain-auth: operator
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/operator/fees/export:
+    get:
+      operationId: operator.fees.export.get
+      tags: [DeFAI]
+      summary: Operator Fees Export Get
+      x-powerchain-auth: operator
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/operator/fees/ledger:
+    get:
+      operationId: operator.fees.ledger.get
+      tags: [DeFAI]
+      summary: Operator Fees Ledger Get
+      x-powerchain-auth: operator
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/operator/fees/policies:
+    get:
+      operationId: operator.fees.policies.get
+      tags: [DeFAI]
+      summary: Operator Fees Policies Get
+      x-powerchain-auth: operator
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/operator/fees/proposals/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, minLength: 1, maxLength: 256 }
+    post:
+      operationId: operator.fees.proposals.id.post
+      tags: [DeFAI]
+      summary: Operator Fees Proposals Id Post
+      x-powerchain-auth: operator
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/operator/fees/reconciliation:
+    get:
+      operationId: operator.fees.reconciliation.get
+      tags: [DeFAI]
+      summary: Operator Fees Reconciliation Get
+      x-powerchain-auth: operator
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/operator/fees/revenue:
+    get:
+      operationId: operator.fees.revenue.get
+      tags: [DeFAI]
+      summary: Operator Fees Revenue Get
+      x-powerchain-auth: operator
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/operator/fees/settlements/{id}/reverify:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, minLength: 1, maxLength: 256 }
+    post:
+      operationId: operator.fees.settlements.id.reverify.post
+      tags: [DeFAI]
+      summary: Operator Fees Settlements Id Reverify Post
+      x-powerchain-auth: operator
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/operator/maintenance:
+    get:
+      operationId: operator.maintenance.get
+      tags: [DeFAI]
+      summary: Operator Maintenance Get
+      x-powerchain-auth: operator
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+    put:
+      operationId: operator.maintenance.put
+      tags: [DeFAI]
+      summary: Operator Maintenance Put
+      x-powerchain-auth: operator
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/operator/operations/attention:
+    get:
+      operationId: operator.operations.attention.get
+      tags: [DeFAI]
+      summary: Operator Operations Attention Get
+      x-powerchain-auth: operator
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/oracles/pyth/sui/updates:
+    post:
+      operationId: oracles.pyth.sui.updates.post
+      tags: [DeFAI]
+      summary: Oracles Pyth Sui Updates Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/payments/checkout:
+    post:
+      operationId: payments.checkout.post
+      tags: [DeFAI]
+      summary: Payments Checkout Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/payments/solana-pay:
     post:
-      summary: Build Solana Pay URL
-      responses: { "200": { description: Solana Pay request URL } }
+      operationId: payments.solana-pay.post
+      tags: [DeFAI]
+      summary: Payments Solana Pay Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/payments/status:
+    get:
+      operationId: payments.status.get
+      tags: [DeFAI]
+      summary: Payments Status Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/pools:
+    get:
+      operationId: pools.get
+      tags: [DeFAI]
+      summary: Pools Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/portfolio:
+    get:
+      operationId: portfolio.get
+      tags: [DeFAI]
+      summary: Portfolio Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/programs/readiness:
+    get:
+      operationId: programs.readiness.get
+      tags: [DeFAI]
+      summary: Programs Readiness Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/programs/readiness/{programId}:
+    parameters:
+      - name: programId
+        in: path
+        required: true
+        schema: { type: string, minLength: 1, maxLength: 256 }
+    get:
+      operationId: programs.readiness.programId.get
+      tags: [DeFAI]
+      summary: Programs Readiness ProgramId Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/providers/diagnostics:
+    get:
+      operationId: providers.diagnostics.get
+      tags: [DeFAI]
+      summary: Providers Diagnostics Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/providers/health:
+    get:
+      operationId: providers.health.get
+      tags: [DeFAI]
+      summary: Providers Health Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/providers/readiness:
+    get:
+      operationId: providers.readiness.get
+      tags: [DeFAI]
+      summary: Providers Readiness Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/ready:
+    get:
+      operationId: ready.get
+      tags: [DeFAI]
+      summary: Ready Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/rpc/status:
+    get:
+      operationId: rpc.status.get
+      tags: [DeFAI]
+      summary: Rpc Status Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/security/policy:
+    get:
+      operationId: security.policy.get
+      tags: [DeFAI]
+      summary: Security Policy Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/sessions:
+    post:
+      operationId: sessions.post
+      tags: [DeFAI]
+      summary: Sessions Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/staking/position:
+    get:
+      operationId: staking.position.get
+      tags: [DeFAI]
+      summary: Staking Position Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/staking/status:
+    get:
+      operationId: staking.status.get
+      tags: [DeFAI]
+      summary: Staking Status Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/staking/transactions/{signature}:
+    parameters:
+      - name: signature
+        in: path
+        required: true
+        schema: { type: string, minLength: 1, maxLength: 256 }
+    get:
+      operationId: staking.transactions.signature.get
+      tags: [DeFAI]
+      summary: Staking Transactions Signature Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/swap/balance:
+    get:
+      operationId: swap.balance.get
+      tags: [DeFAI]
+      summary: Swap Balance Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/swap/openapi:
+    get:
+      operationId: swap.openapi.get
+      tags: [DeFAI]
+      summary: Swap Openapi Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/swap/quote:
+    post:
+      operationId: swap.quote.post
+      tags: [DeFAI]
+      summary: Swap Quote Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/swap/receipt:
     post:
-      summary: Persist a wallet-submitted swap receipt
+      operationId: swap.receipt.post
+      tags: [DeFAI]
+      summary: Swap Receipt Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
       responses:
-        '201':
-          description: Submission receipt persisted
-
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/swap/solana/execute:
+    post:
+      operationId: swap.solana.execute.post
+      tags: [DeFAI]
+      summary: Swap Solana Execute Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/swap/solana/order:
+    post:
+      operationId: swap.solana.order.post
+      tags: [DeFAI]
+      summary: Swap Solana Order Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/swap/solana/provider:
+    get:
+      operationId: swap.solana.provider.get
+      tags: [DeFAI]
+      summary: Swap Solana Provider Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/swap/transaction:
+    post:
+      operationId: swap.transaction.post
+      tags: [DeFAI]
+      summary: Swap Transaction Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/system/readiness:
+    get:
+      operationId: system.readiness.get
+      tags: [DeFAI]
+      summary: System Readiness Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/system/route-policy:
+    get:
+      operationId: system.route-policy.get
+      tags: [DeFAI]
+      summary: System Route Policy Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/token/information:
+    get:
+      operationId: token.information.get
+      tags: [DeFAI]
+      summary: Token Information Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/tokens/trusted:
+    get:
+      operationId: tokens.trusted.get
+      tags: [DeFAI]
+      summary: Tokens Trusted Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/transactions/solana/{signature}:
+    parameters:
+      - name: signature
+        in: path
+        required: true
+        schema: { type: string, minLength: 1, maxLength: 256 }
+    get:
+      operationId: transactions.solana.signature.get
+      tags: [DeFAI]
+      summary: Transactions Solana Signature Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/transactions/sui/{digest}:
+    parameters:
+      - name: digest
+        in: path
+        required: true
+        schema: { type: string, minLength: 1, maxLength: 256 }
+    get:
+      operationId: transactions.sui.digest.get
+      tags: [DeFAI]
+      summary: Transactions Sui Digest Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/version:
+    get:
+      operationId: version.get
+      tags: [DeFAI]
+      summary: Version Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/wallet/activity:
+    get:
+      operationId: wallet.activity.get
+      tags: [DeFAI]
+      summary: Wallet Activity Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/wallet/overview:
+    get:
+      operationId: wallet.overview.get
+      tags: [DeFAI]
+      summary: Wallet Overview Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/wallet/portfolio:
+    get:
+      operationId: wallet.portfolio.get
+      tags: [DeFAI]
+      summary: Wallet Portfolio Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/wallet/solana:
+    get:
+      operationId: wallet.solana.get
+      tags: [DeFAI]
+      summary: Wallet Solana Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/wallet/solana/pwrc-transfers:
+    get:
+      operationId: wallet.solana.pwrc-transfers.get
+      tags: [DeFAI]
+      summary: Wallet Solana Pwrc Transfers Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/wallet/sui:
+    get:
+      operationId: wallet.sui.get
+      tags: [DeFAI]
+      summary: Wallet Sui Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/workers/readiness:
+    get:
+      operationId: workers.readiness.get
+      tags: [DeFAI]
+      summary: Workers Readiness Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
 components:
   securitySchemes:
     ApiKey:
       type: apiKey
       in: header
       name: X-Api-Key
+      description: Runtime enforcement is controlled by POWERCHAIN_API_KEY_MODE.
   schemas:
-    TokenInformationCommitment:
+    ErrorResponse:
       type: object
-      required: [algorithm, canonicalization, digest]
+      required: [error]
       properties:
-        algorithm: { const: sha256 }
-        canonicalization: { const: powerchain-stable-json-v1 }
-        digest: { type: string, pattern: "^[0-9a-f]{64}$" }
+        error: { type: string }
+        code: { type: string }
+        requestId: { type: string }
+  responses:
+    BadRequest:
+      description: Request validation failed
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    Unauthorized:
+      description: API authentication failed
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    RateLimited:
+      description: Request rate limit exceeded
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    InternalError:
+      description: Internal request failure
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }

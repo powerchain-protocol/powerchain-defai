@@ -1,4 +1,5 @@
 import { DataError, retryAfterMs } from "./errors";
+import { resolveClientApiRequest } from "@/lib/api/client-routing";
 
 export type FetchJsonOptions = Omit<RequestInit, "signal"> & {
   signal?: AbortSignal;
@@ -58,9 +59,12 @@ export async function fetchJson<T>(url: string | URL, options: FetchJsonOptions 
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     const request = abortSignal(parentSignal, timeout);
     try {
-      const response = await fetch(url, {
+      const requestHeaders = new Headers(headers);
+      if (!requestHeaders.has("accept")) requestHeaders.set("accept", "application/json");
+      const routed = resolveClientApiRequest(url, requestHeaders);
+      const response = await fetch(routed.url, {
         ...init,
-        headers: { accept: "application/json", ...headers },
+        headers: routed.headers,
         signal: request.signal,
         cache: init.cache ?? "no-store",
       });

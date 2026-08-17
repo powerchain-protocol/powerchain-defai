@@ -1,226 +1,164 @@
-# PowerChain | DeFAI™
+# Install
 
-PowerChain | DeFAI is a version **1.0.0** monorepo for AI-assisted DeFi on **Solana and Sui**. It combines Swap, PWRC ↔ wPWRC Bridge, Staking, Portfolio, Liquidity, Assets, Fees, Wallets, operational tooling, and a read-only DeFi assistant.
-
-The historical `apps/bridge` name remains the compatibility Next.js application shell. It does not mean the product is bridge-only. **Wormhole NTT remains the sole cross-chain principal-movement protocol for PWRC/wPWRC.**
-
-## Shared swap core
-
-`@powerchain/swap-core` is the provider-neutral contract for Solana and Sui swap validation. It centralizes base-unit amount math, slippage bounds, quote expiry, minimum-output protection, payer/asset normalization, fee constants, and execution-state transitions. Jupiter and Cetus remain provider adapters and the connected wallet remains the signer. See `docs/SWAP_CORE_ARCHITECTURE.md`.
-
-## Architecture
-
-```text
-PowerChain DeFAI
-├── apps/bridge          Next.js web/API shell
-├── apps/backend         Canonical server-side domain services
-├── apps/chat            DeFAI assistant feature package
-├── apps/staking         Deployment-gated staking feature package
-├── apps/worker-*        Thin supervised workers
-├── packages/*           Database, protocol, runtime, SDK
-├── clusters             Canonical Solana/Sui cluster registry
-├── shared/blockchain    Shared chain/address/route primitives
-├── api                  OpenAPI and Postman release contracts
-├── programs/solana      Auxiliary Anchor program
-└── contracts/sui        Auxiliary Move package
-```
-
-Execution boundaries are explicit:
-
-- **Bridge:** Wormhole NTT owns cross-chain principal movement.
-- **Swap:** Jupiter owns assembled Solana swap routing; Cetus owns Sui swap routing; connected wallets sign.
-- **AI:** advisory only; it cannot sign, submit, finalize, or settle transactions.
-- **Workers/indexers/explorers:** operational evidence only; they are not settlement authority.
-- **Auxiliary Solana/Sui programs:** configuration, authority, pause, nonce, information-commitment, and intent/audit controls only.
-
-See [`docs/DEFAI_ARCHITECTURE.md`](docs/DEFAI_ARCHITECTURE.md), [`docs/DEFAI_ECOSYSTEM.md`](docs/DEFAI_ECOSYSTEM.md), and [`docs/REAL_NTT_BRIDGE.md`](docs/REAL_NTT_BRIDGE.md).
-
-## Requirements
-
-- Node.js **24.x** (`.nvmrc` and `.node-version` use the Node 24 LTS line).
-- pnpm **11.22.0** via Corepack.
-- PostgreSQL or Supabase-compatible PostgreSQL.
-- Real Solana RPC/WebSocket and Sui gRPC endpoints for production.
-- Verified PWRC/wPWRC, Wormhole NTT, and auxiliary-program deployment identifiers.
-
-The repository uses pnpm only. Do not add npm or Yarn lockfiles.
-
-## Quick start
+Use pnpm `11.22.0` from the monorepo root. PowerChain declares package compatibility as Node `>=24 <26`, but pnpm manages the reproducible project runtime at **Node 24.19.0**. If the shell is on Node 24.0.0, `pnpm install` downloads/uses the pinned project runtime instead of accepting that older 24.x runtime for lifecycle work.
 
 ```bash
-nvm install
-nvm use
-corepack enable
-corepack prepare pnpm@11.22.0 --activate
 pnpm install
-
-If TypeScript reports `Cannot find type definition file for 'react'`, run `pnpm install` from the workspace root rather than invoking an app with an incomplete dependency graph. The root workspace and React UI packages explicitly pin `react`, `react-dom`, `@types/react`, and `@types/react-dom`; `pnpm types:react:check` validates that contract.
-
 pnpm env:bootstrap
-pnpm prisma:generate
-pnpm prisma:validate
-pnpm db:migrate:deploy
 pnpm dev
 ```
 
-Or use the bootstrap helper first:
+For local development, `pnpm dev` is self-healing: it runs `workspace:install:ensure`, performs one root `pnpm install --no-frozen-lockfile` if critical workspace packages are missing, verifies the install, then starts the app. CI, build, typecheck and release commands stay non-mutating and continue to use the strict `workspace:install:check`. Set `POWERCHAIN_AUTO_INSTALL=0` to force strict local behavior.
+
+# Quick Install
+
+If pnpm runtime download is restricted, pnpm is missing, or the workspace is stale, use the checked-in bootstrap. It installs and activates Node `24.19.0` plus pnpm `11.22.0`, then rebuilds the workspace from current manifests.
 
 ```bash
-bash scripts/setup-local.sh
-pnpm install
-pnpm prisma:generate
-pnpm prisma:validate
-pnpm db:migrate:deploy
+source ./bootstrap.sh
+pnpm workspace:repair
+pnpm workspace:install:check
+pnpm env:bootstrap
 pnpm dev
 ```
 
-`pnpm env:bootstrap` creates `.env` from `.env.example` only when `.env` does not already exist. Runtime `.env`, `.env.local`, and `.env.production` files are intentionally excluded from releases.
-
-## Common commands
+For the database-backed Bridge/claims/fees worker stack, start or configure PostgreSQL first:
 
 ```bash
-pnpm dev                         # Next.js DeFAI shell
-pnpm dev:backend                 # backend workspace development task
-pnpm dev:workers                 # Bridge/Claims/Fees workers
-pnpm typecheck                   # workspace TypeScript checks
-pnpm docs:fix                    # normalize Markdown spacing
-pnpm verify:production           # source-level production gates
-pnpm validate:dependency-aware   # Prisma + typecheck + production build
-pnpm release:check               # route/Postman/release + production gates
+pnpm db:preflight
+pnpm db:migrate:deploy
+pnpm dev:stack
 ```
 
-For dependency lifecycle-script review:
+# PowerChain DeFAI
+
+PowerChain DeFAI is a pnpm full-stack monorepo for wallet-authorized AI-assisted DeFi workflows across Solana and Sui. It combines swaps, Wormhole NTT bridging, staking, claims, transaction monitoring, provider diagnostics, APIs, workers, persistence, and an advisory AI assistant without giving AI signing or custody authority.
+
+## Runtime
+
+- Node.js engine: `>=24 <26`; development pin: `24.19.0`.
+- pnpm: `>=11.22.0 <12`; package manager pin: `pnpm@11.22.0`.
+- TypeScript: `7.0.2`; tsx: `4.23.12`; `@types/node`: `26.2.0`.
+- Next.js: `16.3.1`; React / React DOM: `19.2.8`.
+- Solana Kit: `7.1.0`; Mysten Sui: `2.26.1`; Sui dApp Kit React: `2.1.19`.
+- Prisma: `7.9.1`; PostgreSQL: `pg@8.23.0`; Supabase JS: `2.110.8`.
+- Axios: `1.19.0`; ws: `8.21.3`; dotenv: `17.4.2`.
+
+## Applications
+
+- `apps/web` — public marketing frontend on port `3001`, composed from modular `website/ui` sections.
+- `apps/bridge` — application/dashboard + API frontend on port `3000` with chat, swap, Bridge, staking, wallet, claims, settings, integrations and status.
+- `apps/backend` — Node/server-side domain, provider, persistence, routing, transaction and AI services shared by Next.js route handlers and direct worker runtimes.
+- `apps/chat` — shared AI/chat contracts, provider/model metadata and React utilities.
+- `apps/staking` — deployment-gated Solana/Sui staking contracts and verification policy.
+- `apps/worker-bridge` — Bridge reconciliation/finality worker.
+- `apps/worker-claims` — claims/finality worker.
+- `apps/worker-fees` — service-fee reconciliation worker.
+
+Shared code lives under `packages/`, `shared/`, and `clusters/`. API contracts live under `api/`.
+
+## Frontends
+
+Run the application and public marketing site independently:
 
 ```bash
-pnpm deps:builds:status
-pnpm deps:builds:approve
+pnpm dev       # app/dashboard/API on http://localhost:3000
+pnpm dev:web   # marketing site on http://localhost:3001
 ```
 
-Approved build dependencies are source-controlled through pnpm `allowBuilds`.
+`apps/web/website/ui/` contains modular `header.tsx`, `footer.tsx`, `hero.tsx`, `products.tsx`, `features.tsx`, `partnerships.tsx`, `faq.tsx`, `cta.tsx`, `logo.tsx`, and `shell.tsx`. The marketing site links into the canonical application dashboard instead of duplicating application routes.
 
-## Application domains
+## Application navigation
 
-| Domain | Runtime namespace | Primary implementation |
-| --- | --- | --- |
-| DeFAI assistant | `/chat`, `/api/v1/chat` | `apps/chat`, backend DeFAI service |
-| Swap | `/swap`, `/api/v1/swap/*` | Jupiter on Solana, Cetus on Sui |
-| Bridge | `/bridge`, `/api/v1/bridge/*` | Wormhole NTT |
-| Staking | `/staking`, `/api/v1/staking/*` | fail-closed until verified deployment |
-| Portfolio / Assets | `/assets`, `/api/v1/portfolio/*` | trusted-token + chain data services |
-| Liquidity / Pools | Assets/Liquidity UI, pool APIs | Raydium, Meteora, Orca, Cetus observations |
-| Operations | `/integrations`, `/api/v1/operations/status` | persisted worker/database/queue readiness |
+The application opens on `/dashboard`. The workspace sidebar is grouped into **Overview**, **Intelligence**, **Markets**, **Portfolio**, **Network**, and **Account** sections. Dashboard has its own collapsible command-center sidebar, header and navigation-free footer. The viewport shell is fixed; only page content scrolls (with hidden scrollbars), while sidebar navigation scrolls independently only when it overflows.
 
-Bridge and Swap APIs are intentionally separated at runtime, router-policy, SDK, OpenAPI, and Postman boundaries. Shared services such as currencies, RPC, prices, rates, security, trusted tokens, and clusters remain common infrastructure.
+Sui wallet integration uses one stable module-scope dApp Kit instance by default. Custom Sui RPC changes are applied after React commit, preventing dApp Kit store updates from running during another provider's render.
 
-## API contracts
+## API
 
-Root API tooling lives under [`api/`](api/README.md):
+The filesystem route registry is canonical. Generated API artifacts cover the complete route surface instead of maintaining a partial handwritten specification.
 
-```text
-api/
-├── swagger.yaml               Combined DeFAI OpenAPI contract
-├── postman/                   Combined Postman collection/environments
-├── bridge/                    Bridge-only OpenAPI/Postman contract
-└── swap/                      Swap-only OpenAPI/Postman contract
+```bash
+pnpm api:generate
+pnpm api:check
+pnpm postman:generate
+pnpm postman:check
 ```
 
-Runtime OpenAPI endpoints:
+Runtime contracts:
 
 ```text
 GET /api/v1/openapi
 GET /api/v1/bridge/openapi
 GET /api/v1/swap/openapi
+GET /api/v1/health
+GET /api/v1/ready
+GET /api/v1/version
 ```
 
-Production Postman defaults are configured for:
+`api/swagger.yaml`, Bridge/Swap OpenAPI files, Postman collections and the generated SDK route registry are validated against the application route inventory before release.
 
-```text
-https://powerchain.app
-https://swap.powerchain.app
-https://bridge.powerchain.app
+## AI providers
+
+The backend supports PowerChain-hosted providers, OpenAI, DeepSeek through the OpenAI-compatible transport, Google GenAI/Gemini, Anthropic, and OpenRouter. Secrets remain server-side.
+
+```env
+POWERCHAIN_AI_PROVIDER=auto
+POWERCHAIN_AI_MODEL=
+OPENAI_API_KEY=
+DEEPSEEK_API_KEY=
+GOOGLE_GENAI_API_KEY=
+ANTHROPIC_API_KEY=
+OPENROUTER_API_KEY=
 ```
 
-API-key enforcement uses `X-Api-Key` and is controlled by `POWERCHAIN_API_KEY_MODE=off|optional|required`. Never expose API keys through `NEXT_PUBLIC_*`.
+AI remains advisory-only: it cannot sign, submit, finalize, settle, or custody blockchain transactions.
 
-## Networks, assets, and RPC
+## Backend compatibility
 
-Canonical chain and cluster definitions live in:
+The default backend uses the latest pinned compatible package surfaces and a runtime-neutral HTTPS Cetus adapter rather than installing an SDK dependency chain that can impose a narrower Node engine on the entire workspace. Sui transactions remain on `@mysten/sui`; Solana RPC primitives use `@solana/kit`.
 
-- `clusters/` — Solana/Sui mainnet, testnet, devnet, localnet definitions.
-- `shared/blockchain/` — address normalization and supported cross-chain directions.
-- `apps/backend/src/services/rpc.ts` — Solana HTTP/WebSocket failover and Sui readiness.
-- `apps/backend/src/services/currencies.ts` — fiat/crypto/stablecoin metadata and Pyth mapping.
-- `apps/backend/src/data/trusted-token-list.ts` — executable token allowlist.
+Database ownership is explicit in `@powerchain/database` (`@prisma/client`, `@prisma/adapter-pg`, `pg`, Supabase), while backend services consume that package and keep provider secrets server-only.
 
-Trusted stablecoins include Circle USDC on Solana and Sui, and Circle EURC on Solana. Market prices and rates are informational and never Bridge accounting authority.
+## Environment
 
-See [`docs/STABLECOINS_PYTH_RPC.md`](docs/STABLECOINS_PYTH_RPC.md) and [`docs/CROSS_CHAIN_CLUSTERS.md`](docs/CROSS_CHAIN_CLUSTERS.md).
-
-## PWRC / wPWRC integrity
-
-The canonical token-information model is stored in `config/token.json` and bound to the SHA-256 information commitment:
-
-```text
-f6bfd1627686fbff066ee68045a0808be4c1fc69350f3ff35fb501fa28ce51b5
-```
-
-The same commitment is used by token metadata, protocol asset definitions, runtime verification, SDK types, auxiliary program state, OpenAPI, and `build-manifest.json`.
-
-Token metadata lives under [`tokens/metadata/`](tokens/metadata/README.md). Deployment-specific Sui package/object IDs and Wormhole identifiers are never fabricated.
-
-See [`docs/TOKEN_INFORMATION_COMMITMENT.md`](docs/TOKEN_INFORMATION_COMMITMENT.md).
-
-## Bridge safety
-
-The default route is **Sui wPWRC → Solana PWRC**; the reverse direction is also supported when the verified NTT deployment is configured.
-
-A Bridge completion requires persisted finality and NTT reconciliation evidence. RPC dashboards, explorers, AI responses, DEX data, and worker health are not finality authority.
-
-The configured Solana auxiliary program ID is:
-
-```text
-BGEekuKBEsKzEdUdEKvWn4BGRgvAURQMD9f4yLLRteWS
-```
-
-Its governed signer is configured separately with `POWERCHAIN_SOLANA_BRIDGE_AUTHORITY`. The Sui Move source intentionally keeps its named address at `0x0` until a verified package is published and supplied through runtime configuration.
-
-See [`docs/BRIDGE_AUTHORITY.md`](docs/BRIDGE_AUTHORITY.md), [`docs/BRIDGE_OPERATIONS.md`](docs/BRIDGE_OPERATIONS.md), and [`contracts/sui/powerchain_bridge/README.md`](contracts/sui/powerchain_bridge/README.md).
-
-## UI/UX and product safety
-
-The application uses a cinematic light-first white/light-gray/forest/onyx design with a persistent dark theme. Operational content remains legible and evidence-based; synthetic TVL, TPS, success-rate, APR, or security claims are not fabricated.
-
-The app includes remembered cookie consent, legal/privacy/risk pages, feature and route error boundaries, toast/notices, offline-aware status surfaces, and pseudonymous platform-derived abuse-prevention keys.
-
-See [`docs/UI_UX_REFINEMENT.md`](docs/UI_UX_REFINEMENT.md) and [`docs/PRODUCT_SAFETY_LEGAL.md`](docs/PRODUCT_SAFETY_LEGAL.md).
-
-## Validation and releases
-
-Source-level release checks:
+`.env.example` is the canonical environment schema and `config/env.defaults` is the non-secret recovery fallback. Generated `.env`, `.env.local`, Dev Container credentials, private keys, provider secrets, database passwords, build outputs and package-manager caches are ignored.
 
 ```bash
-pnpm docs:fix
+pnpm env:bootstrap
+pnpm env:check
+```
+
+## Common commands
+
+```bash
+pnpm dev
+pnpm dev:web
+pnpm dev:stack
+pnpm typecheck
+pnpm build
+pnpm api:check
 pnpm verify:production
+pnpm validate:all
+pnpm clean
 ```
 
-Dependency-backed release checks:
+Use `./pnpmw <command>` when a shell does not already expose a pnpm binary.
 
-```bash
-pnpm validate:dependency-aware
-```
+## Security boundaries
 
-A production release must not claim Prisma generation, TypeScript dependency resolution, Next.js build, Anchor build, or Sui Move build succeeded unless those commands actually ran in the intended toolchain.
+- Wallets remain the signing authority for Solana/Sui transactions.
+- PWRC uses SPL Token-2022.
+- Wormhole NTT is the principal-movement bridge path for PWRC/wPWRC.
+- Custom RPC/API endpoints are opt-in and validated.
+- Browser-supplied credentials remain transient where supported and are not exported with saved settings.
+- Server credentials never use `NEXT_PUBLIC_*` variables.
+- Staking and settlement paths fail closed until deployment/runtime verification succeeds.
 
-The root keeps only the primary project Markdown files: `README.md`, `CHANGELOG.md`, and `CONTRIBUTORS.md`. Detailed documentation belongs in [`docs/`](docs/README.md) or the owning workspace.
+## Documentation
 
-## Provider and feature configuration
+Architecture, security, operations, recovery, Bridge, staking and runtime documents live under [`docs/`](docs/). API/OpenAPI/Postman assets live under [`api/`](api/).
 
-PowerChain normalizes provider URLs, official Solana program IDs, feature flags, cache TTLs, cross-chain provider policy, AI providers, notifications, storage readiness, and realtime policy through typed backend configuration. See [Environment, providers, features, and runtime policy](docs/ENV_PROVIDER_FEATURES.md).
+## License
 
-The PWRC/wPWRC Bridge remains gated by Wormhole NTT. CCTP is scoped to supported stablecoins; LayerZero does not become a PWRC principal-movement route. Production secrets belong in deployment secret management, never the checked-in examples.
-
-## Monorepo/program core
-
-`@powerchain/bridge-core` centralizes off-chain intent invariants consumed by the backend and mirrored by the Solana/Sui auxiliary programs. See `docs/MONOREPO_PROGRAM_ARCHITECTURE.md`.
-
-See [`docs/POSTMAN_FLOWS_ARCHITECTURE.md`](docs/POSTMAN_FLOWS_ARCHITECTURE.md) for the Postman master/preflight/Swap/Bridge workflow architecture.
+MIT. See [`LICENSE`](LICENSE).

@@ -1,1 +1,1 @@
-console.log(`Package-manager cleanup complete. Reinstall with only pnpm:\n\n  corepack enable\n  corepack prepare pnpm@11.22.0 --activate\n  pnpm install\n  pnpm doctor\n  pnpm typecheck\n  pnpm build:production\n`);
+console.log(`Package-manager cleanup complete. Reinstall with only pnpm:\n\n  source ./bootstrap.sh\n  pnpm install\n  pnpm doctor\n  pnpm typecheck\n  pnpm build:production\n`);

@@ -2,57 +2,151 @@ openapi: 3.1.0
 info:
   title: PowerChain Swap API
   version: 1.0.0
-  description: Swap-only contract for wallet-owned Solana Jupiter and Sui Cetus execution.
+  description: "Swap-only contract for wallet-owned Solana Jupiter and Sui Cetus-adapter execution."
 servers:
   - url: /
 security:
   - ApiKey: []
+x-powerchain-route-count: 8
+x-powerchain-action-count: 8
 paths:
   /api/v1/swap/balance:
     get:
+      operationId: swap.balance.get
+      tags: [Swap]
       summary: Swap Balance Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
       responses:
-        "200":
-          description: Swap API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/swap/openapi:
     get:
+      operationId: swap.openapi.get
+      tags: [Swap]
       summary: Swap Openapi Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
       responses:
-        "200":
-          description: Swap API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/swap/quote:
     post:
+      operationId: swap.quote.post
+      tags: [Swap]
       summary: Swap Quote Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
       responses:
-        "200":
-          description: Swap API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/swap/receipt:
     post:
+      operationId: swap.receipt.post
+      tags: [Swap]
       summary: Swap Receipt Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
       responses:
-        "200":
-          description: Swap API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/swap/solana/execute:
     post:
+      operationId: swap.solana.execute.post
+      tags: [Swap]
       summary: Swap Solana Execute Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
       responses:
-        "200":
-          description: Swap API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/swap/solana/order:
     post:
+      operationId: swap.solana.order.post
+      tags: [Swap]
       summary: Swap Solana Order Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
       responses:
-        "200":
-          description: Swap API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /api/v1/swap/solana/provider:
+    get:
+      operationId: swap.solana.provider.get
+      tags: [Swap]
+      summary: Swap Solana Provider Get
+      x-powerchain-auth: public
+      x-powerchain-idempotent: true
+      responses:
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /api/v1/swap/transaction:
     post:
+      operationId: swap.transaction.post
+      tags: [Swap]
       summary: Swap Transaction Post
+      x-powerchain-auth: public
+      x-powerchain-idempotent: false
       responses:
-        "200":
-          description: Swap API response
+        "200": { description: "PowerChain API response" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "500": { $ref: "#/components/responses/InternalError" }
 components:
   securitySchemes:
     ApiKey:
       type: apiKey
       in: header
       name: X-Api-Key
+      description: Runtime enforcement is controlled by POWERCHAIN_API_KEY_MODE.
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+        code: { type: string }
+        requestId: { type: string }
+  responses:
+    BadRequest:
+      description: Request validation failed
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    Unauthorized:
+      description: API authentication failed
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    RateLimited:
+      description: Request rate limit exceeded
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    InternalError:
+      description: Internal request failure
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }

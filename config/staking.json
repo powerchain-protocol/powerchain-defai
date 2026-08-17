@@ -1,0 +1,37 @@
+{
+  "schema": "powerchain-staking/v1",
+  "version": "1.0.0",
+  "status": "deployment-gated",
+  "solana": {
+    "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+    "tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+    "sourceProgramId": "UNSET",
+    "compileTimePlaceholderProgramId": "Stake11111111111111111111111111111111111111",
+    "deploymentVerified": false,
+    "requiredRuntimeIdentifiers": [
+      "POWERCHAIN_SOLANA_STAKING_PROGRAM_ID",
+      "POWERCHAIN_SOLANA_STAKING_CONFIG",
+      "POWERCHAIN_SOLANA_STAKING_VAULT",
+      "POWERCHAIN_SOLANA_STAKING_REWARD_VAULT"
+    ]
+  },
+  "sui": {
+    "packageId": "UNSET",
+    "poolObjectId": "UNSET",
+    "rewardPoolObjectId": "UNSET",
+    "coinTypeSource": "POWERCHAIN_WPWRC_SUI_COIN_TYPE",
+    "deploymentVerified": false
+  },
+  "rewards": {
+    "model": "fixed-pool",
+    "token": "PWRC",
+    "allocationPolicy": "on-chain-configured-cap",
+    "allocationBaseUnits": "UNVERIFIED",
+    "rateSource": "on-chain-config",
+    "aprPolicy": "do-not-fabricate"
+  },
+  "signing": {
+    "connectedWalletSigns": true,
+    "backendCustody": false
+  }
+}

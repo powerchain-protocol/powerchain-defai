@@ -4,25 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { BrandLogo } from "./brand-logo";
-import { NavigationIcon, type NavigationIconName } from "./navigation-icon";
-
-const items: ReadonlyArray<readonly [string, string, NavigationIconName, string]> = [
-  ["AI Assistant", "/chat", "chat", "DeFi guidance without signing authority"],
-  ["Swap", "/swap", "swap", "Trade across Solana and Sui"],
-  ["Bridge", "/bridge", "bridge", "Transfer wPWRC and PWRC"],
-  ["Explorer", "/explorer", "explorer", "Read-only Solana and Sui explorer"],
-  ["History", "/history", "history", "Review bridge operations"],
-  ["Wallet", "/wallet", "wallet", "Balances and activity"],
-  ["Claim", "/claim", "claim", "Claim eligible PWRC"],
-  ["Staking", "/staking", "staking", "Governed PWRC/wPWRC staking"],
-  ["Assets", "/assets", "assets", "Verify PWRC representations"],
-  ["Fees", "/fees", "fees", "Review service and network fees"],
-  ["Integrations", "/integrations", "integrations", "Runtime providers and protocols"],
-];
-
-function isActive(pathname: string, href: string) {
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
+import { APPLICATION_NAVIGATION_SECTIONS, isActiveRoute } from "./navigation-config";
+import { NavigationIcon } from "./navigation-icon";
 
 function MenuIcon({ close = false }: { close?: boolean }) {
   return close ? (
@@ -89,7 +72,7 @@ export function MobileNavigationMenu() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="mobile-navigation-title"
-            className="absolute inset-y-0 right-0 flex w-[min(88vw,380px)] flex-col border-l border-white/10 bg-[#050807] text-white shadow-2xl"
+            className="absolute inset-y-0 right-0 flex w-[min(88vw,390px)] flex-col border-l border-white/10 bg-[#050807] text-white shadow-2xl"
           >
             <div className="flex min-h-20 items-center gap-3 border-b border-white/10 px-5">
               <BrandLogo inverse showText />
@@ -97,23 +80,30 @@ export function MobileNavigationMenu() {
               <button ref={closeRef} type="button" onClick={() => setOpen(false)} className="ml-auto grid size-10 place-items-center rounded-xl border border-white/10 bg-white/[0.04] text-slate-200 hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#557568]" aria-label="Close navigation menu"><MenuIcon close /></button>
             </div>
 
-            <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4" aria-label="Mobile application navigation">
-              {items.map(([label, href, icon, description]) => {
-                const selected = isActive(pathname, href);
-                return (
-                  <Link key={href} href={href} aria-current={selected ? "page" : undefined} className={`flex min-h-14 items-center gap-3 rounded-xl px-3 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#557568] ${selected ? "bg-[#29483c]/20 text-[#e0e8e4] ring-1 ring-inset ring-[#8ea69a]/20" : "text-slate-200 hover:bg-white/[0.06]"}`}>
-                    <span className={`grid size-9 shrink-0 place-items-center rounded-xl border ${selected ? "border-[#c4d0ca]/15 bg-[#c7d4ce]/10 text-[#e0e8e4]" : "border-white/5 bg-white/[0.04] text-slate-400"}`}><NavigationIcon name={icon} className="size-[18px]" /></span>
-                    <span className="min-w-0"><span className="block text-sm font-semibold">{label}</span><span className="mt-0.5 block truncate text-[11px] text-slate-500">{description}</span></span>
-                  </Link>
-                );
-              })}
+            <nav className="no-scrollbar flex-1 overflow-y-auto px-3 py-4" aria-label="Mobile application navigation">
+              {APPLICATION_NAVIGATION_SECTIONS.map((section, index) => (
+                <section key={section.id} className={index ? "mt-5" : undefined} aria-labelledby={`mobile-nav-section-${section.id}`}>
+                  <p id={`mobile-nav-section-${section.id}`} className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">{section.label}</p>
+                  <div className="space-y-1">
+                    {section.items.map((item) => {
+                      const selected = isActiveRoute(pathname, item.href);
+                      return (
+                        <Link key={item.href} href={item.href} aria-current={selected ? "page" : undefined} className={`flex min-h-14 items-center gap-3 rounded-xl px-3 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#557568] ${selected ? "bg-[#29483c]/20 text-[#e0e8e4] ring-1 ring-inset ring-[#8ea69a]/20" : "text-slate-200 hover:bg-white/[0.06]"}`}>
+                          <span className={`grid size-9 shrink-0 place-items-center rounded-xl border ${selected ? "border-[#c4d0ca]/15 bg-[#c7d4ce]/10 text-[#e0e8e4]" : "border-white/5 bg-white/[0.04] text-slate-400"}`}><NavigationIcon name={item.icon} className="size-[18px]" /></span>
+                          <span className="min-w-0"><span className="block text-sm font-semibold">{item.label}</span><span className="mt-0.5 block truncate text-[11px] text-slate-500">{item.description}</span></span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </section>
+              ))}
             </nav>
 
             <div className="border-t border-white/10 p-4">
               <div className="rounded-2xl border border-[#c4d0ca]/15 bg-[#365f4f]/[0.06] p-3">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[#d0dcd6]">Default route</p>
-                <p className="mt-1 text-sm font-semibold">Sui wPWRC → Solana PWRC</p>
-                <p className="mt-1 text-xs leading-5 text-slate-400">Wormhole NTT · 1:1 principal · wallet-signed</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[#d0dcd6]">Execution boundary</p>
+                <p className="mt-1 text-sm font-semibold">Wallet controlled</p>
+                <p className="mt-1 text-xs leading-5 text-slate-400">PowerChain prepares actions; your connected wallet remains the signing authority.</p>
               </div>
             </div>
           </section>

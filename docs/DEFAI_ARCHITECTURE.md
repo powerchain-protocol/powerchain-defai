@@ -40,7 +40,7 @@ Wormhole NTT remains the sole cross-chain principal-movement path for PWRC ↔ w
 
 ### Staking
 
-`apps/staking` is deployment-gated. Solana PWRC staking requires a configured staking program and vault. Sui wPWRC staking requires a configured package and pool/shared object. The application displays no fabricated APR. Reward rates must come from a verifiable configured deployment.
+`apps/staking` is deployment-gated. Solana PWRC staking requires a configured program, program-owned config, stake vault, reward vault, and RPC verification. The reward model is a fixed funded pool whose allocation cap, funded/distributed balances, and integer reward rate come only from verified on-chain state; source code does not invent the pool size. Sui wPWRC staking remains non-executable until its package, pool, reward pool, coin type, and runtime verifier are available. The application displays no fabricated APR.
 
 ### Portfolio and liquidity
 
@@ -88,7 +88,7 @@ interface DefaiChatContext {
 
 ## Staking deployment rules
 
-Staking fails closed when deployment identifiers are absent. The UI must not infer a vault, pool, program, package, APR, lock period or reward token. A future executable staking implementation must add transaction construction, connected-wallet payer validation, amount/balance checks, explicit review, signature handling, confirmation and recovery tests before the Staking CTA becomes executable.
+Staking fails closed when deployment identifiers or verification evidence are absent. The UI must not infer a vault, pool, program, package, APR, lock period, or reward source. The Solana Anchor program now supplies the on-chain fixed-pool staking state machine, but the UI remains disabled until RPC verification confirms the executable program, program-owned config, canonical PWRC Token-2022 vaults, fixed reward allocation, funding state, and reward policy. Transaction construction/review/signature flows must keep the connected wallet as payer/signer and must not bypass the same verified configuration.
 
 ## Versioning
 
@@ -103,3 +103,7 @@ DEX adapters are grouped under `apps/backend/src/integrations/dex/` so executabl
 ## API workflow architecture
 
 Developer/API workflows are documented in [Postman Flows Architecture](POSTMAN_FLOWS_ARCHITECTURE.md). Those flows may prepare or observe operations, but wallet signing remains external and Bridge settlement remains Wormhole NTT-bound.
+
+## Sui wallet SSR boundary
+
+Mysten dApp Kit wallet detection is browser-only. The root application therefore does not import Mysten wallet hooks from its shared wallet provider. `SuiWalletStateProvider` owns an SSR-safe snapshot, while `sui-wallet-runtime`, the Sui connect button, and the Sui swap island are dynamically loaded with `ssr: false`. This keeps `window` and `document` out of server module evaluation without disabling SSR for the rest of the PowerChain application.

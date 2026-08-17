@@ -9,13 +9,19 @@ const SAFE_VALUE = /^[A-Za-z0-9:_+\-=./]{1,512}$/;
 
 function toBase64Url(value: string) {
   if (typeof Buffer !== "undefined") return Buffer.from(value, "utf8").toString("base64url");
-  return btoa(unescape(encodeURIComponent(value))).replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/g, "");
+  const bytes = new TextEncoder().encode(value);
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/g, "");
 }
 
 function fromBase64Url(value: string) {
   if (typeof Buffer !== "undefined") return Buffer.from(value, "base64url").toString("utf8");
   const padded = value.replaceAll("-", "+").replaceAll("_", "/").padEnd(Math.ceil(value.length / 4) * 4, "=");
-  return decodeURIComponent(escape(atob(padded)));
+  const binary = atob(padded);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+  return new TextDecoder().decode(bytes);
 }
 
 function validPart(value: unknown, kinds: string[]) {

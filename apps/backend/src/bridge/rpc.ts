@@ -28,6 +28,12 @@ async function verifySolana(txHash: string, expectedWallet: string, expectedDelt
 }
 
 type SuiBalanceChange = { coinType?: unknown; amount?: unknown; owner?: unknown };
+type SuiVerifiedTransactionShape = {
+  effects?: { status?: { success?: boolean } };
+  transaction?: { sender?: string } & Record<string, unknown>;
+  balanceChanges?: readonly SuiBalanceChange[];
+};
+type SuiWaitForTransactionResult = { Transaction?: SuiVerifiedTransactionShape; FailedTransaction?: SuiVerifiedTransactionShape };
 function suiOwner(value: unknown): string | null {
   if (typeof value === "string") return value;
   if (!value || typeof value !== "object") return null;
@@ -38,7 +44,9 @@ function suiOwner(value: unknown): string | null {
 async function verifySui(txHash: string, expectedWallet: string, expectedDelta: bigint, role:"source"|"destination"): Promise<VerifiedChainTransaction> {
   const config = nttBridgeConfig();
   const wallet = normalizeSuiAddress(expectedWallet);
-  const result = await withPowerChainSuiClient((client) => client.core.waitForTransaction({ digest: txHash, timeout: 15_000, include: { effects: true, balanceChanges: true, transaction: true } }));
+  const rawResult = await withPowerChainSuiClient((client) => client.core.waitForTransaction({ digest: txHash, timeout: 15_000, include: { effects: true, balanceChanges: true, transaction: true } }));
+  if (!rawResult || typeof rawResult !== "object") throw new Error("SUI_TRANSACTION_RESPONSE_INVALID");
+  const result = rawResult as SuiWaitForTransactionResult;
   const tx = result.Transaction ?? result.FailedTransaction;
   if (!tx || result.FailedTransaction || !tx.effects?.status?.success) throw new Error("SUI_TRANSACTION_FAILED");
   const sender = normalizeSuiAddress(tx.transaction?.sender ?? "0x0");
@@ -46,7 +54,7 @@ async function verifySui(txHash: string, expectedWallet: string, expectedDelta: 
   const serialized = JSON.stringify(tx.transaction ?? {});
   if (!serialized.toLowerCase().includes(config.sui.manager.toLowerCase())) throw new Error("SUI_NTT_MANAGER_NOT_INVOKED");
   let net = 0n;
-  for (const change of (tx.balanceChanges ?? []) as unknown as SuiBalanceChange[]) {
+  for (const change of tx.balanceChanges ?? []) {
     const owner = suiOwner(change.owner);
     const amount = typeof change.amount === "bigint" ? change.amount : typeof change.amount === "string" && /^-?\d+$/.test(change.amount) ? BigInt(change.amount) : null;
     if (!owner || amount === null || normalizeSuiAddress(owner) !== wallet || change.coinType !== config.sui.token) continue;

@@ -4,11 +4,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   PROVIDER_READINESS_REFRESH_MAX_MS,
   PROVIDER_READINESS_REFRESH_MIN_MS,
-  PROVIDER_REQUEST_TIMEOUT_MS,
   clampRefreshMs,
 } from "@/constants/provider-runtime";
-import { fetchJson } from "@/lib/data/http-client";
-import { ageMs, isProviderReadinessPayload, type ProviderReadinessPayload } from "@/lib/data/runtime-validation";
+import { providerClient } from "@/backend/provider-client";
+import { providerErrorMessage } from "@/common/provider-errors";
+import { ageMs, type ProviderReadinessPayload } from "@/lib/data/runtime-validation";
 
 export function useProviderReadiness(refreshMs = 60_000) {
   const [data, setData] = useState<ProviderReadinessPayload | undefined>(undefined);
@@ -33,19 +33,14 @@ export function useProviderReadiness(refreshMs = 60_000) {
     const next = new AbortController();
     controller.current = next;
     try {
-      const result = await fetchJson<unknown>("/api/v1/providers/readiness", {
-        timeoutMs: PROVIDER_REQUEST_TIMEOUT_MS,
-        maxAttempts: 1,
-        signal: next.signal,
-      });
+      const result = await providerClient.readiness({ signal: next.signal });
       if (generation !== requestGeneration.current) return;
-      if (!isProviderReadinessPayload(result)) throw new Error("Provider readiness response was invalid");
       setData(result);
       setLastSuccessfulAt(Date.now());
       setError(undefined);
     } catch (reason) {
       if (next.signal.aborted || generation !== requestGeneration.current) return;
-      setError(reason instanceof Error ? reason.message : "Provider readiness unavailable");
+      setError(providerErrorMessage(reason, "Provider readiness unavailable"));
     } finally {
       if (generation === requestGeneration.current) {
         setLoading(false);

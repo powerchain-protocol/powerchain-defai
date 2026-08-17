@@ -72,7 +72,7 @@ Live deployment additionally requires the real Solana/Sui RPC endpoints, PWRC/wP
 
 ## 2026-08-15 pnpm 11.22.0 dependency-aware gate
 
-The source tree is pinned to `pnpm@11.22.0`. A direct `corepack prepare pnpm@11.22.0 --activate` was attempted in this execution environment and failed before installation because the registry request for `pnpm-11.22.0.tgz` could not be completed. Source-level production, migration-parity, environment, workspace-import, and TypeScript syntax gates pass; dependency-aware Prisma/Next gates must run where registry access is available.
+The source tree is pinned to `pnpm@11.22.0`. A direct `source ./bootstrap.sh` was attempted in this execution environment and failed before installation because the registry request for `pnpm-11.22.0.tgz` could not be completed. Source-level production, migration-parity, environment, workspace-import, and TypeScript syntax gates pass; dependency-aware Prisma/Next gates must run where registry access is available.
 
 ## 2026-08-15 UI/UX and release-artifact refinement
 
@@ -172,7 +172,7 @@ Runtime wiring: PASS
 Full production source gate: PASS
 ```
 
-A dependency-backed build was attempted again. It is still blocked before dependency resolution because the container runs Node `22.16.0` while the repository requires Node `>=24 <25`, and Corepack cannot download the pinned `pnpm@11.22.0` because `registry.npmjs.org` is unreachable (`EAI_AGAIN`). The uploaded source also has no `pnpm-lock.yaml`. Therefore Prisma generation, installed-dependency TypeScript checking, and `next build` are not claimed as passed in this environment.
+A dependency-backed build was attempted again. It is still blocked before dependency resolution because the container runs Node `22.16.0` while the repository requires Node `>=24 <26`, and Corepack cannot download the pinned `pnpm@11.22.0` because `registry.npmjs.org` is unreachable (`EAI_AGAIN`). The uploaded source also has no `pnpm-lock.yaml`. Therefore Prisma generation, installed-dependency TypeScript checking, and `next build` are not claimed as passed in this environment.
 
 ## Theme and infrastructure gate
 
@@ -202,7 +202,7 @@ protocol-layout.test.mjs: PASS
 Full production source gate PASS
 ```
 
-The dependency-backed release gate remains unresolved in this container: Node is `22.16.0`, pnpm is unavailable, and `pnpm-lock.yaml` is not present. The repository requires Node `>=24 <25` and pnpm `11.22.0`, so Prisma generation and the installed-dependency Next.js production build are not claimed as passed here.
+The dependency-backed release gate remains unresolved in this container: Node is `22.16.0`, pnpm is unavailable, and `pnpm-lock.yaml` is not present. The repository requires Node `>=24 <26` and pnpm `11.22.0`, so Prisma generation and the installed-dependency Next.js production build are not claimed as passed here.
 
 ## 2026-08-15 provider redundancy and refresh refinement
 

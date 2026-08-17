@@ -26,4 +26,4 @@ Package manager: `pnpm@11.22.0`
 
 ## Dependency-aware limitation
 
-`corepack prepare pnpm@11.22.0 --activate` was attempted but this execution environment could not download the pnpm tarball from `registry.npmjs.org`. Therefore dependency installation, Prisma generation and the real Next production build are not marked as executed here.
+`source ./bootstrap.sh` was attempted but this execution environment could not download the pnpm tarball from `registry.npmjs.org`. Therefore dependency installation, Prisma generation and the real Next production build are not marked as executed here.

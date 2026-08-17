@@ -1,5 +1,7 @@
 "use client";
 
+import { RecoveryActions } from "@/components/navigation/recovery-actions";
+
 export default function BridgeError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
     <main className="mx-auto max-w-2xl py-10">
@@ -9,7 +11,7 @@ export default function BridgeError({ reset }: { error: Error & { digest?: strin
         <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">No transfer was submitted by this page error. Retry the interface, and check an existing transfer from History before signing anything again.</p>
         <div className="mt-5 flex flex-wrap gap-2">
           <button type="button" onClick={reset} className="min-h-11 rounded-xl bg-[#0b1511] px-4 text-sm font-semibold text-white transition hover:bg-[#102019] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] dark:bg-[#dfe7e3] dark:hover:bg-white">Try again</button>
-          <a href="/history" className="inline-flex min-h-11 items-center rounded-xl border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#35584a] dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-900">View history</a>
+          <RecoveryActions />
         </div>
       </section>
     </main>

@@ -167,3 +167,73 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
 
 html.dark { scrollbar-color: #33443b #050807; }
 html:not(.dark) { scrollbar-color: #cbd5d1 #eef1ef; }
+
+/* Staking workspace: light is the default; dark retains the reference's low-glow energy aesthetic. */
+.staking-hero {
+  background:
+    radial-gradient(circle at 78% 30%, rgba(41, 74, 59, 0.13), transparent 22rem),
+    linear-gradient(135deg, rgba(255,255,255,.98), rgba(242,247,244,.96));
+}
+.dark .staking-hero {
+  background:
+    radial-gradient(circle at 76% 34%, rgba(70, 111, 91, 0.22), transparent 24rem),
+    linear-gradient(135deg, #07100d 0%, #0b1712 55%, #050807 100%);
+}
+.staking-grid-pattern {
+  background-image:
+    linear-gradient(rgba(41,74,59,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(41,74,59,.055) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(to right, transparent, #000 35%, #000);
+}
+.dark .staking-grid-pattern {
+  background-image:
+    linear-gradient(rgba(173,192,182,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(173,192,182,.045) 1px, transparent 1px);
+}
+
+/* Shared production form controls: consistent density, touch targets, and focus state. */
+.pc-input,
+.pc-select,
+.pc-textarea {
+  width: 100%;
+  border: 1px solid rgba(14, 26, 21, 0.12);
+  background: rgba(255, 255, 255, 0.94);
+  color: #101514;
+  border-radius: 0.875rem;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+.pc-input,
+.pc-select { min-height: 2.75rem; padding: 0.65rem 0.8rem; }
+.pc-textarea { min-height: 7rem; resize: vertical; padding: 0.75rem 0.8rem; line-height: 1.55; }
+.pc-input:hover,
+.pc-select:hover,
+.pc-textarea:hover { border-color: rgba(41, 74, 59, 0.28); }
+.pc-input:focus,
+.pc-select:focus,
+.pc-textarea:focus {
+  outline: none;
+  border-color: #557568;
+  box-shadow: 0 0 0 3px rgba(85, 117, 104, 0.14);
+}
+.dark .pc-input,
+.dark .pc-select,
+.dark .pc-textarea {
+  border-color: rgba(255,255,255,.10);
+  background: rgba(8,14,12,.94);
+  color: #f1f5f3;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+}
+.dark .pc-input:hover,
+.dark .pc-select:hover,
+.dark .pc-textarea:hover { border-color: rgba(173, 192, 182, 0.28); }
+
+.pc-section-grid { display: grid; gap: 1rem; }
+@media (min-width: 640px) { .pc-section-grid { gap: 1.25rem; } }
+@media (min-width: 1280px) { .pc-section-grid { gap: 1.5rem; } }
+
+/* Desktop application shells own scrolling inside the content pane. Sidebar/header remain stable. */
+@media (min-width: 1024px) {
+  body { overflow: hidden; }
+}

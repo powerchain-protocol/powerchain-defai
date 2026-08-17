@@ -1,0 +1,22 @@
+[package]
+name = "powerchain_escrow"
+version = "1.0.0"
+description = "Deployment-gated receipt-based Solana token escrow with allowlisted mints, timelocks, extension policy and custom hooks."
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "powerchain_escrow"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
+
+[dependencies]
+anchor-lang = { version = "0.32.1", features = ["init-if-needed"] }
+anchor-spl = "0.32.1"
+spl-token-2022 = { version = "8", features = ["no-entrypoint"] }

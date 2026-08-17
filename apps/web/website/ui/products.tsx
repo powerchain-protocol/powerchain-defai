@@ -1,0 +1,8 @@
+import { ChatBubbleIcon, MixerHorizontalIcon, Link2Icon, LightningBoltIcon } from "@radix-ui/react-icons";
+const products = [
+  {icon:ChatBubbleIcon,title:"DeFAI Assistant",body:"Contextual guidance for routes, liquidity, staking and operational risk without transaction authority."},
+  {icon:MixerHorizontalIcon,title:"Multi-chain Swap",body:"Wallet-signed Solana and Sui execution with provider-aware quoting and explicit transaction review."},
+  {icon:Link2Icon,title:"Wormhole NTT Bridge",body:"PWRC/wPWRC principal movement with persisted status, reconciliation and finality verification."},
+  {icon:LightningBoltIcon,title:"Staking",body:"Deployment-gated staking surfaces that never invent APR, pool state or reward availability."},
+];
+export function Products(){return <section id="products" className="py-24"><div className="web-container"><p className="text-xs font-extrabold uppercase tracking-[.2em] text-[#294a3b]">Products</p><div className="mt-3 flex max-w-3xl flex-col gap-4"><h2 className="text-4xl font-semibold tracking-tight">One workspace, separate execution boundaries.</h2><p className="text-lg leading-8 text-slate-600">Each product shares trusted configuration and observability without collapsing wallet, provider, bridge and AI responsibilities into one opaque layer.</p></div><div className="mt-10 grid gap-4 md:grid-cols-2">{products.map(({icon:Icon,title,body})=><article key={title} className="web-card rounded-3xl p-6"><span className="grid size-11 place-items-center rounded-2xl bg-[#173b2d] text-white"><Icon /></span><h3 className="mt-5 text-xl font-semibold">{title}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{body}</p></article>)}</div></div></section>}

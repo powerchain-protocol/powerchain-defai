@@ -9,7 +9,7 @@ import {
   heliusApiConfigured,
 } from "./helius";
 import { fetchJson } from "../../lib/data/http-client";
-import { solscanAccountUrl, solscanTransactionUrl, suiscanAccountUrl, suiscanTransactionUrl } from "@powerchain/backend/services/explorer";
+import { solscanAccountUrl, solscanTransactionUrl, suiscanAccountUrl, suiscanTransactionUrl } from "@powerchain/protocol/explorers";
 
 const SOLANA_ADDRESS = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
 const SOLANA_SIGNATURE = /^[1-9A-HJ-NP-Za-km-z]{64,100}$/;

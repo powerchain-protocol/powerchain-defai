@@ -2,7 +2,16 @@
   "name": "@powerchain/protocol",
   "version": "1.0.0",
   "private": true,
+  "description": "Canonical PowerChain protocol configuration, deployment identifiers, token policy, and chain-level constants.",
+  "license": "MIT",
+  "author": {
+    "name": "PowerChain"
+  },
   "type": "module",
+  "engines": {
+    "node": ">=24 <26",
+    "pnpm": ">=11.22.0 <12"
+  },
   "exports": {
     ".": "./src/index.ts",
     "./addresses": "./src/addresses.ts",
@@ -14,7 +23,8 @@
     "./validate": "./src/validate.ts",
     "./token-information": "./src/token-information.ts",
     "./assets": "./src/assets.ts",
-    "./ecosystem": "./src/ecosystem.ts"
+    "./ecosystem": "./src/ecosystem.ts",
+    "./programs": "./src/programs.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -28,8 +38,8 @@
     "@powerchain/clusters": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "26.1.2",
-    "tsx": "4.20.6",
-    "typescript": "5.9.3"
+    "@types/node": "26.2.0",
+    "tsx": "4.23.12",
+    "typescript": "7.0.2"
   }
 }

@@ -11,7 +11,8 @@ const checks = [
   ["rate parser defaults split whole", "apps/backend/src/services/rates.ts", (s) => s.includes('const [whole = "0", fraction = ""]')],
   ["React 19 refs have initial values", "apps/bridge/hooks/use-provider-health.ts", (s) => !s.includes("useRef<AbortController>()") && s.includes("useRef<AbortController | null>(null)")],
   ["Prisma postinstall is environment-safe", "package.json", (s) => s.includes('"postinstall": "node scripts/postinstall.mjs"')],
-  ["postinstall skips without DATABASE_URL", "scripts/postinstall.mjs", (s) => s.includes("if (!databaseUrl)") && s.includes("skipping Prisma generation")],
+  ["postinstall verifies Prisma without DATABASE_URL", "scripts/postinstall.mjs", (s) => !s.includes("process.env.DATABASE_URL") && s.includes("ensure-prisma-client.mjs") && s.includes("Prisma client verified/generated without requiring a live DATABASE_URL")],
+  ["integration optionals omit undefined", "packages/protocol/src/integrations.ts", (s) => s.includes("address === undefined ? {} : { address }") && s.includes("apiUrl === undefined ? {} : { apiUrl }")],
 ];
 
 let failed = false;

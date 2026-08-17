@@ -9,5 +9,6 @@ export * from "./token-information";
 export * from "./assets";
 
 export * from "./ecosystem";
+export * from "./programs";
 
 export * from "@powerchain/blockchain";

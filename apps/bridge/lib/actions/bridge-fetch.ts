@@ -1,5 +1,7 @@
 "use client";
 
+import { apiFetch } from "@/lib/api/browser-api";
+
 export class BridgeActionError extends Error {
   constructor(readonly code: string, message: string, readonly status: number, readonly requestId?: string) {
     super(message);
@@ -33,7 +35,7 @@ export async function postBridgeAction<T>(url: string, body: unknown, options: {
   options.signal?.addEventListener("abort", abort, { once: true });
   const rid = requestId();
   try {
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "POST",
       headers: {
         "content-type": "application/json",

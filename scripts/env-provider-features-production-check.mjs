@@ -5,9 +5,9 @@ must("apps/backend/src/config/solana-programs.ts","OFFICIAL_SOLANA_PROGRAMS","SO
 must("apps/backend/src/config/provider-urls.ts","jupiterV2","jupiterLegacyQuote","coingeckoPro","pythHermes");
 must("apps/backend/src/config/cross-chain.ts","principalMovementForPwrc:true","operatorKeyAcceptedAsWalletSigner:false");
 must("apps/backend/src/config/runtime-features.ts","limitOrdersRequested","limitOrdersAvailable: false","FEATURE_LIMIT_ORDERS_NOT_IMPLEMENTED");
-must("apps/backend/src/services/defai.ts","OPENAI_API_KEY","ANTHROPIC_API_KEY","GOOGLE_API_KEY","DEEPSEEK_API_KEY","OPENROUTER_API_KEY","requiresWalletSignatureForActions: true");
+must("apps/backend/src/services/defai.ts","POWERCHAIN_AI_PROVIDER","OPENAI_API_KEY","ANTHROPIC_API_KEY","GOOGLE_GENAI_API_KEY","GOOGLE_API_KEY","DEEPSEEK_API_KEY","OPENROUTER_API_KEY","requiresWalletSignatureForActions: true");
 must("apps/backend/src/mail.ts","RESEND_API_KEY","MAIL_PROVIDER_NOT_CONFIGURED");
 must("apps/bridge/app/api/v1/market/token/route.ts","fetchCoinGeckoSimplePrice","cachePolicy()","clientIpSecurityContext");
-must("apps/bridge/server/routing/api-router.ts","WORMHOLE_DISABLED","FEATURE_SWAP_DISABLED","FEATURE_CROSS_CHAIN_DISABLED");
+must("apps/bridge/server/routing/core-policy.ts","WORMHOLE_DISABLED","FEATURE_SWAP_DISABLED","FEATURE_CROSS_CHAIN_DISABLED");
 const swaggerLine=read(".env.example").split(/\r?\n/).find((line)=>line.startsWith("SWAGGER_API_KEY="));if(swaggerLine!=="SWAGGER_API_KEY=")throw new Error("SWAGGER_API_KEY template must remain empty");
 console.log("env/provider/features production check PASS");

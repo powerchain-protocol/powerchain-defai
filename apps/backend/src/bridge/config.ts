@@ -86,5 +86,5 @@ export function nttBridgeConfig() {
 
 export function directionChains(direction: BridgeDirection): { source: BridgeChain; destination: BridgeChain } {
   const pair = crossChainPair(direction);
-  return { source: pair.source, destination: pair.destination };
+  return { source: pair.sourceChain, destination: pair.destinationChain };
 }

@@ -1,0 +1,18 @@
+{"timestamp":"00:00:03.889","source":"Server","level":"LOG","message":""}
+{"timestamp":"00:00:14.270","source":"Server","level":"LOG","message":"○ Compiling / ..."}
+{"timestamp":"00:00:21.602","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"00:05:51.412","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"00:05:52.289","source":"Browser","level":"DEBUG","message":"Provider initialization - wallet not connected"}
+{"timestamp":"00:06:21.264","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"00:06:21.303","source":"Browser","level":"DEBUG","message":"[initMessageListener]  --- receive contentScriptInitDone ---"}
+{"timestamp":"00:06:21.304","source":"Browser","level":"DEBUG","message":"[postMessageToContentScript] {\"args\":[],\"callFrom\":\"inPage\",\"funcName\":\"getExtensionInfo\",\"messageId\":\"qxMuizY-8HaUC808W-O3g\",\"moduleName\":\"multichainWallet\",\"type\":\"contentscriptFunctionCall\"}"}
+{"timestamp":"00:06:21.352","source":"Browser","level":"DEBUG","message":"Provider initialization - wallet not connected"}
+{"timestamp":"00:06:21.352","source":"Browser","level":"DEBUG","message":"[initMessageListener]  --- receive contentscript message --- {\"__wallet_sent_from_content_script_msg__\":true,\"messageId\":\"qxMuizY-8HaUC808W-O3g\",\"returnValue\":{\"autoSignEnabled\":false,\"extensionId\":\"8ba8dc6b-c1b7-4b8d-9ff9-089ba69960af\",\"version\":\"1.21.0\",\"walletLocked\":true},\"target\":\"inPage\",\"type\":\"functionCallResult\"}"}
+{"timestamp":"00:11:27.258","source":"Browser","level":"LOG","message":"restart sse, about to listen"}
+{"timestamp":"00:11:27.258","source":"Browser","level":"LOG","message":"listen https://wallet.binance.com/tonbridge/bridge/events?client_id=061401bf22c0161652c63e09f1295fd1bc9750e72ed3bd2b1693a0fe4aa12904&user_info="}
+{"timestamp":"00:11:27.258","source":"Browser","level":"LOG","message":"open [object Event]"}
+{"timestamp":"00:13:01.789","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"00:13:01.789","source":"Browser","level":"DEBUG","message":"[initMessageListener]  --- receive contentScriptInitDone ---"}
+{"timestamp":"00:13:01.789","source":"Browser","level":"DEBUG","message":"[postMessageToContentScript] {\"args\":[],\"callFrom\":\"inPage\",\"funcName\":\"getExtensionInfo\",\"messageId\":\"YVNrvsK1m_yqXanV5nkkl\",\"moduleName\":\"multichainWallet\",\"type\":\"contentscriptFunctionCall\"}"}
+{"timestamp":"00:13:01.789","source":"Browser","level":"DEBUG","message":"[initMessageListener]  --- receive contentscript message --- {\"__wallet_sent_from_content_script_msg__\":true,\"messageId\":\"YVNrvsK1m_yqXanV5nkkl\",\"returnValue\":{\"autoSignEnabled\":false,\"extensionId\":\"8ba8dc6b-c1b7-4b8d-9ff9-089ba69960af\",\"version\":\"1.21.0\",\"walletLocked\":true},\"target\":\"inPage\",\"type\":\"functionCallResult\"}"}
+{"timestamp":"00:13:15.879","source":"Browser","level":"DEBUG","message":"Provider initialization - wallet not connected"}

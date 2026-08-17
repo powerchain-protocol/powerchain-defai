@@ -1,11 +1,10 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
-const databaseUrl = process.env.DATABASE_URL?.trim();
-if (!databaseUrl) {
-  console.log("[postinstall] DATABASE_URL is not set; skipping Prisma generation. Run `pnpm env:bootstrap` and then `pnpm prisma:generate`.");
-  process.exit(0);
-}
-
-const result = spawnSync(process.platform === "win32" ? "pnpm.cmd" : "pnpm", ["prisma:generate"], { stdio: "inherit", env: process.env });
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const ensure = path.join(repoRoot, "scripts", "ensure-prisma-client.mjs");
+const result = spawnSync(process.execPath, [ensure], { cwd: repoRoot, stdio: "inherit", env: process.env });
 if (result.error) throw result.error;
-process.exit(result.status ?? 1);
+if (result.status !== 0) process.exit(result.status ?? 1);
+console.log("[postinstall] Prisma client verified/generated without requiring a live DATABASE_URL.");

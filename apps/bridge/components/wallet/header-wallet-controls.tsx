@@ -1,10 +1,15 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import { ConnectButton } from "@mysten/dapp-kit-react/ui";
 import { useConnectedWallets } from "@/lib/wallet/connected-wallets";
 import { WalletConnectModal } from "./wallet-connect-modal";
+
+const SuiConnectButton = dynamic(
+  () => import("./sui-connect-button").then((module) => module.SuiConnectButton),
+  { ssr: false, loading: () => <button type="button" disabled className="min-h-10 rounded-xl px-3 text-sm text-slate-500">Sui</button> },
+);
 
 function short(value: string | null): string | null {
   return value && value.length > 12 ? `${value.slice(0, 4)}…${value.slice(-4)}` : value;
@@ -39,13 +44,7 @@ export function HeaderWalletControls() {
           <div className="wallet-icon-only sm:hidden" title={wallets.solanaAddress ? `Solana ${short(wallets.solanaAddress)}` : "Solana wallet"}>
             <WalletMultiButton><span className="sr-only">Solana wallet {short(wallets.solanaAddress)}</span></WalletMultiButton>
           </div>
-          <div className="sui-wallet-compact">
-            <ConnectButton>
-              <span className="hidden sm:inline">Sui</span>
-              <span className="sm:hidden" aria-hidden="true">S</span>
-              <span className="sr-only sm:hidden">Sui wallet</span>
-            </ConnectButton>
-          </div>
+          <div className="sui-wallet-compact"><SuiConnectButton compact /></div>
         </>
       )}
       <WalletConnectModal open={open} onClose={closeModal} />

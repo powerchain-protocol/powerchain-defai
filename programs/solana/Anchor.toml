@@ -7,10 +7,12 @@ skip-lint = false
 
 [programs.localnet]
 powerchain_bridge = "BGEekuKBEsKzEdUdEKvWn4BGRgvAURQMD9f4yLLRteWS"
+powerchain_staking = "Stake11111111111111111111111111111111111111"
+powerchain_escrow = "8AQLAvN5gcV1nbWoEfaPqnorsqJLPjmvEFeZBHkWCKBw"
 
 [provider]
 cluster = "Localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
-test = "pnpm exec tsx tests/powerchain-bridge.ts"
+test = "pnpm exec tsx tests/powerchain-defai.ts && pnpm exec tsx tests/powerchain-staking.ts && pnpm exec tsx tests/powerchain-escrow.ts"

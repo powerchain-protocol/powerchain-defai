@@ -54,6 +54,7 @@ export class ReconnectingWebSocket {
   private lastPongAt: number | undefined;
   private readonly listeners = new Map<string, Set<(event: Event) => void>>();
   private endpointIndex = 0;
+  private generation = 0;
 
   constructor(private readonly url: () => string | readonly string[], private readonly options: ReconnectingWebSocketOptions = {}) {}
 
@@ -75,9 +76,12 @@ export class ReconnectingWebSocket {
     this.connectionAttempts += 1;
     this.emitState("connecting");
     const selected = this.currentUrl();
+    const generation = ++this.generation;
     const socket = new WebSocket(selected.url, this.options.protocols);
     this.socket = socket;
+    const active = () => generation === this.generation && socket === this.socket;
     socket.addEventListener("open", () => {
+      if (!active()) return;
       this.attempt = 0;
       this.endpointIndex = selected.index;
       this.lastOpenAt = Date.now();
@@ -85,6 +89,7 @@ export class ReconnectingWebSocket {
       this.startHeartbeat();
     });
     socket.addEventListener("message", (event) => {
+      if (!active()) return;
       if (this.messageBytes(event.data) > this.maxMessageBytes()) {
         this.oversizedMessages += 1;
         socket.close(1009, "message too large");
@@ -98,10 +103,12 @@ export class ReconnectingWebSocket {
       this.messages += 1;
       this.lastMessageAt = Date.now();
       if (this.isPong(event.data)) this.acknowledgePong();
+      else this.acknowledgeHeartbeatActivity();
       this.dispatch("message", event);
     });
-    socket.addEventListener("error", (event) => this.dispatch("error", event));
+    socket.addEventListener("error", (event) => { if (active()) this.dispatch("error", event); });
     socket.addEventListener("close", (event) => {
+      if (!active()) return;
       this.stopHeartbeat();
       this.lastCloseAt = Date.now();
       this.dispatch("close", event);
@@ -138,6 +145,7 @@ export class ReconnectingWebSocket {
 
   close(code = 1000, reason = "client closed") {
     this.stopped = true;
+    this.generation += 1;
     if (this.retryTimer) clearTimeout(this.retryTimer);
     this.retryTimer = undefined;
     this.stopHeartbeat();
@@ -148,8 +156,10 @@ export class ReconnectingWebSocket {
 
   restart() {
     this.stopped = false;
+    this.generation += 1;
     if (this.retryTimer) clearTimeout(this.retryTimer);
     this.retryTimer = undefined;
+    this.stopHeartbeat();
     this.socket?.close(1000, "restart");
     this.socket = undefined;
     this.connect();
@@ -168,7 +178,11 @@ export class ReconnectingWebSocket {
     const delay = Math.min(max, min * 2 ** Math.min(this.attempt++, 6));
     const jitter = Math.round(delay * (0.8 + Math.random() * 0.4));
     this.reconnects += 1;
-    this.retryTimer = setTimeout(() => this.connect(), jitter);
+    const generation = this.generation;
+    this.retryTimer = setTimeout(() => {
+      if (generation !== this.generation || this.stopped) return;
+      this.connect();
+    }, jitter);
   }
 
   private startHeartbeat() {
@@ -195,6 +209,13 @@ export class ReconnectingWebSocket {
   private acknowledgePong() {
     this.pongsReceived += 1;
     this.lastPongAt = Date.now();
+    if (this.heartbeatDeadline) clearTimeout(this.heartbeatDeadline);
+    this.heartbeatDeadline = undefined;
+  }
+
+  private acknowledgeHeartbeatActivity() {
+    // A valid application event proves the socket is alive even when an upstream
+    // WebSocket service does not implement the optional application-level pong.
     if (this.heartbeatDeadline) clearTimeout(this.heartbeatDeadline);
     this.heartbeatDeadline = undefined;
   }

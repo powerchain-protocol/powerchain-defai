@@ -7,18 +7,18 @@ const must = (condition, message) => { if (!condition) throw new Error(message);
 
 const rootPackage = readJson("package.json");
 for (const [name, version] of Object.entries({
-  react: "19.2.0",
-  "react-dom": "19.2.0",
-  "@types/react": "19.2.2",
-  "@types/react-dom": "19.2.2",
+  react: "19.2.8",
+  "react-dom": "19.2.8",
+  "@types/react": "19.2.18",
+  "@types/react-dom": "19.2.4",
 })) {
   must(rootPackage.devDependencies?.[name] === version, `ROOT_REACT_TYPE_DEPENDENCY_MISSING:${name}`);
 }
 
 for (const rel of ["apps/bridge/package.json", "apps/chat/package.json"]) {
   const pkg = readJson(rel);
-  must(pkg.dependencies?.react === "19.2.0", `REACT_RUNTIME_DEPENDENCY_MISSING:${rel}`);
-  must(pkg.devDependencies?.["@types/react"] === "19.2.2", `REACT_TYPES_DEPENDENCY_MISSING:${rel}`);
+  must(pkg.dependencies?.react === "19.2.8", `REACT_RUNTIME_DEPENDENCY_MISSING:${rel}`);
+  must(pkg.devDependencies?.["@types/react"] === "19.2.18", `REACT_TYPES_DEPENDENCY_MISSING:${rel}`);
 }
 
 const bridgeTs = readJson("apps/bridge/tsconfig.json");

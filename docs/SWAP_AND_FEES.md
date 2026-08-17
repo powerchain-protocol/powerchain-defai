@@ -31,12 +31,12 @@ The default product direction is Sui wPWRC to Solana PWRC, with the reverse rout
 
 ## PWRC 2.5% Token-2022 transfer fee
 
-On Solana, PWRC fee enforcement is based on the Token-2022 Transfer Fee extension when `POWERCHAIN_SOLANA_PWRC_FEE_MODE=token-2022-native`.
+On Solana, PWRC fee enforcement is based on the Token-2022 Transfer Fee extension when `POWERCHAIN_SOLANA_PWRC_FEE_MODE=service-fee-separate`.
 
 Required configuration:
 
 ```text
-POWERCHAIN_PWRC_TRANSFER_FEE_BPS=250
+POWERCHAIN_PWRC_TRANSFER_FEE_BPS=0
 POWERCHAIN_PWRC_WITHDRAW_WITHHELD_AUTHORITY=
 POWERCHAIN_PWRC_FEE_RECEIVER_TOKEN_ACCOUNT=
 ```

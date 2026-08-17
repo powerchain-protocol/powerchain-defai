@@ -28,6 +28,8 @@ export function fail(code: string, message: string, status: number, id = randomU
   );
 }
 
+export const problem = fail;
+
 export async function json(req: Request, maxBytes = MAX_JSON_BYTES): Promise<unknown> {
   const type = req.headers.get("content-type")?.split(";", 1)[0]?.trim().toLowerCase();
   if (type !== "application/json") throw new Error("UNSUPPORTED_MEDIA_TYPE");

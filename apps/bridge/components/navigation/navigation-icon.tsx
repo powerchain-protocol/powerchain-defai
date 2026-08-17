@@ -1,6 +1,6 @@
 import type { SVGProps } from "react";
 
-export type NavigationIconName = "swap" | "bridge" | "history" | "wallet" | "claim" | "assets" | "fees" | "integrations" | "chat" | "staking" | "explorer";
+export type NavigationIconName = "dashboard" | "swap" | "bridge" | "history" | "wallet" | "claim" | "assets" | "fees" | "integrations" | "chat" | "staking" | "explorer" | "status" | "protocol" | "settings" | "profile";
 
 function IconBase({ children, ...props }: SVGProps<SVGSVGElement> & { children: React.ReactNode }) {
   return (
@@ -12,6 +12,8 @@ function IconBase({ children, ...props }: SVGProps<SVGSVGElement> & { children: 
 
 export function NavigationIcon({ name, className = "size-4" }: { name: NavigationIconName; className?: string }) {
   switch (name) {
+    case "dashboard":
+      return <IconBase className={className}><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></IconBase>;
     case "swap":
       return <IconBase className={className}><path d="M7 7h11l-3-3"/><path d="m18 7-3 3"/><path d="M17 17H6l3 3"/><path d="m6 17 3-3"/></IconBase>;
     case "bridge":
@@ -32,7 +34,15 @@ export function NavigationIcon({ name, className = "size-4" }: { name: Navigatio
       return <IconBase className={className}><path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-4 4v-4H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" /><path d="M8 9h8" /><path d="M8 13h5" /></IconBase>;
     case "staking":
       return <IconBase className={className}><circle cx="12" cy="12" r="8" /><path d="M12 7v10" /><path d="M9 10.5c0-1.1 1.2-2 3-2s3 .9 3 2-1 1.8-3 2-3 .9-3 2 1.2 2 3 2 3-.9 3-2" /></IconBase>;
+    case "status":
+      return <IconBase className={className}><path d="M4 18V6" /><path d="M8 18v-5" /><path d="M12 18V9" /><path d="M16 18v-8" /><path d="M20 18V4" /></IconBase>;
     case "integrations":
       return <IconBase className={className}><path d="M8 3v4" /><path d="M16 3v4" /><path d="M5 7h14" /><path d="M7 7v4a5 5 0 0 0 10 0V7" /><path d="M12 16v5" /></IconBase>;
+    case "protocol":
+      return <IconBase className={className}><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/><path d="M8.5 5.2 16.5 10"/></IconBase>;
+    case "settings":
+      return <IconBase className={className}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21h-4v-.09A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3v-4h.09A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3h4v.09A1.7 1.7 0 0 0 15.4 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.15.38.36.72.6 1 .29.32.67.52 1.1.6H21v4h-.09c-.43.08-.81.28-1.1.6-.24.28-.45.62-.6 1Z"/></IconBase>;
+    case "profile":
+      return <IconBase className={className}><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></IconBase>;
   }
 }

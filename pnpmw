@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# PowerChain pnpm wrapper for shells that do not have Node 24.19/pnpm installed.
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "$ROOT/scripts/bootstrap-toolchain.sh" || exit $?
+cd "$ROOT"
+exec pnpm "$@"

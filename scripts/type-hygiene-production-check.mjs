@@ -61,7 +61,8 @@ for (const file of source) {
   if (isBridgeClientCandidate) {
     const usesClientApi = /\b(?:useState|useEffect|useLayoutEffect|useReducer|useRef|useContext|useSyncExternalStore)\s*\(|\b(?:window|document|navigator|localStorage|sessionStorage)\b/.test(text);
     const hasClientDirective = /^\s*["']use client["'];?/.test(text);
-    if (usesClientApi && !hasClientDirective) errors.push(`${rel}: client hook/browser API requires a use client boundary`);
+    const hasIsomorphicBrowserGuard = text.includes("@powerchain-isomorphic-browser-guard") && text.includes('typeof window === "undefined"');
+    if (usesClientApi && !hasClientDirective && !hasIsomorphicBrowserGuard) errors.push(`${rel}: client hook/browser API requires a use client boundary or audited isomorphic browser guard`);
   }
 }
 

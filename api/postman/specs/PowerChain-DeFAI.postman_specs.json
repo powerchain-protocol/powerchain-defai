@@ -247,6 +247,14 @@
       "idempotent": true
     },
     {
+      "name": "escrow.readiness.get",
+      "method": "GET",
+      "path": "/api/v1/escrow/readiness",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
       "name": "fees.collection-plan.get",
       "method": "GET",
       "path": "/api/v1/fees/collection-plan",
@@ -447,6 +455,46 @@
       "idempotent": false
     },
     {
+      "name": "operator.maintenance.get",
+      "method": "GET",
+      "path": "/api/v1/operator/maintenance",
+      "domain": "shared",
+      "auth": "operator",
+      "idempotent": true
+    },
+    {
+      "name": "operator.maintenance.put",
+      "method": "PUT",
+      "path": "/api/v1/operator/maintenance",
+      "domain": "shared",
+      "auth": "operator",
+      "idempotent": false
+    },
+    {
+      "name": "operator.operations.attention.get",
+      "method": "GET",
+      "path": "/api/v1/operator/operations/attention",
+      "domain": "shared",
+      "auth": "operator",
+      "idempotent": true
+    },
+    {
+      "name": "oracles.pyth.sui.updates.post",
+      "method": "POST",
+      "path": "/api/v1/oracles/pyth/sui/updates",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
+      "name": "payments.checkout.post",
+      "method": "POST",
+      "path": "/api/v1/payments/checkout",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": false
+    },
+    {
       "name": "payments.solana-pay.post",
       "method": "POST",
       "path": "/api/v1/payments/solana-pay",
@@ -474,6 +522,22 @@
       "name": "portfolio.get",
       "method": "GET",
       "path": "/api/v1/portfolio",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "programs.readiness.get",
+      "method": "GET",
+      "path": "/api/v1/programs/readiness",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "programs.readiness.programId.get",
+      "method": "GET",
+      "path": "/api/v1/programs/readiness/:programId",
       "domain": "shared",
       "auth": "public",
       "idempotent": true
@@ -535,9 +599,25 @@
       "idempotent": false
     },
     {
+      "name": "staking.position.get",
+      "method": "GET",
+      "path": "/api/v1/staking/position",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
       "name": "staking.status.get",
       "method": "GET",
       "path": "/api/v1/staking/status",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "staking.transactions.signature.get",
+      "method": "GET",
+      "path": "/api/v1/staking/transactions/:signature",
       "domain": "shared",
       "auth": "public",
       "idempotent": true
@@ -591,12 +671,36 @@
       "idempotent": false
     },
     {
+      "name": "swap.solana.provider.get",
+      "method": "GET",
+      "path": "/api/v1/swap/solana/provider",
+      "domain": "swap",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
       "name": "swap.transaction.post",
       "method": "POST",
       "path": "/api/v1/swap/transaction",
       "domain": "swap",
       "auth": "public",
       "idempotent": false
+    },
+    {
+      "name": "system.readiness.get",
+      "method": "GET",
+      "path": "/api/v1/system/readiness",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
+    },
+    {
+      "name": "system.route-policy.get",
+      "method": "GET",
+      "path": "/api/v1/system/route-policy",
+      "domain": "shared",
+      "auth": "public",
+      "idempotent": true
     },
     {
       "name": "token.information.get",

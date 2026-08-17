@@ -1,22 +1,17 @@
 {
   "name": "@powerchain/backend",
   "version": "1.0.0",
-  "dependencies": {
-    "@mysten/sui": "2.23.1",
-    "@powerchain/database": "workspace:*",
-    "@solana/spl-token": "0.4.15",
-    "@solana/web3.js": "1.98.4",
-    "bs58": "6.0.0",
-    "@powerchain/protocol": "workspace:*",
-    "@cetusprotocol/aggregator-sdk": "1.6.1",
-    "tweetnacl": "1.0.3",
-    "@powerchain/blockchain": "workspace:*",
-    "@powerchain/clusters": "workspace:*",
-    "@powerchain/bridge-core": "workspace:*",
-    "@powerchain/swap-core": "workspace:*"
-  },
   "private": true,
+  "description": "PowerChain server-side domain and integration library for secure API orchestration, provider access, persistence, routing, and operational controls.",
+  "license": "MIT",
+  "author": {
+    "name": "PowerChain"
+  },
   "type": "module",
+  "engines": {
+    "node": ">=24 <26",
+    "pnpm": ">=11.22.0 <12"
+  },
   "exports": {
     ".": "./src/index.ts",
     "./swap/cetus": "./src/swap/cetus.ts",
@@ -39,6 +34,9 @@
     "./integrations/dex": "./src/integrations/dex/index.ts",
     "./integrations/dex/*": "./src/integrations/dex/*.ts",
     "./workers": "./src/workers/index.ts",
+    "./claims": "./src/claims/index.ts",
+    "./fees": "./src/fees/index.ts",
+    "./bridge": "./src/bridge/index.ts",
     "./services/explorer": "./src/services/explorer.ts",
     "./services/transactions": "./src/services/transactions.ts",
     "./routing": "./src/routing/index.ts",
@@ -53,16 +51,46 @@
     "./bridge/sui-targets": "./src/bridge/sui-targets.ts",
     "./bridge/*": "./src/bridge/*.ts",
     "./swap": "./src/swap/index.ts",
-    "./swap/executions": "./src/swap/executions.ts"
+    "./swap/executions": "./src/swap/executions.ts",
+    "./payments/checkout": "./src/payments/checkout.ts",
+    "./escrow/config": "./src/escrow/config.ts",
+    "./escrow/*": "./src/escrow/*.ts",
+    "./services/ai/provider-clients": "./src/services/ai/provider-clients.ts",
+    "./services/staking": "./src/services/staking.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "dev": "node --env-file-if-exists=../../.env --env-file-if-exists=../../.env.local --import tsx --watch src/index.ts",
-    "start": "node --env-file-if-exists=../../.env --env-file-if-exists=../../.env.local --import tsx src/index.ts"
+    "dev": "tsc --noEmit --watch --preserveWatchOutput",
+    "pretypecheck": "pnpm -w workspace:install:check && pnpm -w prisma:ensure",
+    "predev": "pnpm -w workspace:install:ensure && pnpm -w prisma:ensure"
+  },
+  "dependencies": {
+    "@mysten/sui": "2.26.1",
+    "@powerchain/blockchain": "workspace:*",
+    "@powerchain/bridge-core": "workspace:*",
+    "@powerchain/clusters": "workspace:*",
+    "@powerchain/database": "workspace:*",
+    "@powerchain/protocol": "workspace:*",
+    "@powerchain/runtime": "workspace:*",
+    "@powerchain/swap-core": "workspace:*",
+    "@solana/spl-token": "0.4.15",
+    "@solana/web3.js": "1.98.4",
+    "bs58": "6.0.0",
+    "tweetnacl": "1.0.3",
+    "@solana/kit": "7.1.0",
+    "openai": "7.4.0",
+    "@google/genai": "2.17.0",
+    "dotenv": "17.4.2",
+    "ws": "8.21.3",
+    "@powerchain/staking": "workspace:*",
+    "axios": "1.19.0",
+    "@supabase/supabase-js": "2.110.8",
+    "pg": "8.23.0",
+    "@prisma/client": "7.9.1"
   },
   "devDependencies": {
-    "@types/node": "26.1.2",
-    "typescript": "5.9.3",
-    "tsx": "4.20.6"
+    "@types/node": "26.2.0",
+    "typescript": "7.0.2",
+    "tsx": "4.23.12"
   }
 }

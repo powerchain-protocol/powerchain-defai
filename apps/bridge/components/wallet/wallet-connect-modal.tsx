@@ -1,8 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useRef } from "react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
-import { ConnectButton } from "@mysten/dapp-kit-react/ui";
+
+const SuiConnectButton = dynamic(
+  () => import("./sui-connect-button").then((module) => module.SuiConnectButton),
+  { ssr: false, loading: () => <button type="button" disabled className="min-h-10 px-2 text-sm text-slate-500">Loading Sui wallets…</button> },
+);
 
 const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -67,7 +72,7 @@ export function WalletConnectModal({ open, onClose }: { open: boolean; onClose: 
             <span className="mt-0.5 block text-xs text-slate-500">Phantom, Solflare, Backpack and Wallet Standard providers</span>
           </button>
           <div className="rounded-xl border border-slate-200 p-2 transition hover:border-[#9eafa7] dark:border-slate-800 dark:hover:border-[#35584a]">
-            <ConnectButton><span>Connect Sui wallet</span></ConnectButton>
+            <SuiConnectButton />
             <p className="px-2 pb-1 pt-2 text-xs text-slate-500">Connect through Mysten dApp Kit compatible wallets.</p>
           </div>
         </div>

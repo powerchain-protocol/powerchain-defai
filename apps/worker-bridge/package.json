@@ -2,23 +2,32 @@
   "name": "@powerchain/worker-bridge",
   "version": "1.0.0",
   "private": true,
+  "description": "PowerChain bridge worker for durable cross-chain operation processing, reconciliation, retries, and recovery.",
+  "license": "MIT",
+  "author": {
+    "name": "PowerChain"
+  },
   "type": "module",
+  "engines": {
+    "node": ">=24 <26",
+    "pnpm": ">=11.22.0 <12"
+  },
   "scripts": {
     "dev": "node --env-file-if-exists=../../.env --env-file-if-exists=../../.env.local --import tsx --watch src/main.ts",
     "start": "node --env-file-if-exists=../../.env --env-file-if-exists=../../.env.local --import tsx src/main.ts",
     "typecheck": "tsc --noEmit",
-    "predev": "pnpm -w prisma:generate",
-    "prestart": "pnpm -w prisma:generate",
-    "pretypecheck": "pnpm -w prisma:generate"
+    "predev": "pnpm -w workspace:install:ensure && pnpm -w env:bootstrap && pnpm -w prisma:ensure",
+    "prestart": "pnpm -w workspace:install:check && pnpm -w env:check",
+    "pretypecheck": "pnpm -w workspace:install:check && pnpm -w prisma:ensure"
   },
   "dependencies": {
     "@powerchain/backend": "workspace:*",
     "@powerchain/database": "workspace:*",
-    "@powerchain/runtime": "workspace:*"
+    "@powerchain/runtime": "workspace:*",
+    "tsx": "4.23.12"
   },
   "devDependencies": {
-    "@types/node": "26.1.2",
-    "tsx": "4.20.6",
-    "typescript": "5.9.3"
+    "@types/node": "26.2.0",
+    "typescript": "7.0.2"
   }
 }

@@ -1,36 +1,45 @@
-import { NextResponse } from "next/server";
-import { getSolanaRpc, getSuiRpc } from "@/server/rpc/providers";
+import { checkProviderHealth } from "@/server/services/provider-health";
+import { fail, ok, requestId } from "@/server/http";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-function snapshot() {
-  const solana = getSolanaRpc();
-  const sui = getSuiRpc();
-  return {
-    generatedAt: new Date().toISOString(),
-    processLocal: true,
-    authoritativeForAccounting: false,
-    chains: {
-      solana: { pool: solana.pool.poolSnapshot(), metrics: solana.client.metrics() },
-      sui: { pool: sui.pool.poolSnapshot(), metrics: sui.client.metrics() },
-    },
-  };
-}
-
-export async function GET() {
+export async function GET(req: Request) {
+  const id = requestId(req);
   try {
-    return NextResponse.json(snapshot(), {
-      status: 200,
-      headers: {
-        "cache-control": "no-store, max-age=0",
-        "x-content-type-options": "nosniff",
+    const health = await checkProviderHealth();
+    const solana = health.providers.find((provider) => provider.provider === "solana");
+    const sui = health.providers.find((provider) => provider.provider === "sui");
+    if (!solana || !sui) throw new Error("PROVIDER_DIAGNOSTICS_INCOMPLETE");
+    const data = {
+      available: health.status !== "unavailable",
+      generatedAt: health.checkedAt,
+      processLocal: true as const,
+      authoritativeForAccounting: false as const,
+      chains: {
+        solana: {
+          status: solana.status,
+          ok: solana.ok,
+          endpoints: solana.endpoints,
+          metrics: solana.metrics,
+          ...(solana.latencyMs === undefined ? {} : { latencyMs: solana.latencyMs }),
+          ...(solana.head === undefined ? {} : { head: solana.head }),
+          ...(solana.source === undefined ? {} : { source: solana.source }),
+        },
+        sui: {
+          status: sui.status,
+          ok: sui.ok,
+          endpoints: sui.endpoints,
+          metrics: sui.metrics,
+          ...(sui.latencyMs === undefined ? {} : { latencyMs: sui.latencyMs }),
+          ...(sui.head === undefined ? {} : { head: sui.head }),
+          ...(sui.source === undefined ? {} : { source: sui.source }),
+        },
       },
-    });
-  } catch {
-    return NextResponse.json(
-      { generatedAt: new Date().toISOString(), processLocal: true, available: false },
-      { status: 503, headers: { "cache-control": "no-store, max-age=0" } },
-    );
+    };
+    return ok(data, 200, id, { "x-powerchain-provider-status": health.status });
+  } catch (reason) {
+    const detail = reason instanceof Error ? reason.name : "Unavailable";
+    return fail("PROVIDER_DIAGNOSTICS_UNAVAILABLE", "Provider diagnostics are unavailable.", 503, id, true, { detail, authoritativeForAccounting: false });
   }
 }

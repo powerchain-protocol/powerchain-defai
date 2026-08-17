@@ -19,7 +19,7 @@ export async function GET() {
     });
   } catch {
     return NextResponse.json(
-      { state: "blocked", database: { ready: false }, workers: { ready: false, maxAgeMs: 60_000, workers: [] }, queues: [], checkedAt: new Date().toISOString(), authoritativeForBridgeAccounting: false },
+      { state: "blocked", database: { ready: false }, workers: { ready: false, maxAgeMs: 60_000, workers: [] }, queues: [], queuePressure: "high", maintenance: { draining: true, activeLeases: 0, quiescent: false, source: "database-unavailable", revision: 0, readHealthy: false, checkedAt: new Date().toISOString(), lastSuccessfulReadAt: null, cacheAgeMs: 0 }, checkedAt: new Date().toISOString(), authoritativeForBridgeAccounting: false },
       { status: 503, headers: { "cache-control": "no-store, max-age=0", "retry-after": "5", "x-powerchain-operations": "blocked" } },
     );
   }

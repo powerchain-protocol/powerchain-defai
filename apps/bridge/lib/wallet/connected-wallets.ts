@@ -1,12 +1,11 @@
 "use client";
 
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useCurrentAccount, useCurrentWallet } from "@mysten/dapp-kit-react";
+import { useSuiWalletSnapshot } from "@/context/sui-wallet-context";
 
 export function useConnectedWallets() {
   const solana = useWallet();
-  const suiAccount = useCurrentAccount();
-  const suiWallet = useCurrentWallet();
+  const sui = useSuiWalletSnapshot();
   return {
     solanaAddress: solana.publicKey?.toBase58() ?? null,
     solanaConnected: solana.connected,
@@ -14,8 +13,8 @@ export function useConnectedWallets() {
     solanaSignMessage: solana.signMessage,
     solanaSignTransaction: solana.signTransaction,
     solanaSendTransaction: solana.sendTransaction,
-    suiAddress: suiAccount?.address ?? null,
-    suiConnected: Boolean(suiAccount),
-    suiWalletName: suiWallet?.name ?? null,
+    suiAddress: sui.address,
+    suiConnected: Boolean(sui.address),
+    suiWalletName: sui.walletName,
   };
 }

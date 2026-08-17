@@ -4,11 +4,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   PROVIDER_HEALTH_REFRESH_MAX_MS,
   PROVIDER_HEALTH_REFRESH_MIN_MS,
-  PROVIDER_REQUEST_TIMEOUT_MS,
   clampRefreshMs,
 } from "@/constants/provider-runtime";
-import { fetchJson } from "@/lib/data/http-client";
-import { ageMs, isProviderHealthPayload, type ProviderHealthPayload } from "@/lib/data/runtime-validation";
+import { providerClient } from "@/backend/provider-client";
+import { providerErrorMessage } from "@/common/provider-errors";
+import { ageMs, type ProviderHealthPayload } from "@/lib/data/runtime-validation";
 
 export function useProviderHealth(refreshMs = 30_000) {
   const [data, setData] = useState<ProviderHealthPayload | undefined>(undefined);
@@ -27,19 +27,14 @@ export function useProviderHealth(refreshMs = 30_000) {
     const controller = new AbortController();
     activeController.current = controller;
     try {
-      const result = await fetchJson<unknown>("/api/v1/providers/health", {
-        timeoutMs: PROVIDER_REQUEST_TIMEOUT_MS,
-        maxAttempts: 1,
-        signal: controller.signal,
-      });
+      const result = await providerClient.health({ signal: controller.signal });
       if (generation !== requestGeneration.current) return;
-      if (!isProviderHealthPayload(result)) throw new Error("Provider health response was invalid");
       setData(result);
       setLastSuccessfulAt(Date.now());
       setError(undefined);
     } catch (reason) {
       if (controller.signal.aborted || generation !== requestGeneration.current) return;
-      setError(reason instanceof Error ? reason.message : "Provider health unavailable");
+      setError(providerErrorMessage(reason, "Provider health unavailable"));
     } finally {
       if (generation === requestGeneration.current) {
         setLoading(false);

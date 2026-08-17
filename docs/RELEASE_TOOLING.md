@@ -4,21 +4,21 @@ PowerChain Bridge 1.0.0 standardizes local development, Vercel deployment, packa
 
 ## Runtime pins
 
-- Node.js: the Node `24` LTS line via `.nvmrc` and `.node-version` (current latest LTS and compatible with Vercel Functions Node 24.x).
+- Node.js: `24.19.0` via `.nvmrc` and `.node-version`, with package engines enforcing `>=24 <26`.
 - pnpm: `11.22.0` via `packageManager` and Vercel Corepack activation.
 - Next.js telemetry: disabled for all repository Next commands through `scripts/next-cli.mjs`; Vercel also sets `NEXT_TELEMETRY_DISABLED=1` during the build.
 
 ## pnpm dependency builds
 
-`pnpm-workspace.yaml` uses `allowBuilds`. This is the source-controlled equivalent of approving reviewed dependency lifecycle scripts. Do not add packages merely to silence an ignored-build warning. Review the package and the reason its lifecycle script is required first.
+`pnpm-workspace.yaml` uses `allowBuilds` and `verifyDepsBeforeRun: warn`. The latter prevents repair/bootstrap scripts from auto-triggering an install before they can repair dependency approval state. This is the source-controlled equivalent of approving reviewed dependency lifecycle scripts. Do not add packages merely to silence an ignored-build warning. Review the package and the reason its lifecycle script is required first.
 
-If a new dependency needs an install build:
+For the existing reviewed set, use the deterministic non-interactive helper:
 
 ```bash
-pnpm approve-builds
+pnpm deps:builds:approve:reviewed
 ```
 
-Review the resulting allowlist change before committing it.
+If a genuinely new dependency needs an install build, use `pnpm approve-builds`, review the package, then mirror the approved package in `scripts/approve-reviewed-builds.mjs`. Never enable all dependency builds globally.
 
 ## Lockfile policy
 

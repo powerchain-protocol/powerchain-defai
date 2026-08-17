@@ -1,0 +1,29 @@
+{
+  "schema": "powerchain-escrow/v1",
+  "version": "1.0.0",
+  "status": "deployment-gated",
+  "programId": "UNSET",
+  "sourcePlaceholderProgramId": "8AQLAvN5gcV1nbWoEfaPqnorsqJLPjmvEFeZBHkWCKBw",
+  "signing": {
+    "connectedWalletSigns": true,
+    "backendCustody": false
+  },
+  "features": {
+    "receiptPda": true,
+    "mintAllowlist": true,
+    "token2022ExtensionBlocking": [
+      "PermanentDelegate",
+      "NonTransferable",
+      "Pausable",
+      "TransferHook"
+    ],
+    "timelockSlots": true,
+    "customHooks": [
+      "PreDeposit",
+      "PostDeposit",
+      "PreWithdraw",
+      "PostWithdraw"
+    ],
+    "immutableHookWarning": true
+  }
+}

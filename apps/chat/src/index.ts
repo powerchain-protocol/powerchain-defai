@@ -5,3 +5,7 @@ export * from "./hooks/use-saved-prompts";
 export * from "./types/chat";
 export * from "./types/messages";
 export * from "./types/prompts";
+export * from "./ai/providers";
+export * from "./ai/model-settings";
+export * from "./icons";
+export * from "./ai/messages";

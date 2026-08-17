@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/lib/api/browser-api";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNetworkOnline } from "./use-network-online";
@@ -65,7 +66,7 @@ export function useBridgeRuntime() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("/api/v1/bridge/runtime", { cache: "no-store", headers: { accept: "application/json" }, signal: abort.signal });
+      const response = await apiFetch("/api/v1/bridge/runtime", { cache: "no-store", headers: { accept: "application/json" }, signal: abort.signal });
       const body: unknown = await response.json();
       if (id !== generation.current) return;
       if (!validPayload(body)) throw new Error("Invalid bridge runtime response");

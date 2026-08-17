@@ -10,7 +10,7 @@ export async function GET() {
       status: runtime.status === "blocked" ? 503 : 200,
       headers: {
         "cache-control": "no-store, max-age=0",
-        "x-powerchain-bridge-runtime": runtime.status,
+        "x-powerchain-defai-runtime": runtime.status,
         "x-powerchain-runtime-snapshot": runtime.snapshotId,
         "x-powerchain-runtime-valid-until": runtime.validUntil,
       },
@@ -34,7 +34,7 @@ export async function GET() {
       headers: {
         "cache-control": "no-store, max-age=0",
         "retry-after": "5",
-        "x-powerchain-bridge-runtime": "blocked",
+        "x-powerchain-defai-runtime": "blocked",
       },
     });
   }

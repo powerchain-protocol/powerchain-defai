@@ -1,21 +1,43 @@
 "use client";
 
-import { useMemo, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { WalletAdapterNetwork, type WalletAdapter } from "@solana/wallet-adapter-base";
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-import { DAppKitProvider, createDAppKit } from "@mysten/dapp-kit-react";
-import { SuiGrpcClient } from "@mysten/sui/grpc";
+import { useUserSettings } from "@/context/user-settings-context";
+import { normalizeHttpEndpoint } from "@/lib/settings/storage";
 
-const suiDAppKit = createDAppKit({
-  networks: ["mainnet"],
-  defaultNetwork: "mainnet",
-  createClient: (network) => new SuiGrpcClient({ network, baseUrl: process.env.NEXT_PUBLIC_SUI_WALLET_RPC_URL?.trim() || "https://fullnode.mainnet.sui.io:443" }),
-  autoConnect: true,
-});
-
-declare module "@mysten/dapp-kit-react" { interface Register { dAppKit: typeof suiDAppKit } }
+function useOptionalWalletConnectAdapter() {
+  const [wallets, setWallets] = useState<WalletAdapter[]>([]);
+  useEffect(() => {
+    const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID?.trim();
+    if (!projectId || typeof window === "undefined") return;
+    let active = true;
+    void import("@walletconnect/solana-adapter")
+      .then(({ WalletConnectWalletAdapter }) => {
+        if (!active) return;
+        setWallets([new WalletConnectWalletAdapter({ network: WalletAdapterNetwork.Mainnet, options: { projectId } })]);
+      })
+      .catch(() => { if (active) setWallets([]); });
+    return () => { active = false; };
+  }, []);
+  return wallets;
+}
 
 export function PowerChainWalletProvider({ children }: { children: ReactNode }) {
-  const endpoint = useMemo(() => process.env.NEXT_PUBLIC_SOLANA_WALLET_RPC_URL?.trim() || "https://api.mainnet-beta.solana.com", []);
-  return <ConnectionProvider endpoint={endpoint}><WalletProvider wallets={[]} autoConnect><WalletModalProvider><DAppKitProvider dAppKit={suiDAppKit}>{children}</DAppKitProvider></WalletModalProvider></WalletProvider></ConnectionProvider>;
+  const { settings } = useUserSettings();
+  const endpoint = useMemo(() => {
+    if (settings.connectivity.useCustomSolanaRpc && settings.connectivity.solanaRpcUrl.trim()) {
+      try { return normalizeHttpEndpoint(settings.connectivity.solanaRpcUrl, { allowLocalDevelopment: process.env.NODE_ENV !== "production" }); } catch { /* canonical fallback */ }
+    }
+    return process.env.NEXT_PUBLIC_SOLANA_WALLET_RPC_URL?.trim() || "https://api.mainnet-beta.solana.com";
+  }, [settings.connectivity.solanaRpcUrl, settings.connectivity.useCustomSolanaRpc]);
+  const walletConnectWallets = useOptionalWalletConnectAdapter();
+  return (
+    <ConnectionProvider endpoint={endpoint} key={endpoint}>
+      <WalletProvider wallets={walletConnectWallets} autoConnect>
+        <WalletModalProvider>{children}</WalletModalProvider>
+      </WalletProvider>
+    </ConnectionProvider>
+  );
 }

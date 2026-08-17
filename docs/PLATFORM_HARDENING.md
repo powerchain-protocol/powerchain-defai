@@ -22,9 +22,7 @@ node scripts/full-production-check.mjs
 Dependency-aware validation remains:
 
 ```bash
-nvm use
-corepack enable
-corepack prepare pnpm@11.22.0 --activate
+source ./bootstrap.sh
 pnpm install
 pnpm validate:all
 ```

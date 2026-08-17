@@ -1,4 +1,4 @@
-import { getPrice, type PriceAsset } from "./prices";
+import { getPrice, type PriceAsset, type PriceSource } from "./prices";
 import type { RateCurrency } from "./currencies";
 
 export type RateAsset = RateCurrency;
@@ -20,5 +20,5 @@ export async function getRate(base: RateAsset, quote: RateAsset): Promise<RateQu
   const basePoint = base === "USD" ? null : await getPrice(base); const quotePoint = quote === "USD" ? null : await getPrice(quote);
   const baseUsd = basePoint ? toScaled(basePoint.price) : SCALE; const quoteUsd = quotePoint ? toScaled(quotePoint.price) : SCALE; if (quoteUsd <= 0n) throw new Error("RATE_QUOTE_PRICE_INVALID");
   const rate = (baseUsd * SCALE) / quoteUsd;
-  return { base, quote, rate: fromScaled(rate), sources: [basePoint?.source, quotePoint?.source].filter((value): value is string => Boolean(value)), checkedAt: new Date().toISOString(), authoritativeForBridgeAccounting: false };
+  return { base, quote, rate: fromScaled(rate), sources: [basePoint?.source, quotePoint?.source].filter((value): value is PriceSource => value !== undefined), checkedAt: new Date().toISOString(), authoritativeForBridgeAccounting: false };
 }

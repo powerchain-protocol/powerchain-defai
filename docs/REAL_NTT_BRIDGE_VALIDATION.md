@@ -2,7 +2,7 @@
 
 ## Implemented production path
 
-- Wallet-signed Wormhole NTT execution remains in Wormhole Connect with the configured NTT Executor route.
+- The broad Wormhole Connect browser dependency is removed to avoid unsupported/deprecated chain packages in this Solana/Sui-only app. PowerChain owns quote binding and transfer tracking; wallet-signed NTT execution may be opened through the reviewed `NEXT_PUBLIC_POWERCHAIN_NTT_TRANSFER_URL` surface, then the source signature/digest is bound to the persisted transfer.
 - Persisted server quote and transfer records bind principal, route, wallets, runtime snapshot, service fee and intent commitment.
 - Source transaction hashes are unique to a PowerChain transfer and may be attached idempotently after wallet submission.
 - The bridge worker independently checks source-chain finality and success, the expected NTT manager, source signer, and source PWRC/wPWRC principal debit.

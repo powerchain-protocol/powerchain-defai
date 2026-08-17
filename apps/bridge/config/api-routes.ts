@@ -164,6 +164,12 @@ export const API_ROUTES: readonly ApiRouteDefinition[] = [
     ]
   },
   {
+    "path": "/api/v1/escrow/readiness",
+    "methods": [
+      "GET"
+    ]
+  },
+  {
     "path": "/api/v1/fees/collection-plan",
     "methods": [
       "GET"
@@ -309,6 +315,31 @@ export const API_ROUTES: readonly ApiRouteDefinition[] = [
     ]
   },
   {
+    "path": "/api/v1/operator/maintenance",
+    "methods": [
+      "GET",
+      "PUT"
+    ]
+  },
+  {
+    "path": "/api/v1/operator/operations/attention",
+    "methods": [
+      "GET"
+    ]
+  },
+  {
+    "path": "/api/v1/oracles/pyth/sui/updates",
+    "methods": [
+      "POST"
+    ]
+  },
+  {
+    "path": "/api/v1/payments/checkout",
+    "methods": [
+      "POST"
+    ]
+  },
+  {
     "path": "/api/v1/payments/solana-pay",
     "methods": [
       "POST"
@@ -328,6 +359,18 @@ export const API_ROUTES: readonly ApiRouteDefinition[] = [
   },
   {
     "path": "/api/v1/portfolio",
+    "methods": [
+      "GET"
+    ]
+  },
+  {
+    "path": "/api/v1/programs/readiness",
+    "methods": [
+      "GET"
+    ]
+  },
+  {
+    "path": "/api/v1/programs/readiness/:programId",
     "methods": [
       "GET"
     ]
@@ -375,7 +418,19 @@ export const API_ROUTES: readonly ApiRouteDefinition[] = [
     ]
   },
   {
+    "path": "/api/v1/staking/position",
+    "methods": [
+      "GET"
+    ]
+  },
+  {
     "path": "/api/v1/staking/status",
+    "methods": [
+      "GET"
+    ]
+  },
+  {
+    "path": "/api/v1/staking/transactions/:signature",
     "methods": [
       "GET"
     ]
@@ -417,9 +472,27 @@ export const API_ROUTES: readonly ApiRouteDefinition[] = [
     ]
   },
   {
+    "path": "/api/v1/swap/solana/provider",
+    "methods": [
+      "GET"
+    ]
+  },
+  {
     "path": "/api/v1/swap/transaction",
     "methods": [
       "POST"
+    ]
+  },
+  {
+    "path": "/api/v1/system/readiness",
+    "methods": [
+      "GET"
+    ]
+  },
+  {
+    "path": "/api/v1/system/route-policy",
+    "methods": [
+      "GET"
     ]
   },
   {

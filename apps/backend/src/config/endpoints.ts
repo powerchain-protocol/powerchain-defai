@@ -63,7 +63,7 @@ function endpointPool(
   provider: string,
 ): EndpointPool {
   return {
-    primary: primary ? endpoint(`solana-${kind === "websocket" ? "ws" : kind}-primary`, provider, kind, "primary", primary, true) : undefined,
+    ...(primary ? { primary: endpoint(`solana-${kind === "websocket" ? "ws" : kind}-primary`, provider, kind, "primary", primary, true) } : {}),
     fallbacks: fallbacks.map((url, index) => endpoint(`solana-${kind === "websocket" ? "ws" : kind}-fallback-${index + 1}`, "fallback", kind, "fallback", url, true)),
   };
 }
@@ -93,7 +93,7 @@ export function suiGrpcPool(env: NodeJS.ProcessEnv = process.env): EndpointPool 
     primary,
   );
   return {
-    primary: primary ? endpoint("sui-grpc-primary", "sui", "grpc", "primary", primary, true) : undefined,
+    ...(primary ? { primary: endpoint("sui-grpc-primary", "sui", "grpc", "primary", primary, true) } : {}),
     fallbacks: fallbacks.map((url, index) => endpoint(`sui-grpc-fallback-${index + 1}`, "sui", "grpc", "fallback", url, true)),
   };
 }

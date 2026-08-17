@@ -37,6 +37,7 @@ pub mod powerchain_bridge {
     /// Initializes a separate immutable-by-policy token information commitment PDA.
     /// This avoids changing the already deployed BridgeConfig account layout.
     pub fn initialize_information_commitment(ctx: Context<InitializeInformationCommitment>) -> Result<()> {
+        assert_config_version(&ctx.accounts.config)?;
         let information = &mut ctx.accounts.information;
         information.authority = ctx.accounts.authority.key();
         information.bump = ctx.bumps.information;
@@ -61,6 +62,7 @@ pub mod powerchain_bridge {
         require!(new_authority != crate::ID, BridgeError::ProgramCannotBeAuthority);
 
         let config = &mut ctx.accounts.config;
+        assert_config_version(config)?;
         let previous_authority = config.authority;
         config.authority = new_authority;
 
@@ -70,6 +72,7 @@ pub mod powerchain_bridge {
 
     pub fn set_paused(ctx: Context<SetPaused>, paused: bool) -> Result<()> {
         let config = &mut ctx.accounts.config;
+        assert_config_version(config)?;
         config.paused = paused;
         emit!(BridgePauseUpdated { paused, authority: ctx.accounts.authority.key() });
         Ok(())
@@ -82,6 +85,7 @@ pub mod powerchain_bridge {
         validate_record_intent_args(&args)?;
 
         let config = &mut ctx.accounts.config;
+        assert_config_version(config)?;
         require!(!config.paused, BridgeError::BridgePaused);
         let operation_nonce = config.next_nonce;
         config.next_nonce = config.next_nonce.checked_add(1).ok_or(BridgeError::NonceOverflow)?;
@@ -110,6 +114,11 @@ pub mod powerchain_bridge {
         });
         Ok(())
     }
+}
+
+fn assert_config_version(config: &BridgeConfig) -> Result<()> {
+    require!(config.version == BRIDGE_CONFIG_VERSION, BridgeError::ConfigVersionMismatch);
+    Ok(())
 }
 
 fn validate_record_intent_args(args: &RecordIntentArgs) -> Result<()> {
@@ -291,6 +300,8 @@ pub enum BridgeError {
     BridgePaused,
     #[msg("Bridge operation nonce overflowed")]
     NonceOverflow,
+    #[msg("Bridge configuration version does not match the canonical version")]
+    ConfigVersionMismatch,
     #[msg("PowerChain token information commitment version does not match the canonical version")]
     InformationCommitmentVersionMismatch,
     #[msg("PowerChain token information commitment does not match the canonical commitment")]

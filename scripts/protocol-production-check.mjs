@@ -13,7 +13,7 @@ const required = [
 for (const file of required) if (!fs.existsSync(file)) throw new Error(`Missing protocol file: ${file}`);
 const rootPackage = JSON.parse(fs.readFileSync("package.json", "utf8"));
 if (rootPackage.version !== "1.0.0") throw new Error("ROOT_VERSION_MUST_REMAIN_1.0.0");
-if (rootPackage.engines?.node !== ">=24 <25") throw new Error("NODE_ENGINE_RANGE_MISMATCH");
+if (rootPackage.engines?.node !== ">=24 <26") throw new Error("NODE_ENGINE_RANGE_MISMATCH");
 const all = [...fs.readdirSync("apps", { withFileTypes: true }).filter(e=>e.isDirectory()).map(e=>`apps/${e.name}/package.json`), ...fs.readdirSync("packages", { withFileTypes: true }).filter(e=>e.isDirectory()).map(e=>`packages/${e.name}/package.json`)];
 for (const file of all) if (fs.existsSync(file)) { const p=JSON.parse(fs.readFileSync(file,"utf8")); if (p.version !== "1.0.0") throw new Error(`${file}: version must be 1.0.0`); }
 const tsconfigs = [];

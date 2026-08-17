@@ -1,23 +1,26 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = process.cwd();
-const target = path.join(root, ".env");
-const candidates = [
-  path.join(root, ".env.example"),
-  path.join(root, ".env.local.example"),
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const copies = [
+  { target: ".env", candidates: [".env.example", ".env.local.example", "config/env.defaults"] },
+  { target: ".env.local", candidates: [".env.local.example", "config/env.defaults"] },
 ];
 
-if (fs.existsSync(target)) {
-  console.log("Environment already exists: .env (left unchanged)");
-  process.exit(0);
+let created = 0;
+for (const entry of copies) {
+  const target = path.join(repoRoot, entry.target);
+  if (fs.existsSync(target)) {
+    console.log(`[env:bootstrap] ${entry.target} already exists; leaving it unchanged.`);
+    continue;
+  }
+  const template = entry.candidates.map((name) => path.join(repoRoot, name)).find((candidate) => fs.existsSync(candidate));
+  if (!template) {
+    throw new Error(`No environment template found for ${entry.target}. Expected ${entry.candidates.join(" or ")} at repository root ${repoRoot}.`);
+  }
+  fs.copyFileSync(template, target, fs.constants.COPYFILE_EXCL);
+  created += 1;
+  console.log(`[env:bootstrap] Created ${entry.target} from ${path.basename(template)}.`);
 }
-
-const source = candidates.find((candidate) => fs.existsSync(candidate));
-if (!source) {
-  console.error("No environment template found. Expected .env.local.example or .env.example at repository root.");
-  process.exit(1);
-}
-
-fs.copyFileSync(source, target, fs.constants.COPYFILE_EXCL);
-console.log(`Created .env from ${path.basename(source)}. Review values before production use.`);
+if (created === 0) console.log("[env:bootstrap] Environment files are already initialized.");

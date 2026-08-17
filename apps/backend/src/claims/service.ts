@@ -1,5 +1,3 @@
-import "server-only";
-
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { PublicKey } from "@solana/web3.js";
 import bs58 from "bs58";

@@ -1,0 +1,3 @@
+# Cloudflare Workers local preview variables.
+# Copy to .dev.vars locally; never commit secrets.
+NEXTJS_ENV=development

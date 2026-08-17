@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/lib/api/browser-api";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -38,7 +39,7 @@ export function usePwrcIntegrity() {
     setError(null);
     const timer = window.setTimeout(() => abort.abort(), 8_000);
     try {
-      const response = await fetch("/api/v1/data/pwrc/integrity", { cache: "no-store", signal: abort.signal });
+      const response = await apiFetch("/api/v1/data/pwrc/integrity", { cache: "no-store", signal: abort.signal });
       const body: unknown = await response.json();
       if (id !== generation.current) return;
       if (!valid(body)) throw new Error("Invalid integrity response");

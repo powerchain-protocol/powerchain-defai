@@ -1,12 +1,10 @@
-import { stakingStatus, type StakingConfiguration } from "@powerchain/staking";
-import { PageHeader } from "@/components/ui/page-header";
+import { stakingStatus } from "@powerchain/staking";
+import { StakingDashboard } from "@/components/staking/staking-dashboard";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Staking" };
-export default function StakingPage() {
-  const status = stakingStatus();
-  return <div className="space-y-6"><PageHeader eyebrow="DeFi" title="Staking" description="PWRC and wPWRC staking workspace with fail-closed deployment configuration and wallet-owned execution." />
-    <section className="grid gap-4 lg:grid-cols-2">{status.configurations.map((item: StakingConfiguration) => <article key={item.chain} className="rounded-[24px] border border-slate-200 bg-white/80 p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.04]"><div className="flex items-center justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{item.chain}</p><h2 className="mt-1 text-lg font-semibold text-slate-950 dark:text-white">Stake {item.tokenSymbol}</h2></div><span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${item.state === "configured" ? "bg-[#e9efec] text-[#254536] dark:bg-[#29483c]/20 dark:text-[#d9e3de]" : "bg-slate-100 text-slate-600 dark:bg-white/[0.06] dark:text-slate-300"}`}>{item.state}</span></div><dl className="mt-5 grid gap-3 text-sm"><div><dt className="text-slate-500">Custody model</dt><dd className="mt-1 font-medium text-slate-800 dark:text-slate-200">{item.custodyModel}</dd></div><div><dt className="text-slate-500">Program / package</dt><dd className="mt-1 break-all font-mono text-xs text-slate-700 dark:text-slate-300">{item.programOrPackageId ?? "Not configured"}</dd></div><div><dt className="text-slate-500">Vault / pool</dt><dd className="mt-1 break-all font-mono text-xs text-slate-700 dark:text-slate-300">{item.vaultOrPoolId ?? "Not configured"}</dd></div></dl><button type="button" disabled={item.state !== "configured"} className="pc-button-primary mt-5 min-h-11 w-full rounded-2xl px-4 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40">{item.state === "configured" ? `Review ${item.tokenSymbol} staking` : "Staking deployment required"}</button></article>)}</section>
-    <aside className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-200">No APR is fabricated. Reward rates appear only when a configured staking deployment exposes a verifiable reward source. AI may explain staking but cannot authorize or sign it.</aside>
-  </div>;
+
+export default async function StakingPage() {
+  const status = await stakingStatus();
+  return <StakingDashboard initialStatus={status} />;
 }
